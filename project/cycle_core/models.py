@@ -10,12 +10,14 @@ class CycleDetails(models.Model):
 
     avg_cycle_duration = models.IntegerField(
         choices=CYCLE_DURATION_CHOICES,
+        default=5,
         blank=False,
         null=False,
     )
 
     avg_menstruation_duration = models.IntegerField(
         choices=MENSTRUATION_DURATION_CHOICES,
+        default=30,
         blank=False,
         null=False,
     )
