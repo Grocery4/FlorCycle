@@ -1,0 +1,11 @@
+<form method="get">
+    {{form.as_p}}
+    <button type="submit">Send</button>
+</form>
+
+<b>Submitted data</b>
+{{ last_menstruation_date }}
+{{ avg_cycle_duration }}
+{{ avg_menstruation_duration }}
+
+{% include "prediction_table.html" %}
