@@ -1,0 +1,59 @@
+from django.test import TestCase
+from datetime import datetime, timedelta
+
+from cycle_core.models import CycleDetails, CycleWindowPrediction
+from cycle_core.services import PredictionBuilder
+
+
+class TestPredictionBuilder(TestCase):
+
+    def setUp(self):
+        # Example baseline values
+        self.last_menstruation_date = datetime(2025, 1, 1).date()
+        self.avg_cycle_duration = 28
+        self.avg_menstruation_duration = 5
+
+        self.cd = CycleDetails(
+            last_menstruation_date=self.last_menstruation_date,
+            avg_cycle_duration=self.avg_cycle_duration,
+            avg_menstruation_duration=self.avg_menstruation_duration
+        )
+
+    def test_predict_menstruation(self):
+        start, end = PredictionBuilder.predictMenstruation(self.cd)
+
+        expected_start = (self.last_menstruation_date + timedelta(days=self.avg_cycle_duration))
+        expected_end = expected_start + timedelta(days=self.avg_menstruation_duration)
+
+        self.assertEqual(start, expected_start)
+        self.assertEqual(end, expected_end)
+
+    def test_predict_ovulation(self):
+        first_day = datetime(2025, 2, 1).date()
+        start, end = PredictionBuilder.predictOvulation(first_day)
+
+        expected_start = first_day + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY)
+        expected_end = first_day + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
+
+        self.assertEqual(start, expected_start)
+        self.assertEqual(end, expected_end)
+
+    def test_generate_prediction(self):
+        cwp = PredictionBuilder.generatePrediction(self.cd)
+        # Expected menstruation window
+        expected_menstruation_start = self.last_menstruation_date + timedelta(days=self.avg_cycle_duration)
+        expected_menstruation_end = expected_menstruation_start + timedelta(days=self.avg_menstruation_duration)
+
+        # Expected ovulation window
+        expected_ovulation_start = expected_menstruation_start + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY)
+        expected_ovulation_end = expected_menstruation_start + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
+
+        self.assertIsInstance(cwp, CycleWindowPrediction)
+        self.assertEqual(cwp.menstruation_start, expected_menstruation_start)
+        self.assertEqual(cwp.menstruation_end, expected_menstruation_end)
+        self.assertEqual(cwp.min_ovulation_window, expected_ovulation_start)
+        self.assertEqual(cwp.max_ovulation_window, expected_ovulation_end)
+
+
+if __name__ == "__main__":
+    TestCase.main()
