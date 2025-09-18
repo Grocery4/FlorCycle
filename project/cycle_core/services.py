@@ -17,6 +17,7 @@ class PredictionBuilder():
 
         return cwp
 
+    # TODO - evaluate whether the calculations are accurate according to inspiration website
     @staticmethod
     def predictMenstruation(cd: CycleDetails) -> tuple[datetime, datetime]:
         menstruation_start = cd.last_menstruation_date + timedelta(days=cd.avg_cycle_duration)
