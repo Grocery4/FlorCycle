@@ -7,7 +7,7 @@ import datetime
 
 class TestCycleDetailsModel(TestCase):
     def setUp(self):
-        self.DATE = datetime.datetime.strptime("2025-09-24", "%Y-%m-%d")
+        self.DATE = datetime.datetime.strptime("2025-09-24", "%Y-%m-%d").date()
         self.AVG_CYCLE_DURATION = 5
         self.AVG_MENSTRUATION_DURATION = 30
 
@@ -53,6 +53,8 @@ class TestCycleDetailsModel(TestCase):
         )
         with self.assertRaises(ValidationError):
             obj.full_clean()
+
+
 
 class TestCycleWindowPrediction(TestCase):
     def setUp(self):
@@ -124,3 +126,7 @@ class TestCycleWindowPrediction(TestCase):
 
         expected = (self.end - self.start) + datetime.timedelta(days=1)
         self.assertEqual(data.getOvulationDuration(), expected)
+
+
+if __name__ == '__main__':
+    TestCase.main()
