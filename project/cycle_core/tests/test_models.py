@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-from cycle_core.models import CycleDetails
+from cycle_core.models import CycleDetails, CycleWindowPrediction
 import datetime
 
 
@@ -53,3 +53,74 @@ class TestCycleDetailsModel(TestCase):
         )
         with self.assertRaises(ValidationError):
             obj.full_clean()
+
+class TestCycleWindowPrediction(TestCase):
+    def setUp(self):
+        # Common base dates
+        self.start = datetime.date(2025, 7, 1)
+        self.end = datetime.date(2025, 7, 5)
+        self.ovul_min = datetime.date(2025, 7, 10)
+        self.ovul_max = datetime.date(2025, 7, 14)
+
+    def test_get_menstruation_dates_as_list(self):
+        data = CycleWindowPrediction(
+            menstruation_start=self.start,
+            menstruation_end=self.end,
+            min_ovulation_window=self.ovul_min,
+            max_ovulation_window=self.ovul_max
+        )
+        expected = [self.start + datetime.timedelta(days=i) for i in range(5)]
+        self.assertEqual(data.getMenstruationDatesAsList(), expected)
+        
+
+    def test_get_ovulation_dates_as_list(self):
+        data = CycleWindowPrediction(
+            menstruation_start=self.start,
+            menstruation_end=self.end,
+            min_ovulation_window=self.ovul_min,
+            max_ovulation_window=self.ovul_max
+        )
+        expected = [self.ovul_min + datetime.timedelta(days=i) for i in range(5)]
+        self.assertEqual(data.getOvulationDatesAsList(), expected)
+
+    def test_menstruation_dates_missing_period_start(self):
+        data = CycleWindowPrediction(
+            menstruation_start=None,
+            menstruation_end=self.end,
+            min_ovulation_window=self.ovul_min,
+            max_ovulation_window=self.ovul_max
+        )
+        with self.assertRaises(ValueError):
+            data.getMenstruationDatesAsList()
+
+    def test_ovulation_dates_missing_min(self):
+        data = CycleWindowPrediction(
+            menstruation_start=self.start,
+            menstruation_end=self.end,
+            min_ovulation_window=None,
+            max_ovulation_window=self.ovul_max
+        )
+        with self.assertRaises(ValueError):
+            data.getOvulationDatesAsList()
+
+    def test_menstruation_duration(self):
+        data = CycleWindowPrediction(
+            menstruation_start=self.start,
+            menstruation_end=self.end,
+            min_ovulation_window=self.ovul_min,
+            max_ovulation_window=self.ovul_max
+        )
+
+        expected = (self.end - self.start) + datetime.timedelta(days=1)
+        self.assertEqual(data.getMenstruationDuration(), expected)
+
+    def test_ovulation_duration(self):
+        data = CycleWindowPrediction(
+            menstruation_start=self.start,
+            menstruation_end=self.end,
+            min_ovulation_window=self.ovul_min,
+            max_ovulation_window=self.ovul_max
+        )
+
+        expected = (self.end - self.start) + datetime.timedelta(days=1)
+        self.assertEqual(data.getOvulationDuration(), expected)

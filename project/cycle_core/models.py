@@ -1,5 +1,7 @@
 from django.db import models
-from datetime import datetime
+from django.utils.timezone import now
+
+from datetime import timedelta
 
 # Create your models here.
 class CycleDetails(models.Model):
@@ -7,8 +9,12 @@ class CycleDetails(models.Model):
     CYCLE_DURATION_CHOICES = [(i, f'{i} DAYS') for i in range(22, 45)]
     MENSTRUATION_DURATION_CHOICES = [(i, f'{i} DAY') if i == 1 else (i, f'{i} DAYS') for i in range(1, 11)]
 
+    AVG_MIN_OVULATION_DAY = 6
+    AVG_MAX_OVULATION_DAY = 10
+
+
     last_menstruation_date = models.DateField(
-        default=datetime.today()
+        default=now
     )
 
     avg_cycle_duration = models.IntegerField(
@@ -24,3 +30,64 @@ class CycleDetails(models.Model):
         blank=False,
         null=False,
     )
+
+    #TODO - implement methods
+    # external function could pass last x=12 cycle/menstruation durations
+    # and make an average of those durations
+    # if total_entry_count % x == 0: take last x logs
+    def updateAverageCycleDuration(self):
+        pass
+
+    def updateAverageMenstruationDuration(self):
+        pass
+
+
+class CycleWindowPrediction(models.Model):
+
+    menstruation_start = models.DateField(
+        blank=False,
+        default=now
+    )
+
+    menstruation_end = models.DateField(
+        blank=False,
+        default=now
+    )
+
+    min_ovulation_window = models.DateField(
+        blank=False,
+    )
+
+    max_ovulation_window = models.DateField(
+        blank=False,
+    )
+
+    def getMenstruationDatesAsList(self):
+        if self.menstruation_start is None or self.menstruation_end is None:
+            raise ValueError('period_start and period_end must be set.')
+
+        delta = self.getMenstruationDuration()
+        return [self.menstruation_start + timedelta(days=i) for i in range(delta.days)]
+
+
+    def getOvulationDatesAsList(self):
+        if self.min_ovulation_window is None or self.max_ovulation_window is None:
+            raise ValueError('min_ovulation_window and max_ovulation_window must be set.')
+
+        delta = self.getOvulationDuration()
+        return [self.min_ovulation_window + timedelta(days=i) for i in range(delta.days)]
+    
+
+    def getMenstruationDuration(self):
+        return (self.menstruation_end - self.menstruation_start) + timedelta(days=1)
+
+
+    def getOvulationDuration(self):
+        return (self.max_ovulation_window - self.min_ovulation_window) + timedelta(days=1)
+
+
+    def __str__(self):
+        return (
+            f"Menstruation: from {self.menstruation_start} to {self.menstruation_end}, "
+            f"Ovulation: from {self.min_ovulation_window} to {self.max_ovulation_window}"
+        )
