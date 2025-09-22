@@ -5,12 +5,14 @@ from datetime import timedelta
 
 # Create your models here.
 class CycleDetails(models.Model):
+    #TODO - add a user class to have one CycleDetails seed per user.    
 
     CYCLE_DURATION_CHOICES = [(i, f'{i} DAYS') for i in range(22, 45)]
     MENSTRUATION_DURATION_CHOICES = [(i, f'{i} DAY') if i == 1 else (i, f'{i} DAYS') for i in range(1, 11)]
 
-    AVG_MIN_OVULATION_DAY = 6
-    AVG_MAX_OVULATION_DAY = 10
+    #Values based on reference website.
+    AVG_MIN_OVULATION_DAY = 12
+    AVG_MAX_OVULATION_DAY = 16
 
 
     last_menstruation_date = models.DateField(
@@ -30,7 +32,21 @@ class CycleDetails(models.Model):
         blank=False,
         null=False,
     )
-
+    
+    # CycleWindow.objects.get_or_create() should be used in view.
+    # The model should NOT be the one to insert elements in database.
+    # Used in services.PredictionBuilder.generateMultiplePrediction to generate
+    # a uniformed list of CycleWindows starting from the initial CycleWindow.
+    def asCycleWindow(self):
+        cw = CycleWindow(
+            menstruation_start=self.last_menstruation_date,
+            menstruation_end=self.last_menstruation_date + timedelta(days=self.avg_menstruation_duration-1),
+            min_ovulation_window=self.last_menstruation_date + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY),
+            max_ovulation_window=self.last_menstruation_date + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
+        )
+        
+        return cw
+    
     #TODO - implement methods
     # external function could pass last x=12 cycle/menstruation durations
     # and make an average of those durations
@@ -41,8 +57,12 @@ class CycleDetails(models.Model):
     def updateAverageMenstruationDuration(self):
         pass
 
+    def __str__(self):
+        return f'last menstruation: {self.last_menstruation_date}\n average cycle duration:{self.avg_cycle_duration}\n average menstruation duration:{self.avg_menstruation_duration}'
 
-class CycleWindowPrediction(models.Model):
+
+
+class CycleWindow(models.Model):
 
     menstruation_start = models.DateField(
         blank=False,
