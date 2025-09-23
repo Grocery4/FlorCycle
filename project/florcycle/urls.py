@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('cycle-core/', include('cycle_core.urls')),
+    path('guest-mode/', include('guest_mode.urls'))
 ]

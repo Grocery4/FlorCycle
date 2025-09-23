@@ -19,6 +19,8 @@ from django.urls import path
 
 from . import views
 
+app_name = 'cycle_core'
+
 urlpatterns = [
     path('test-form/', views.show_form, name='show_test_form'),
 ]
