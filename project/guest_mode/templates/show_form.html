@@ -4,13 +4,23 @@
     <button type="submit">Send</button>
 </form>
 
-<b>Submitted data</b>
-<p>
-    {{ last_menstruation_date }}
-    {{ avg_cycle_duration }}
-    {{ avg_menstruation_duration }}
-</p>
+{% if last_menstruation_date and avg_cycle_duration and avg_menstruation_duration %}
+    <p>
+        <b>Submitted data:</b>
+        {{ last_menstruation_date }}
+        {{ avg_cycle_duration }}
+        {{ avg_menstruation_duration }}
+    </p>
+{% endif %}
 
-<p>
-    {% include "cycle_core/prediction_table.html" %}
-</p>
+{% if predictions %}
+    <p>
+        {% include "cycle_core/prediction_table.html" %}
+    </p>
+{% endif %}
+
+{% if calendars %}
+    <p>
+        {% include "calendar_core/calendars.html" %}
+    </p>
+{% endif %}
