@@ -16,14 +16,7 @@ def show_form(request):
             cd = form.save(commit=False)
             predictions = PredictionBuilder.generateMultiplePredictions(cd, 3)
 
-            ctx['last_menstruation_date'] = cd.last_menstruation_date
-            ctx['avg_cycle_duration'] = cd.avg_cycle_duration
-            ctx['avg_menstruation_duration'] = cd.avg_menstruation_duration
             ctx['predictions'] = predictions
-            
-            # TODO render calendars
             ctx['calendars'] = generateCalendars(predictions)
-
-            return render(request, 'show_form.html', ctx)
 
     return render(request, 'show_form.html', ctx)

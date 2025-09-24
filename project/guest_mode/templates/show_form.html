@@ -1,26 +1,23 @@
-<form method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Send</button>
-</form>
+{% extends "base.html" %}
 
-{% if last_menstruation_date and avg_cycle_duration and avg_menstruation_duration %}
-    <p>
-        <b>Submitted data:</b>
-        {{ last_menstruation_date }}
-        {{ avg_cycle_duration }}
-        {{ avg_menstruation_duration }}
-    </p>
-{% endif %}
+{% block title %}Guest mode{% endblock title %}
 
-{% if predictions %}
-    <p>
-        {% include "cycle_core/prediction_table.html" %}
-    </p>
-{% endif %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">Send</button>
+    </form>
 
-{% if calendars %}
-    <p>
-        {% include "calendar_core/calendars.html" %}
-    </p>
-{% endif %}
+    {% if predictions %}
+        <div class="prediction_table">
+            {% include "cycle_core/prediction_table.html" %}
+        </div>
+    {% endif %}
+
+    {% if calendars %}
+        <div class="calendars">
+            {% include "calendar_core/calendars.html" %}
+        </div>
+    {% endif %}
+{% endblock content %}
