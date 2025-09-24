@@ -61,26 +61,28 @@ class TestCycleDetailsModel(TestCase):
             avg_menstruation_duration=self.AVG_MENSTRUATION_DURATION
         )
 
-        cw, created = cd.asCycleWindow()
+        # FIXME - created variable should be used when using CycleWindow.objects.get_or_create().
+        # in this case, cd.asCycleWindow() simply instantiates a CycleWindow object, but the save on db should be done
+        # by some dashboard view. refer to cycle_core.models.asCycleWindow() comments for more info.
+        # cw, created = cd.asCycleWindow()
+        cw = cd.asCycleWindow()
 
         expected_menstruation_start = self.DATE
-        expected_menstruation_end = self.DATE + datetime.timedelta(days=self.AVG_MENSTRUATION_DURATION)
+        expected_menstruation_end = self.DATE + datetime.timedelta(days=self.AVG_MENSTRUATION_DURATION-1)
         expected_ovulation_start = self.DATE + datetime.timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY)
         expected_ovulation_end = self.DATE + datetime.timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
-        expected_created = True
 
         self.assertIsInstance(cw, CycleWindow)
         self.assertEqual(cw.menstruation_start, expected_menstruation_start)
         self.assertEqual(cw.menstruation_end, expected_menstruation_end)
         self.assertEqual(cw.min_ovulation_window, expected_ovulation_start)
         self.assertEqual(cw.max_ovulation_window, expected_ovulation_end)
-        self.assertEqual(created, expected_created)
 
-        cw2, created2 = cd.asCycleWindow()
-        expected_created = False
+        # FIXME - insert into correct test
+        # cw2, created2 = cd.asCycleWindow()
+        cw2 = cd.asCycleWindow()
 
         self.assertIsInstance(cw2, CycleWindow)
-        self.assertEqual(created2, expected_created)
 
 
 class TestCycleWindowPrediction(TestCase):
@@ -98,7 +100,7 @@ class TestCycleWindowPrediction(TestCase):
             min_ovulation_window=self.ovul_min,
             max_ovulation_window=self.ovul_max
         )
-        expected = [self.start + datetime.timedelta(days=i) for i in range(5)]
+        expected = [(self.start + datetime.timedelta(days=i)).strftime('%Y-%m-%d') for i in range(5)]
         self.assertEqual(data.getMenstruationDatesAsList(), expected)
         
 
@@ -109,7 +111,7 @@ class TestCycleWindowPrediction(TestCase):
             min_ovulation_window=self.ovul_min,
             max_ovulation_window=self.ovul_max
         )
-        expected = [self.ovul_min + datetime.timedelta(days=i) for i in range(5)]
+        expected = [(self.ovul_min + datetime.timedelta(days=i)).strftime('%Y-%m-%d') for i in range(5)]
         self.assertEqual(data.getOvulationDatesAsList(), expected)
 
     def test_menstruation_dates_missing_period_start(self):

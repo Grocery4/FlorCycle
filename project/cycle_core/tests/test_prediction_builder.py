@@ -63,8 +63,5 @@ class TestPredictionBuilder(TestCase):
         self.assertEqual(predictions[0].min_ovulation_window, self.cd.asCycleWindow().min_ovulation_window)
         self.assertEqual(predictions[0].max_ovulation_window, self.cd.asCycleWindow().max_ovulation_window)
 
-        for elem in predictions:
-            print(elem)
-
 if __name__ == "__main__":
     TestCase.main()

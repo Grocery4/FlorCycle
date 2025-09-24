@@ -87,7 +87,7 @@ class CycleWindow(models.Model):
             raise ValueError('period_start and period_end must be set.')
 
         delta = self.getMenstruationDuration()
-        return [self.menstruation_start + timedelta(days=i) for i in range(delta.days)]
+        return [(self.menstruation_start + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(delta.days)]
 
 
     def getOvulationDatesAsList(self):
@@ -95,7 +95,7 @@ class CycleWindow(models.Model):
             raise ValueError('min_ovulation_window and max_ovulation_window must be set.')
 
         delta = self.getOvulationDuration()
-        return [self.min_ovulation_window + timedelta(days=i) for i in range(delta.days)]
+        return [(self.min_ovulation_window + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(delta.days)]
     
 
     def getMenstruationDuration(self):

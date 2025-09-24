@@ -30,7 +30,6 @@ class PredictionBuilder():
 
         return(ovulation_start, ovulation_end)
 
-    #TODO
     @staticmethod
     def generateMultiplePredictions(cd: CycleDetails, times: int) -> list:
         prediction_list = []
