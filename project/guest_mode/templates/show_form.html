@@ -3,21 +3,24 @@
 {% block title %}Guest mode{% endblock title %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Send</button>
-    </form>
+    <div class="container">
+        
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">Send</button>
+        </form>
 
-    {% if predictions %}
-        <div class="prediction_table">
-            {% include "cycle_core/prediction_table.html" %}
-        </div>
-    {% endif %}
+        {% if predictions %}
+            <div class="prediction_table">
+                {% include "cycle_core/prediction_table.html" %}
+            </div>
+        {% endif %}
 
-    {% if calendars %}
-        <div class="calendars">
-            {% include "calendar_core/calendars.html" %}
-        </div>
-    {% endif %}
+        {% if calendars %}
+            <div class="calendars">
+                {% include "calendar_core/calendars.html" %}
+            </div>
+        {% endif %}
+    </div>
 {% endblock content %}
