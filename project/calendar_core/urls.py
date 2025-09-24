@@ -1,0 +1,1 @@
+app_name = 'calendar_core'

@@ -29,7 +29,7 @@ class CycleCalendar(calendar.HTMLCalendar):
             return f'<td class="{css_class}">{day}</td>'
         else:
             return f'<td>{day}</td>'
-
+        
 def renderCalendar(year, month, menstruation_dates: dict=None, ovulation_dates: dict=None):
     highlights = {
         'highlight-menstruation' : menstruation_dates or {},
@@ -38,20 +38,22 @@ def renderCalendar(year, month, menstruation_dates: dict=None, ovulation_dates: 
     
     return CycleCalendar(highlights=highlights).formatmonth(year, month)
 
-def renderMultipleCalendars(year: int, months: list, menstruation_dates:dict=None, ovulation_dates:dict=None):
-    calendar = CycleCalendar(highlights=highlights)
+# accepts a list of (year, month)
+def renderMultipleCalendars(months: list[tuple[int, int]], menstruation_dates: dict=None, ovulation_dates: dict=None) -> list[str]:
     highlights = {
-        'highlight-menstruation' : menstruation_dates or {},
-        'highlight-ovulation' : ovulation_dates or {}
+        'highlight-menstruation': menstruation_dates or {},
+        'highlight-ovulation': ovulation_dates or {}
     }
+    calendar = CycleCalendar(highlights=highlights)
 
-    html_calendar = ''
-    
-    for m in months:
-        html_calendar += calendar.formatmonth(year, m)
-        html_calendar += '\n'
-    
-    return html_calendar
+    html_calendars = []
+    for year, month in months:
+        cal = ''
+        cal += calendar.formatmonth(year, month)
+        cal += '\n'
+        html_calendars.append(cal)
+
+    return html_calendars
         
 
 
