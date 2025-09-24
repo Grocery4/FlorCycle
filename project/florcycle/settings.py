@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'guest_mode',
     'cycle_core',
+    'calendar_core',
     'forum',
 ]
 
