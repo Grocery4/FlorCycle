@@ -37,5 +37,4 @@ def getHighlightedDates(predictions:list) -> tuple[list, list]:
 def generateCalendars(predictions):
         months = getMonthsRange(predictions)
         menstruation_highlights, ovulation_highlights = getHighlightedDates(predictions)
-        print(menstruation_highlights, ovulation_highlights)
         return renderMultipleCalendars(months, menstruation_highlights, ovulation_highlights)
