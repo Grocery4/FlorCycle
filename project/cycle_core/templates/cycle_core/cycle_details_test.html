@@ -1,0 +1,13 @@
+<form method="get">
+    {{form.as_p}}
+    <button type="submit">Send</button>
+</form>
+
+<b>Submitted data</b>
+<p>
+    {{ last_menstruation_date }}
+    {{ avg_cycle_duration }}
+    {{ avg_menstruation_duration }}
+</p>
+
+{% include "cycle_core/prediction_table.html" %}

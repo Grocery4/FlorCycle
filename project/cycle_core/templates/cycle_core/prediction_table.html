@@ -1,0 +1,14 @@
+<table>
+<tr>
+    <th>Menstruation dates</th>
+    <th>Ovulation dates</th>
+</tr>
+
+{% for p in predictions  %}
+    <tr>
+        <td>{{ p.menstruation_start }} to {{ p.menstruation_end }}</td>
+        <td>{{ p.min_ovulation_window }} to {{ p.max_ovulation_window }}</td>
+    </tr>
+{% endfor %}
+
+</table>
