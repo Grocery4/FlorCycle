@@ -51,6 +51,8 @@ class CycleDetails(models.Model):
     # external function could pass last x=12 cycle/menstruation durations
     # and make an average of those durations
     # if total_entry_count % x == 0: take last x logs
+
+    # these methods are strictly accessible by logged users.
     def updateAverageCycleDuration(self):
         pass
 
