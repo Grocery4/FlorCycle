@@ -23,10 +23,10 @@ class ModeratorProfile(models.Model):
 
 class DoctorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    cv = ...
-    license_number = ... #string
-    is_verified = ... #bool
-    rating = ...#choice 1/5
+    cv = models.FileField(upload_to='doctors/cv/')
+    license_number = models.CharField(max_length=100)
+    is_verified = models.BooleanField(default=False)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
     def save(self, *args, **kwargs):
         self.user.is_doctor = True
@@ -37,8 +37,8 @@ class DoctorProfile(models.Model):
 
 class PartnerProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    partner_code = ... #str, has to be randgen
-    linked_user = ... #1:1 with user
+    partner_code = models.CharField(max_length=20, unique=True)
+    linked_user = models.ForeignKey(CustomUser, related_name="partners", on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         self.user.is_partner = True
