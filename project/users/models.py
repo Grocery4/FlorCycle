@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
+from .services import doctorCvUploadPath
+
 # Create your models here.
 class CustomUser(AbstractUser):
     is_moderator = models.BooleanField(default=False)
@@ -23,7 +25,7 @@ class ModeratorProfile(models.Model):
 
 class DoctorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    cv = models.FileField(upload_to='doctors/cv/')
+    cv = models.FileField(upload_to=doctorCvUploadPath)
     license_number = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
@@ -48,13 +50,33 @@ class PartnerProfile(models.Model):
 
 
 class PremiumProfile(models.Model):
+    PLAN_CHOICES = [
+        ('TRIAL', 'trial'),
+        ('MONTHLY', 'monthly'),
+        ('YEARLY', 'yearly')
+    ]
+
+    STATUS_CHOICES = [
+        ('ACTIVE', 'Active'),
+        ('EXPIRED', 'Expired'),
+        ('CANCELED', 'Canceled')
+    ]
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    payment_info = ... #no idea
-    subscription_plan = ...#custom
-    subscription_status = ...#custom
-    start_date = ... #date
-    end_date = ... #date
-    auto_renew = ... #bool
+    payment_info = models.JSONField(default=dict)
+    subscription_plan = models.CharField(
+        max_length=20,
+        choices=PLAN_CHOICES,
+        default='MONTHLY'
+    )
+    subscription_status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='ACTIVE'
+    )
+    start_date = models.DateField(auto_now_add=True)
+    end_date = models.DateField(blank=True, null=True)
+    auto_renew = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.user.is_premium = True
