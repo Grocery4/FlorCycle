@@ -5,11 +5,22 @@ from django.contrib.auth.models import AbstractUser
 from .services import doctorCvUploadPath
 
 # Create your models here.
+
+#TODO - remove unused fields, ie: first & last name
 class CustomUser(AbstractUser):
-    is_moderator = models.BooleanField(default=False)
-    is_doctor = models.BooleanField(default=False)
-    is_partner = models.BooleanField(default=False)
-    is_premium = models.BooleanField(default=False)
+    USER_TYPE_CHOICES = [
+        ('STANDARD', 'Standard'),
+        ('MODERATOR', 'Moderator'),
+        ('DOCTOR', 'Doctor'),
+        ('PARTNER', 'Partner'),
+        ('PREMIUM', 'Premium'),
+    ]
+
+    user_type = models.CharField(
+        max_length=20,
+        choices=USER_TYPE_CHOICES,
+        default='STANDARD'
+    )
 
 
 
@@ -17,8 +28,8 @@ class ModeratorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        self.user.is_moderator = True
-        self.user.save(update_fields=["is_moderator"])
+        self.user.user_type = 'MODERATOR'
+        self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)
 
 
@@ -31,8 +42,8 @@ class DoctorProfile(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
     def save(self, *args, **kwargs):
-        self.user.is_doctor = True
-        self.user.save(update_fields=["is_doctor"])
+        self.user.user_type = 'DOCTOR'
+        self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)
 
 
@@ -43,8 +54,8 @@ class PartnerProfile(models.Model):
     linked_user = models.ForeignKey(CustomUser, related_name="partners", on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        self.user.is_partner = True
-        self.user.save(update_fields=["is_partner"])
+        self.user.user_type = 'PARTNER'
+        self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)
 
 
@@ -79,6 +90,6 @@ class PremiumProfile(models.Model):
     auto_renew = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        self.user.is_premium = True
-        self.user.save(update_fields=["is_premium"])
+        self.user.user_type = 'PREMIUM'
+        self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)
