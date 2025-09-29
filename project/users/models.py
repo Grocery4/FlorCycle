@@ -2,7 +2,27 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
-from .services import doctorCvUploadPath
+import os
+import uuid
+
+def doctorCvUploadPath(instance, filename):
+    # Get file extension
+    ext = filename.split('.')[-1]
+    # Build unique filename: doctor_<user_id>_<uuid>.<ext>
+    filename = f"doctor_{instance.user.id}_{uuid.uuid4().hex}.{ext}"
+    # Save inside MEDIA_ROOT/doctors/cv/
+    return os.path.join("doctors", "cv", filename)
+
+def activatePremiumSubscription(user):
+    premium, created = PremiumProfile.objects.get_or_create(user=user)
+    premium.subscription_status = "active"
+    premium.payment_info = {
+        "provider": "mockpay",
+        "subscription_id": f"sub_{user.id}",
+        "amount": "9.99",
+        "currency": "EUR"
+    }
+    premium.save()
 
 # Create your models here.
 
