@@ -58,7 +58,7 @@ class ModeratorProfile(models.Model):
 # FileExtensionValidator only checks for .pdf extension, therefore there's no way to check for fake .pdf files
 class DoctorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    cv = models.FileField(validators=[FileExtensionValidator(allowed_extensions=["pdf"])], upload_to=doctorCvUploadPath)
+    cv = models.FileField(validators=[FileExtensionValidator(allowed_extensions=["pdf", "docx"])], upload_to=doctorCvUploadPath)
     license_number = models.CharField(max_length=100, unique=True)
     is_verified = models.BooleanField(default=False)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
