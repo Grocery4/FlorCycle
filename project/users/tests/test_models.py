@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
 
@@ -28,6 +29,32 @@ class UserProfilesTestCase(TestCase):
         self.assertEqual(doctor_profile.license_number, "ABC123")
         self.assertFalse(doctor_profile.is_verified)
         self.assertEqual(doctor_profile.rating, 0.0)
+
+    # inputting a .pdf file does not raise ValidationError, regardless of content_type
+    def test_cv_file_type(self):
+        #wrong format
+        fake_cv = SimpleUploadedFile("fake_cv.zip", b"fake file", content_type="application/zip")
+        doctor_profile, created = DoctorProfile.objects.get_or_create(
+            user=self.user,
+            cv=fake_cv,
+            license_number="ABC123"
+        )
+        with self.assertRaises(ValidationError):
+            doctor_profile.full_clean()
+            doctor_profile.save()
+        
+        #pdf file, wrong extension
+        real_cv = SimpleUploadedFile("real_cv.zip", b"fake file", content_type="application/pdf")
+        doctor_profile1, created = DoctorProfile.objects.get_or_create(
+            user=self.user,
+            cv=real_cv,
+            license_number="ABC123"
+        )
+        with self.assertRaises(ValidationError):
+            doctor_profile1.full_clean()
+            doctor_profile1.save()
+
+
 
     def test_license_number_uniqueness(self):
         dummy_cv = SimpleUploadedFile("cv.pdf", b"fake file", content_type="application/pdf")
