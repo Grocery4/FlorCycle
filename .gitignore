@@ -4,8 +4,8 @@ __pycache__/
 # ignore db
 *.sqlite3
 
-# ignore media/ directory
-media/
+# ignore migrations/ directory
+migrations/
 
 # ignore media/ directory
 media/
