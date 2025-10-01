@@ -9,7 +9,7 @@ from users.models import CustomUser, ModeratorProfile, DoctorProfile, PartnerPro
 
 class UserProfilesTestCase(TestCase):
     def setUp(self):
-        self.user = CustomUser.objects.create_user(username="testuser", password="pass123")
+        self.user = CustomUser.objects.create_user(username="testuser", password="pass123", email="setupemail@example.com")
 
     def test_moderator_profile_sets_flag(self):
         ModeratorProfile.objects.create(user=self.user)
@@ -29,6 +29,31 @@ class UserProfilesTestCase(TestCase):
         self.assertFalse(doctor_profile.is_verified)
         self.assertEqual(doctor_profile.rating, 0.0)
 
+    def test_license_number_uniqueness(self):
+        dummy_cv = SimpleUploadedFile("cv.pdf", b"fake file", content_type="application/pdf")
+        DoctorProfile.objects.create(
+            user=self.user,
+            cv=dummy_cv,
+            license_number="UNIQUE123"
+        )
+
+        another_user = CustomUser.objects.create_user(username="doctor2", password="pass123", email="licenseuniqueness@example.com")
+        with self.assertRaises(IntegrityError):
+            DoctorProfile.objects.create(
+                user=another_user,
+                cv=dummy_cv,
+                license_number="UNIQUE123"
+            )
+
+    def test_username_uniqueness(self):
+        with self.assertRaises(IntegrityError):
+            CustomUser.objects.create_user(username="testuser", password="newpass123")
+
+    def test_email_uniqueness(self):
+        user1 = CustomUser.objects.create_user(username="user1", password="pass123", email="unique@example.com")
+        with self.assertRaises(IntegrityError):
+            CustomUser.objects.create_user(username="user2", password="pass123", email="unique@example.com")
+
     def test_partner_profile_sets_flag_and_unique_code(self):
         linked_user = CustomUser.objects.create_user(username="linked", password="pass123")
         partner_profile = PartnerProfile.objects.create(
@@ -41,7 +66,6 @@ class UserProfilesTestCase(TestCase):
         self.assertEqual(partner_profile.partner_code, "PARTNER001")
         self.assertEqual(partner_profile.linked_user, linked_user)
 
-        # unique partner_code constraint
         with self.assertRaises(IntegrityError):
             PartnerProfile.objects.create(
                 user=linked_user,

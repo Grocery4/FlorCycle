@@ -35,7 +35,8 @@ class CustomUser(AbstractUser):
         ('PARTNER', 'Partner'),
         ('PREMIUM', 'Premium'),
     ]
-
+    
+    email = models.EmailField(blank=False, null=False, unique=True)
     user_type = models.CharField(
         max_length=20,
         choices=USER_TYPE_CHOICES,
@@ -57,7 +58,7 @@ class ModeratorProfile(models.Model):
 class DoctorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     cv = models.FileField(upload_to=doctorCvUploadPath)
-    license_number = models.CharField(max_length=100)
+    license_number = models.CharField(max_length=100, unique=True)
     is_verified = models.BooleanField(default=False)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
