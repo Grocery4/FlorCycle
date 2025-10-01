@@ -2,7 +2,7 @@
 __pycache__/
 
 # ignore db
-*.sqlite3
+project/db.sqlite3
 
 # ignore migrations/ directory
 migrations/
