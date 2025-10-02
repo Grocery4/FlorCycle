@@ -61,7 +61,8 @@ class DoctorProfile(models.Model):
     cv = models.FileField(validators=[FileExtensionValidator(allowed_extensions=["pdf", "docx"])], upload_to=doctorCvUploadPath)
     license_number = models.CharField(max_length=100, unique=True)
     is_verified = models.BooleanField(default=False)
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    #TODO - move rating to forum app
+    # rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
     def save(self, *args, **kwargs):
         self.user.user_type = 'DOCTOR'
