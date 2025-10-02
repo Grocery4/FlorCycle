@@ -3,6 +3,11 @@ from django import forms
 from django.core.validators import FileExtensionValidator
 from .models import CustomUser, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
 
+class UserSignupForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email']
+
 class ModeratorSignupForm(UserCreationForm):
     pass
 

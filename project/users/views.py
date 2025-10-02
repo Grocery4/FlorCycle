@@ -1,9 +1,23 @@
 from django.shortcuts import render
 
-from .forms import DoctorSignupForm
+
+from .forms import UserSignupForm, DoctorSignupForm
 
 
 # Create your views here.
+
+def standard_form(request):
+    #TODO
+    ctx = {}
+    ctx['form'] = UserSignupForm()
+    if request.method == 'POST':
+        form = UserSignupForm(request.POST)
+        ctx['form'] = form
+        if form.is_valid():
+            form.save()
+            print(form.cleaned_data)
+    return render(request, 'signup.html', ctx)
+
 def doctor_form(request):
     ctx = {}
     ctx['form'] = DoctorSignupForm()
@@ -13,4 +27,4 @@ def doctor_form(request):
         if form.is_valid():
             form.save()
     
-    return render(request, 'test.html', ctx)
+    return render(request, 'signup.html', ctx)
