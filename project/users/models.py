@@ -27,7 +27,6 @@ def activatePremiumSubscription(user):
 
 
 
-#TODO - remove unused fields, ie: first & last name
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = [
         ('STANDARD', 'Standard'),
@@ -37,6 +36,9 @@ class CustomUser(AbstractUser):
         ('PREMIUM', 'Premium'),
     ]
     
+    first_name = None
+    last_name = None
+
     email = models.EmailField(blank=False, null=False, unique=True)
     user_type = models.CharField(
         max_length=20,
