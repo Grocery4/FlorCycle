@@ -47,7 +47,7 @@ class CustomUser(AbstractUser):
     )
 
 
-
+# TODO - implement perms, set is_staff = True
 class ModeratorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
