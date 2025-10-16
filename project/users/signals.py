@@ -10,5 +10,9 @@ from .models import ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProf
 def downgrade_user_type_on_profile_delete(sender, instance, **kwargs):
     user = instance.user
     if user:
-        user.user_type = 'STANDARD'  # or whatever your default value is
+        if user.is_staff:
+            user.is_staff = False
+            user.save(update_fields=['is_staff'])
+
+        user.user_type = 'STANDARD'
         user.save(update_fields=['user_type'])
