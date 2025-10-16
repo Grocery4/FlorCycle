@@ -50,6 +50,9 @@ class CustomUser(AbstractUser):
 # TODO - implement perms, set is_staff = True
 class ModeratorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    can_suspend_users = models.BooleanField(default=False)
+    can_edit_posts = models.BooleanField(default=True)
+
 
     def save(self, *args, **kwargs):
         self.user.user_type = 'MODERATOR'
