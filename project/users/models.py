@@ -26,7 +26,7 @@ def activatePremiumSubscription(user):
     premium.save()
 
 
-
+#TODO - implement pfps, cycledata into standarduser,
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = [
         ('STANDARD', 'Standard'),
@@ -47,16 +47,18 @@ class CustomUser(AbstractUser):
     )
 
 
-# TODO - implement perms, set is_staff = True
 class ModeratorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    can_suspend_users = models.BooleanField(default=False)
-    can_edit_posts = models.BooleanField(default=True)
+    can_suspend_users = models.BooleanField()
+    can_edit_posts = models.BooleanField()
+    is_verified = models.BooleanField(default=False)
 
-
+    
     def save(self, *args, **kwargs):
-        self.user.user_type = 'MODERATOR'
-        self.user.save(update_fields=['user_type'])
+        if self.user:
+            self.user.is_staff = True
+            self.user.user_type = 'MODERATOR'
+            self.user.save(update_fields=['is_staff', 'user_type'])
         super().save(*args, **kwargs)
 
 
