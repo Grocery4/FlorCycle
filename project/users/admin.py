@@ -6,26 +6,26 @@ from .models import CustomUser, ModeratorProfile, DoctorProfile, PartnerProfile,
 # Define inlines
 class ModeratorProfileInline(admin.StackedInline):
     model = ModeratorProfile
-    can_delete = False
+    can_delete = True
     extra = 0
     max_num = 1
 
 class DoctorProfileInline(admin.StackedInline):
     model = DoctorProfile
-    can_delete = False
+    can_delete = True
     extra = 0
     max_num = 1
 
 class PartnerProfileInline(admin.StackedInline):
     model = PartnerProfile
-    can_delete = False
+    can_delete = True
     fk_name = 'user'
     extra = 0
     max_num = 1
 
 class PremiumProfileInline(admin.StackedInline):
     model = PremiumProfile
-    can_delete = False
+    can_delete = True
     extra = 0
     max_num = 1
 
