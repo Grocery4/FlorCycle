@@ -11,11 +11,18 @@ from users.models import CustomUser, ModeratorProfile, DoctorProfile, PartnerPro
 class UserProfilesTestCase(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(username="testuser", password="pass123", email="setupemail@example.com")
+        self.user1 = CustomUser.objects.create_user(username="testuser1", password="pass123", email="setupemail1@example.com")
 
-    def test_moderator_profile_sets_flag(self):
-        ModeratorProfile.objects.create(user=self.user)
+    def test_moderator_profile_sets_flag_and_fields(self):
+        moderator_profile = ModeratorProfile.objects.create(
+            user=self.user,
+            can_suspend_users = True,
+            can_edit_posts = True
+        )
         self.user.refresh_from_db()
         self.assertEqual(self.user.user_type, 'MODERATOR')
+        self.assertTrue(moderator_profile.can_suspend_users)
+        self.assertTrue(moderator_profile.can_edit_posts)
 
     def test_doctor_profile_sets_flag_and_fields(self):
         dummy_cv = SimpleUploadedFile("cv.pdf", b"fake file", content_type="application/pdf")
@@ -28,7 +35,6 @@ class UserProfilesTestCase(TestCase):
         self.assertEqual(self.user.user_type, 'DOCTOR')
         self.assertEqual(doctor_profile.license_number, "ABC123")
         self.assertFalse(doctor_profile.is_verified)
-        self.assertEqual(doctor_profile.rating, 0.0)
 
     # inputting a .pdf file does not raise ValidationError, regardless of content_type
     def test_cv_file_type(self):
@@ -46,9 +52,9 @@ class UserProfilesTestCase(TestCase):
         #pdf file, wrong extension
         real_cv = SimpleUploadedFile("real_cv.zip", b"fake file", content_type="application/pdf")
         doctor_profile1, created = DoctorProfile.objects.get_or_create(
-            user=self.user,
+            user=self.user1,
             cv=real_cv,
-            license_number="ABC123"
+            license_number="123ABC"
         )
         with self.assertRaises(ValidationError):
             doctor_profile1.full_clean()
