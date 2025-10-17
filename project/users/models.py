@@ -56,9 +56,12 @@ class ModeratorProfile(models.Model):
     
     def save(self, *args, **kwargs):
         if self.user:
-            self.user.is_staff = True
+            if self.is_verified == True:
+                self.user.is_staff = True
+            else:
+                self.user.is_staff = False
             self.user.user_type = 'MODERATOR'
-            self.user.save(update_fields=['is_staff', 'user_type'])
+            self.user.save(update_fields=['user_type', 'is_staff'])
         super().save(*args, **kwargs)
 
 

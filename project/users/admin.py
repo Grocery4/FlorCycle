@@ -6,44 +6,34 @@ from .models import CustomUser, ModeratorProfile, DoctorProfile, PartnerProfile,
 # Define inlines
 class ModeratorProfileInline(admin.StackedInline):
     model = ModeratorProfile
-    can_delete = True
+    can_delete = False
+    fk_name = 'user'
     extra = 0
-    max_num = 1
 
 class DoctorProfileInline(admin.StackedInline):
     model = DoctorProfile
-    can_delete = True
+    can_delete = False
     extra = 0
-    max_num = 1
 
 class PartnerProfileInline(admin.StackedInline):
     model = PartnerProfile
-    can_delete = True
+    can_delete = False
     fk_name = 'user'
     extra = 0
-    max_num = 1
 
 class PremiumProfileInline(admin.StackedInline):
     model = PremiumProfile
-    can_delete = True
+    can_delete = False
     extra = 0
-    max_num = 1
 
 # Custom UserAdmin
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    inlines = [
-        ModeratorProfileInline,
-        DoctorProfileInline,
-        PartnerProfileInline,
-        PremiumProfileInline
-    ]
-
     list_display = ("email", "user_type", "is_staff", "is_active")
     ordering = ("email",)
     
     fieldsets = (
-        (None, {"fields": ("email", "password", "user_type")}),
+        (None, {"fields": ("email", "password")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
@@ -51,6 +41,20 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             "classes": ("wide",),
-            "fields": ("username", "email", "password1", "password2"),
+            "fields": ("username", "email", "password1", "password2", "user_type"),
         }),
     )
+
+    def get_inline_instances(self, request, obj=None):
+        if not obj:
+            return []
+        inlines = []
+        if obj.user_type == 'MODERATOR':
+            inlines = [ModeratorProfileInline(self.model, self.admin_site)]
+        elif obj.user_type == 'DOCTOR':
+            inlines = [DoctorProfileInline(self.model, self.admin_site)]
+        elif obj.user_type == 'PARTNER':
+            inlines = [PartnerProfileInline(self.model, self.admin_site)]
+        elif obj.user_type == 'PREMIUM':
+            inlines = [PremiumProfileInline(self.model, self.admin_site)]
+        return inlines
