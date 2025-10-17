@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'guest_mode',
+    'dashboard',
     'cycle_core',
     'calendar_core',
     'users',
