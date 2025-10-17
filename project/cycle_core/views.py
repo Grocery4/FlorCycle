@@ -24,6 +24,6 @@ def show_form(request):
                 avg_menstruation_duration=ctx['avg_menstruation_duration']
             ))
 
-            return render(request, 'cycle_details_test.html', ctx)
+            return render(request, 'cycle_core/cycle_details_test.html', ctx)
 
-    return render(request, 'cycle_details_test.html', ctx)
+    return render(request, 'cycle_core/cycle_details_test.html', ctx)

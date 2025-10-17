@@ -19,4 +19,4 @@ def show_form(request):
             ctx['predictions'] = predictions
             ctx['calendars'] = generateCalendars(predictions)
 
-    return render(request, 'show_form.html', ctx)
+    return render(request, 'guest_mode/show_form.html', ctx)
