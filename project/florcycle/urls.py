@@ -25,4 +25,5 @@ urlpatterns = [
     path('guest-mode/', include('guest_mode.urls')),
     path("accounts/", include("django.contrib.auth.urls")),
     path('accounts/', include('users.urls')),
+    path('dashboard/', include('dashboard.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
