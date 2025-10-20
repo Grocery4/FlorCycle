@@ -139,3 +139,4 @@ MEDIA_URL = '/media/'
 
 # Redirect to dashboard after login
 LOGIN_REDIRECT_URL = '/dashboard/home'
+LOGOUT_REDIRECT_URL = '/guest-mode'
