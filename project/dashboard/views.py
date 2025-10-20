@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
-def home(request):
+def homepage(request):
     ctx = {}
-    return render(request, 'dashboard/dashboard.html', ctx)
+    if request.user.is_authenticated:
+        return render(request, 'dashboard/dashboard.html', ctx)
+    else:
+        return redirect('guest_mode:show_form')
