@@ -1,11 +1,13 @@
 from django.db import models
 from django.utils.timezone import now
+from django.conf import settings
 
 from datetime import timedelta
 
 # Create your models here.
 class CycleDetails(models.Model):
-    #TODO - add a user class to have one CycleDetails seed per user.    
+    #TODO - add a user class to have one CycleDetails seed per user.
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     CYCLE_DURATION_CHOICES = [(i, f'{i} DAYS') for i in range(22, 45)]
     MENSTRUATION_DURATION_CHOICES = [(i, f'{i} DAY') if i == 1 else (i, f'{i} DAYS') for i in range(1, 11)]
