@@ -17,7 +17,7 @@ class CycleDetails(models.Model):
     AVG_MAX_OVULATION_DAY = 16
 
 
-    last_menstruation_date = models.DateField(
+    base_menstruation_date = models.DateField(
         default=now
     )
 
@@ -41,10 +41,10 @@ class CycleDetails(models.Model):
     # a uniformed list of CycleWindows starting from the initial CycleWindow.
     def asCycleWindow(self):
         cw = CycleWindow(
-            menstruation_start=self.last_menstruation_date,
-            menstruation_end=self.last_menstruation_date + timedelta(days=self.avg_menstruation_duration-1),
-            min_ovulation_window=self.last_menstruation_date + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY),
-            max_ovulation_window=self.last_menstruation_date + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
+            menstruation_start=self.base_menstruation_date,
+            menstruation_end=self.base_menstruation_date + timedelta(days=self.avg_menstruation_duration-1),
+            min_ovulation_window=self.base_menstruation_date + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY),
+            max_ovulation_window=self.base_menstruation_date + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
         )
         
         return cw
@@ -62,7 +62,7 @@ class CycleDetails(models.Model):
         pass
 
     def __str__(self):
-        return f'last menstruation: {self.last_menstruation_date}\n average cycle duration:{self.avg_cycle_duration}\n average menstruation duration:{self.avg_menstruation_duration}'
+        return f'last menstruation: {self.base_menstruation_date}\n average cycle duration:{self.avg_cycle_duration}\n average menstruation duration:{self.avg_menstruation_duration}'
 
 
 

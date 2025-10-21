@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 class PredictionBuilder():
     @staticmethod
     def generatePrediction(cd: CycleDetails) -> CycleWindow:
-        predicted_menstruation_start, predicted_menstruation_end = PredictionBuilder.predictMenstruation(cd.last_menstruation_date, cd.avg_cycle_duration, cd.avg_menstruation_duration)
+        predicted_menstruation_start, predicted_menstruation_end = PredictionBuilder.predictMenstruation(cd.base_menstruation_date, cd.avg_cycle_duration, cd.avg_menstruation_duration)
         min_ovulation_window, max_ovulation_window = PredictionBuilder.predictOvulation(predicted_menstruation_start)
 
         cwp = CycleWindow(
