@@ -8,3 +8,14 @@ class CycleDetailsForm(forms.ModelForm):
         widgets = {
             "base_menstruation_date": forms.DateInput(attrs={"type": "date"})
         }
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+    
+    def save(self, commit=True):
+        obj = super().save(commit=False)
+        if self.user:
+            obj.user = self.user
+        if commit:
+            obj.save()
+        return obj
