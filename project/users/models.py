@@ -56,6 +56,10 @@ class StandardProfile(models.Model):
     profile_picture = models.ImageField(upload_to=userProfilePicturePath, blank=True)
 
     def save(self, *args, **kwargs):
+        if not self.is_configured:
+            cd = self.user.cycledetails
+            cd.delete()
+
         self.user.user_type = 'STANDARD'
         self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)
