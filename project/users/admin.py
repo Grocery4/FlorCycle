@@ -1,9 +1,16 @@
 # admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
+from .models import CustomUser, StandardProfile, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
 
 # Define inlines
+class StandardProfileInline(admin.StackedInline):
+    model = StandardProfile
+    can_delete = False
+    fk_name = 'user'
+    extra = 0
+
+
 class ModeratorProfileInline(admin.StackedInline):
     model = ModeratorProfile
     can_delete = False
@@ -33,7 +40,7 @@ class CustomUserAdmin(UserAdmin):
     ordering = ("email",)
     
     fieldsets = (
-        (None, {"fields": ("email", "password")}),
+        (None, {"fields": ("username", "email", "password")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
@@ -49,6 +56,8 @@ class CustomUserAdmin(UserAdmin):
         if not obj:
             return []
         inlines = []
+        if obj.user_type == 'STANDARD':
+            inlines = [StandardProfileInline(self.model, self.admin_site)]
         if obj.user_type == 'MODERATOR':
             inlines = [ModeratorProfileInline(self.model, self.admin_site)]
         elif obj.user_type == 'DOCTOR':
