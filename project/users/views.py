@@ -10,7 +10,7 @@ def standard_form(request):
     ctx = {}
     ctx['form'] = UserSignupForm()
     if request.method == 'POST':
-        form = UserSignupForm(request.POST)
+        form = UserSignupForm(request.POST, request.FILES)
         ctx['form'] = form
         if form.is_valid():
             form.save()

@@ -25,6 +25,9 @@ def activatePremiumSubscription(user):
     }
     premium.save()
 
+def userProfilePicturePath(instance, filename):
+    # upload to MEDIA_ROOT/profile_pictures/user_<id>/<filename>
+    return os.path.join('profile_pictures', f'user_{instance.user.id}', filename)
 
 #TODO - implement pfps, cycledata into standarduser,
 class CustomUser(AbstractUser):
@@ -46,6 +49,16 @@ class CustomUser(AbstractUser):
         default='STANDARD'
     )
 
+#TODO - test this mf class
+class StandardProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    is_configured = models.BooleanField(default=False)
+    profile_picture = models.ImageField(upload_to=userProfilePicturePath, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.user.user_type = 'STANDARD'
+        self.user.save(update_fields=['user_type'])
+        super().save(*args, **kwargs)
 
 class ModeratorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

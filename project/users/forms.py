@@ -1,12 +1,25 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.validators import FileExtensionValidator
-from .models import CustomUser, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
+from .models import CustomUser, StandardProfile, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
 
 class UserSignupForm(UserCreationForm):
-    class Meta:
+    profile_picture = forms.ImageField()
+    
+    class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = ['username', 'email']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.user_type = 'STANDARD'
+        if commit:
+            user.save()
+            StandardProfile.objects.create(
+                user=user,
+                profile_picture=self.cleaned_data["profile_picture"],
+            )
+        return user
 
 class ModeratorSignupForm(UserCreationForm):
     pass
@@ -17,7 +30,7 @@ class DoctorSignupForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('username', 'email')
+        fields = ['username', 'email']
 
     def clean_license_number(self):
         license_number = self.cleaned_data.get("license_number")
