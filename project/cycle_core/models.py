@@ -6,7 +6,7 @@ from datetime import timedelta
 
 # Create your models here.
 class CycleDetails(models.Model):
-    #TODO - add a user class to have one CycleDetails seed per user.
+    #TODO - test this mf
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     CYCLE_DURATION_CHOICES = [(i, f'{i} DAYS') for i in range(22, 45)]
