@@ -16,7 +16,7 @@ def homepage(request):
     
 @user_type_required(['STANDARD', 'PREMIUM'])
 def setup(request):
-    profile = request.user.standardprofile
+    profile = request.user.userprofile
     if profile.is_configured:
         return redirect('dashboard:homepage')
 
@@ -31,7 +31,7 @@ def setup(request):
             ctx['avg_menstruation_duration'] = form.cleaned_data['avg_menstruation_duration']
             
             # TODO fix this shi
-            profile = request.user.standardprofile
+            profile = request.user.userprofile
         
             cycle = form.save(commit=False)
             cycle.user = request.user  # link to logged-in user
