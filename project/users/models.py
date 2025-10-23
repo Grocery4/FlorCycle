@@ -53,14 +53,17 @@ class CustomUser(AbstractUser):
 class StandardProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_configured = models.BooleanField(default=False)
+    is_premium = models.BooleanField(default=False)
     profile_picture = models.ImageField(upload_to=userProfilePicturePath, blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.is_configured:
+        cycledetails = getattr(self.user, 'cycledetails', None)
+        
+        if cycledetails and not self.is_configured:
             cd = self.user.cycledetails
             cd.delete()
 
-        self.user.user_type = 'STANDARD'
+        self.user.user_type = 'PREMIUM' if self.is_premium else 'STANDARD'
         self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)
 

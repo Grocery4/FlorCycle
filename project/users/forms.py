@@ -4,7 +4,7 @@ from django.core.validators import FileExtensionValidator
 from .models import CustomUser, StandardProfile, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
 
 class UserSignupForm(UserCreationForm):
-    profile_picture = forms.ImageField()
+    profile_picture = forms.ImageField(required=False)
     
     class Meta(UserCreationForm.Meta):
         model = CustomUser
@@ -13,12 +13,8 @@ class UserSignupForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.user_type = 'STANDARD'
-        if commit:
-            user.save()
-            StandardProfile.objects.create(
-                user=user,
-                profile_picture=self.cleaned_data["profile_picture"],
-            )
+        user = super().save()
+
         return user
 
 class ModeratorSignupForm(UserCreationForm):

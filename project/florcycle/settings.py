@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'dashboard',
     'cycle_core',
     'calendar_core',
-    'users',
+    'users.apps.UsersConfig',
     'forum',
 ]
 
