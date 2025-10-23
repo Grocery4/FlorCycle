@@ -115,3 +115,14 @@ class CycleWindow(models.Model):
             f"Menstruation: from {self.menstruation_start} to {self.menstruation_end}, "
             f"Ovulation: from {self.min_ovulation_window} to {self.max_ovulation_window}"
         )
+    
+
+    
+# This class is used as a stats holder which will be dynamically updated by methods.
+# It's different from CycleDetails, which is a class used to generate the initial setup form
+# fillled by the user through UI.
+class CycleStats(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    avg_cycle_duration = models.FloatField(default=28)
+    avg_menstruation_duration = models.FloatField(default=5)
+    updated_at = models.DateTimeField(auto_now=True)
