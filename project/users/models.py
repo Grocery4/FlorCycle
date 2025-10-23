@@ -15,7 +15,8 @@ def doctorCvUploadPath(instance, filename):
     return os.path.join("doctors", "cv", filename)
 
 def activatePremiumSubscription(user):
-    premium, created = PremiumProfile.objects.get_or_create(user=user)
+    premium, created = UserProfile.objects.get_or_create(user=user)
+    premium.is_premium = True
     premium.subscription_status = "active"
     premium.payment_info = {
         "provider": "mockpay",
@@ -23,6 +24,7 @@ def activatePremiumSubscription(user):
         "amount": "9.99",
         "currency": "EUR"
     }
+    
     premium.save()
 
 def userProfilePicturePath(instance, filename):
@@ -53,8 +55,37 @@ class CustomUser(AbstractUser):
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_configured = models.BooleanField(default=False)
-    is_premium = models.BooleanField(default=False)
     profile_picture = models.ImageField(upload_to=userProfilePicturePath, blank=True)
+
+    is_premium = models.BooleanField(default=False)
+    
+    #Premium fields
+    PLAN_CHOICES = [
+        ('TRIAL', 'trial'),
+        ('MONTHLY', 'monthly'),
+        ('YEARLY', 'yearly')
+    ]
+
+    STATUS_CHOICES = [
+        ('ACTIVE', 'Active'),
+        ('EXPIRED', 'Expired'),
+        ('CANCELED', 'Canceled')
+    ]
+
+    payment_info = models.JSONField(blank=True, null=True, default=dict)
+    subscription_plan = models.CharField(
+        max_length=20,
+        choices=PLAN_CHOICES,
+        default='MONTHLY'
+    )
+    subscription_status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='ACTIVE'
+    )
+    start_date = models.DateField(auto_now_add=True)
+    end_date = models.DateField(blank=True, null=True)
+    auto_renew = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         cycledetails = getattr(self.user, 'cycledetails', None)
@@ -108,41 +139,5 @@ class PartnerProfile(models.Model):
 
     def save(self, *args, **kwargs):
         self.user.user_type = 'PARTNER'
-        self.user.save(update_fields=['user_type'])
-        super().save(*args, **kwargs)
-
-
-
-class PremiumProfile(models.Model):
-    PLAN_CHOICES = [
-        ('TRIAL', 'trial'),
-        ('MONTHLY', 'monthly'),
-        ('YEARLY', 'yearly')
-    ]
-
-    STATUS_CHOICES = [
-        ('ACTIVE', 'Active'),
-        ('EXPIRED', 'Expired'),
-        ('CANCELED', 'Canceled')
-    ]
-
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    payment_info = models.JSONField(default=dict)
-    subscription_plan = models.CharField(
-        max_length=20,
-        choices=PLAN_CHOICES,
-        default='MONTHLY'
-    )
-    subscription_status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default='ACTIVE'
-    )
-    start_date = models.DateField(auto_now_add=True)
-    end_date = models.DateField(blank=True, null=True)
-    auto_renew = models.BooleanField(default=False)
-
-    def save(self, *args, **kwargs):
-        self.user.user_type = 'PREMIUM'
         self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)

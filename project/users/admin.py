@@ -1,7 +1,7 @@
 # admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, UserProfile, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
+from .models import CustomUser, UserProfile, ModeratorProfile, DoctorProfile, PartnerProfile
 
 # Define inlines
 class UserProfileInline(admin.StackedInline):
@@ -28,10 +28,7 @@ class PartnerProfileInline(admin.StackedInline):
     fk_name = 'user'
     extra = 0
 
-class PremiumProfileInline(admin.StackedInline):
-    model = PremiumProfile
-    can_delete = False
-    extra = 0
+
 
 # Custom UserAdmin
 @admin.register(CustomUser)
@@ -64,6 +61,5 @@ class CustomUserAdmin(UserAdmin):
             inlines = [DoctorProfileInline(self.model, self.admin_site)]
         elif obj.user_type == 'PARTNER':
             inlines = [PartnerProfileInline(self.model, self.admin_site)]
-        elif obj.user_type == 'PREMIUM':
-            inlines = [PremiumProfileInline(self.model, self.admin_site)]
+
         return inlines
