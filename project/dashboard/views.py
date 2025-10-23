@@ -3,19 +3,16 @@ from django.contrib.auth.decorators import login_required
 
 from cycle_core.models import CycleDetails
 from cycle_core.forms import CycleDetailsForm
-from .services import user_type_required
+from .services import user_type_required, configured_required
 
 # FIXME - what if it's a PremiumProfile?
 
 
 # Create your views here.
 @user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
 def homepage(request):
-    profile = request.user.standardprofile
-    if profile.is_configured:
-        return render(request, 'dashboard/dashboard.html')
-    else:
-        return redirect('dashboard:setup_page')
+    return render(request, 'dashboard/dashboard.html')
     
 @user_type_required(['STANDARD', 'PREMIUM'])
 def setup(request):
@@ -45,3 +42,29 @@ def setup(request):
 
 
     return render(request, 'dashboard/setup.html', ctx)
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def settings(request):
+    ctx = {}
+    #TODO - fix this shi to accomodate premium users too
+    if request.method == 'GET':
+        ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, instance=request.user.cycledetails)
+    
+            # try to get the existing details, or None if not found
+
+    if request.method == 'POST':
+        try:
+            instance = request.user.cycledetails
+        except CycleDetails.DoesNotExist:
+            instance = None
+
+        cycle_details_form = CycleDetailsForm(request.POST, instance=instance, user=request.user)
+        if cycle_details_form.is_valid():
+            cycle_details_form.save()
+        
+    ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, instance=request.user.cycledetails)
+    
+    
+    return render(request, 'dashboard/settings.html', ctx)
+

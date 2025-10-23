@@ -3,7 +3,7 @@
 
 {% if request.user.is_authenticated %}
     <div class="top-bar">
-        <a href="" class="settings">settings button</a>
+        <a href="{% url 'dashboard:settings_page'%}" class="settings">settings button</a>
         <a href="" class="notification">notification button</a>
     </div>
 {% endif %}
