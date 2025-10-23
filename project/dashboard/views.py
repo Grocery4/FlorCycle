@@ -5,9 +5,6 @@ from cycle_core.models import CycleDetails
 from cycle_core.forms import CycleDetailsForm
 from .services import user_type_required, configured_required
 
-# FIXME - what if it's a PremiumProfile?
-
-
 # Create your views here.
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
@@ -46,7 +43,6 @@ def setup(request):
 @configured_required
 def settings(request):
     ctx = {}
-    #TODO - fix this shi to accomodate premium users too
     if request.method == 'GET':
         ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, instance=request.user.cycledetails)
     
