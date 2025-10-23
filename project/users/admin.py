@@ -1,11 +1,11 @@
 # admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, StandardProfile, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
+from .models import CustomUser, UserProfile, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
 
 # Define inlines
-class StandardProfileInline(admin.StackedInline):
-    model = StandardProfile
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
     can_delete = False
     fk_name = 'user'
     extra = 0
@@ -57,7 +57,7 @@ class CustomUserAdmin(UserAdmin):
             return []
         inlines = []
         if obj.user_type == 'STANDARD':
-            inlines = [StandardProfileInline(self.model, self.admin_site)]
+            inlines = [UserProfileInline(self.model, self.admin_site)]
         if obj.user_type == 'MODERATOR':
             inlines = [ModeratorProfileInline(self.model, self.admin_site)]
         elif obj.user_type == 'DOCTOR':

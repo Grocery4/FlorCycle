@@ -50,7 +50,7 @@ class CustomUser(AbstractUser):
     )
 
 #TODO - test this mf class
-class StandardProfile(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_configured = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)
