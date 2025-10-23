@@ -30,7 +30,6 @@ def setup(request):
             ctx['avg_cycle_duration'] = form.cleaned_data['avg_cycle_duration']
             ctx['avg_menstruation_duration'] = form.cleaned_data['avg_menstruation_duration']
             
-            # TODO fix this shi
             profile = request.user.userprofile
         
             cycle = form.save(commit=False)
@@ -51,8 +50,6 @@ def settings(request):
     if request.method == 'GET':
         ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, instance=request.user.cycledetails)
     
-            # try to get the existing details, or None if not found
-
     if request.method == 'POST':
         try:
             instance = request.user.cycledetails
