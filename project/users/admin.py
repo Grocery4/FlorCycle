@@ -53,7 +53,7 @@ class CustomUserAdmin(UserAdmin):
         if not obj:
             return []
         inlines = []
-        if obj.user_type == 'STANDARD':
+        if obj.user_type == 'STANDARD' or obj.user_type == 'PREMIUM':
             inlines = [UserProfileInline(self.model, self.admin_site)]
         if obj.user_type == 'MODERATOR':
             inlines = [ModeratorProfileInline(self.model, self.admin_site)]
