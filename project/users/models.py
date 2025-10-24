@@ -57,7 +57,7 @@ class CustomUser(AbstractUser):
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_configured = models.BooleanField(default=False)
-    profile_picture = models.ImageField(upload_to=userProfilePicturePath, blank=True)
+    profile_picture = models.ImageField(upload_to=userProfilePicturePath, default='profile_pictures/default/default_profile.jpg', blank=True)
 
     is_premium = models.BooleanField(default=False)
     
@@ -74,25 +74,45 @@ class UserProfile(models.Model):
         ('CANCELED', 'Canceled')
     ]
 
-    payment_info = models.JSONField(blank=True, null=True, default=dict)
+    payment_info = models.JSONField(
+        blank=True, 
+        null=True, 
+        default=None
+    )
     subscription_plan = models.CharField(
         max_length=20,
         choices=PLAN_CHOICES,
-        default='MONTHLY'
+        blank=True,
+        null=True,
+        default=None
     )
     subscription_status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='ACTIVE'
+        blank=True,
+        null=True,
+        default=None,
     )
-    start_date = models.DateField(auto_now_add=True)
-    end_date = models.DateField(blank=True, null=True)
-    auto_renew = models.BooleanField(default=False)
+    start_date = models.DateField(
+        blank=True, 
+        null=True,
+        default=None
+    )
+    end_date = models.DateField(
+        blank=True,
+        null=True, 
+        default=None
+    )
+    auto_renew = models.BooleanField(
+        blank=True,
+        null=True,
+        default=None
+    )
     
     #TODO - test method
     def clean(self):
         if not self.is_premium:
-            if self.subscription_plan != 'MONTHLY' or self.subscription_status != 'ACTIVE' or self.auto_renew:
+            if self.subscription_plan or self.subscription_status or self.auto_renew:
                 raise ValidationError(("Premium subscription fields can only be set if user is premium."))
             
             if self.payment_info:
@@ -102,9 +122,12 @@ class UserProfile(models.Model):
         self.full_clean()
 
         cycledetails = getattr(self.user, 'cycledetails', None)
-        if cycledetails and not self.is_configured:
+        if not self.is_configured and cycledetails:
             cd = self.user.cycledetails
             cd.delete()
+
+        elif self.is_configured and not cycledetails:
+            self.is_configured = False
 
         self.user.user_type = 'PREMIUM' if self.is_premium else 'STANDARD'
         self.user.save(update_fields=['user_type'])
