@@ -15,7 +15,7 @@ def doctorCvUploadPath(instance, filename):
     return os.path.join("doctors", "cv", filename)
 
 def activatePremiumSubscription(user):
-    premium, created = UserProfile.objects.get_or_create(user=user)
+    premium = UserProfile.objects.get(user=user)
     premium.is_premium = True
     premium.subscription_status = "active"
     premium.payment_info = {
@@ -24,7 +24,7 @@ def activatePremiumSubscription(user):
         "amount": "9.99",
         "currency": "EUR"
     }
-    
+
     premium.save()
 
 def userProfilePicturePath(instance, filename):
