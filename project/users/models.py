@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 
 import os
@@ -28,7 +29,8 @@ def activatePremiumSubscription(user):
     premium.save()
 
 def userProfilePicturePath(instance, filename):
-    # upload to MEDIA_ROOT/profile_pictures/user_<id>/<filename>
+    ext = filename.split('.')[-1]
+    filename = f"user_{instance.user.id}_{uuid.uuid4().hex}.{ext}"
     return os.path.join('profile_pictures', f'user_{instance.user.id}', filename)
 
 #TODO - implement pfps, cycledata into standarduser,
@@ -86,10 +88,20 @@ class UserProfile(models.Model):
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(blank=True, null=True)
     auto_renew = models.BooleanField(default=False)
+    
+    #TODO - test method
+    def clean(self):
+        if not self.is_premium:
+            if self.subscription_plan != 'MONTHLY' or self.subscription_status != 'ACTIVE' or self.auto_renew:
+                raise ValidationError(("Premium subscription fields can only be set if user is premium."))
+            
+            if self.payment_info:
+                raise ValidationError(("Payment info should be empty for non-premium users."))
 
     def save(self, *args, **kwargs):
+        self.full_clean()
+
         cycledetails = getattr(self.user, 'cycledetails', None)
-        
         if cycledetails and not self.is_configured:
             cd = self.user.cycledetails
             cd.delete()

@@ -134,7 +134,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 # Media file location
-MEDIA_ROOT = 'media/'
+MEDIA_ROOT = 'project/media/'
 MEDIA_URL = '/media/'
 
 # Redirect to dashboard after login

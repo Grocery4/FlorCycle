@@ -9,11 +9,17 @@ class UserSignupForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = ['username', 'email']
-
+    
     def save(self, commit=True):
         user = super().save(commit=False)
         user.user_type = 'STANDARD'
-        user = super().save()
+        if commit:
+            user.save()
+
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            if self.cleaned_data.get('profile_picture'):
+                profile.profile_picture = self.cleaned_data['profile_picture']
+            profile.save()
 
         return user
 
