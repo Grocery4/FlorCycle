@@ -3,22 +3,29 @@
 
 {% block extra_head %}<link rel="stylesheet" href={% static "dashboard/css/settings.css" %}>{% endblock extra_head %}
 {% block title %}Settings{% endblock title %}
+
 {% block content %}
-    <div class="settings-wrapper">
-        <div class="cycle-details">
-            <form method='post'>
-                {% csrf_token %}
-                {{ cycle_details_form.as_p }}
-                <button type="submit">Save</button>
-            </form>
+    <div class="settings-content-wrapper">
+        <div class="settings-top-bar">
+            {% include "dashboard/settings_topbar.html" %}
         </div>
         
-        <div class="premium-form">
-            {% if not user.userprofile.is_premium %}
-                <button>Get premium</button>
-            {% else %}
-                You're premium!
-            {% endif %}
+        <div class="settings-sections">
+            <div class="cycle-details">
+                <form method='post'>
+                    {% csrf_token %}
+                    {{ cycle_details_form.as_p }}
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+            
+            <div class="premium-form">
+                {% if not user.userprofile.is_premium %}
+                    <button>Get premium</button>
+                {% else %}
+                    You're premium!
+                {% endif %}
+            </div>
         </div>
     </div>
 
