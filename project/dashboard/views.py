@@ -47,20 +47,22 @@ def setup(request):
 @configured_required
 def settings(request):
     ctx = {}
-    if request.method == 'GET':
-        ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, instance=request.user.cycledetails)
 
     if request.method == 'POST':
+        # checks whether to render user values or default values in case cycledetails is instantiated.
+        # it's a redundant check, since settings page cannot be accessed if there is no cycledetails object
         try:
             instance = request.user.cycledetails
         except CycleDetails.DoesNotExist:
             instance = None
 
-        cycle_details_form = CycleDetailsForm(request.POST, instance=instance, user=request.user)
+        # retrieve form data
+        cycle_details_form = CycleDetailsForm(request.POST, mode='settings', user=request.user, instance=instance)
         if cycle_details_form.is_valid():
             cycle_details_form.save()
-        
-    ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, instance=request.user.cycledetails)
+    
+    # display user's form data
+    ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, mode='settings', instance=request.user.cycledetails)
     
     
     return render(request, 'dashboard/settings.html', ctx)
