@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 
 import os
@@ -15,7 +16,8 @@ def doctorCvUploadPath(instance, filename):
     return os.path.join("doctors", "cv", filename)
 
 def activatePremiumSubscription(user):
-    premium, created = PremiumProfile.objects.get_or_create(user=user)
+    premium = UserProfile.objects.get(user=user)
+    premium.is_premium = True
     premium.subscription_status = "active"
     premium.payment_info = {
         "provider": "mockpay",
@@ -23,10 +25,12 @@ def activatePremiumSubscription(user):
         "amount": "9.99",
         "currency": "EUR"
     }
+
     premium.save()
 
 def userProfilePicturePath(instance, filename):
-    # upload to MEDIA_ROOT/profile_pictures/user_<id>/<filename>
+    ext = filename.split('.')[-1]
+    filename = f"user_{instance.user.id}_{uuid.uuid4().hex}.{ext}"
     return os.path.join('profile_pictures', f'user_{instance.user.id}', filename)
 
 #TODO - implement pfps, cycledata into standarduser,
@@ -50,17 +54,88 @@ class CustomUser(AbstractUser):
     )
 
 #TODO - test this mf class
-class StandardProfile(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_configured = models.BooleanField(default=False)
-    profile_picture = models.ImageField(upload_to=userProfilePicturePath, blank=True)
+    profile_picture = models.ImageField(upload_to=userProfilePicturePath, default='profile_pictures/default/default_profile.jpg', blank=True)
 
+    is_premium = models.BooleanField(default=False)
+    
+    #Premium fields
+    PLAN_CHOICES = [
+        ('TRIAL', 'trial'),
+        ('MONTHLY', 'monthly'),
+        ('YEARLY', 'yearly')
+    ]
+
+    STATUS_CHOICES = [
+        ('ACTIVE', 'Active'),
+        ('EXPIRED', 'Expired'),
+        ('CANCELED', 'Canceled')
+    ]
+
+    payment_info = models.JSONField(
+        blank=True, 
+        null=True, 
+        default=None
+    )
+    subscription_plan = models.CharField(
+        max_length=20,
+        choices=PLAN_CHOICES,
+        blank=True,
+        null=True,
+        default=None
+    )
+    subscription_status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        blank=True,
+        null=True,
+        default=None,
+    )
+    start_date = models.DateField(
+        blank=True, 
+        null=True,
+        default=None
+    )
+    end_date = models.DateField(
+        blank=True,
+        null=True, 
+        default=None
+    )
+    auto_renew = models.BooleanField(
+        blank=True,
+        null=True,
+        default=None
+    )
+    
+    #TODO - test method
+    def clean(self):
+        if not self.is_premium:
+            if self.subscription_plan or self.subscription_status or self.auto_renew:
+                raise ValidationError(("Premium subscription fields can only be set if user is premium."))
+            
+            if self.payment_info:
+                raise ValidationError(("Payment info should be empty for non-premium users."))
+    #TODO - test method for premium fields
     def save(self, *args, **kwargs):
-        if not self.is_configured:
+        if not self.is_premium:
+            self.subscription_plan = None
+            self.subscription_status = None
+            self.auto_renew = None
+            self.payment_info = None
+
+        self.full_clean()
+
+        cycledetails = getattr(self.user, 'cycledetails', None)
+        if not self.is_configured and cycledetails:
             cd = self.user.cycledetails
             cd.delete()
 
-        self.user.user_type = 'STANDARD'
+        elif self.is_configured and not cycledetails:
+            self.is_configured = False
+
+        self.user.user_type = 'PREMIUM' if self.is_premium else 'STANDARD'
         self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)
 
@@ -105,41 +180,5 @@ class PartnerProfile(models.Model):
 
     def save(self, *args, **kwargs):
         self.user.user_type = 'PARTNER'
-        self.user.save(update_fields=['user_type'])
-        super().save(*args, **kwargs)
-
-
-
-class PremiumProfile(models.Model):
-    PLAN_CHOICES = [
-        ('TRIAL', 'trial'),
-        ('MONTHLY', 'monthly'),
-        ('YEARLY', 'yearly')
-    ]
-
-    STATUS_CHOICES = [
-        ('ACTIVE', 'Active'),
-        ('EXPIRED', 'Expired'),
-        ('CANCELED', 'Canceled')
-    ]
-
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    payment_info = models.JSONField(default=dict)
-    subscription_plan = models.CharField(
-        max_length=20,
-        choices=PLAN_CHOICES,
-        default='MONTHLY'
-    )
-    subscription_status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default='ACTIVE'
-    )
-    start_date = models.DateField(auto_now_add=True)
-    end_date = models.DateField(blank=True, null=True)
-    auto_renew = models.BooleanField(default=False)
-
-    def save(self, *args, **kwargs):
-        self.user.user_type = 'PREMIUM'
         self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)

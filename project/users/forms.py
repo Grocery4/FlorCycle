@@ -1,24 +1,26 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.validators import FileExtensionValidator
-from .models import CustomUser, StandardProfile, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
+from .models import CustomUser, UserProfile, ModeratorProfile, DoctorProfile, PartnerProfile
 
 class UserSignupForm(UserCreationForm):
-    profile_picture = forms.ImageField()
+    profile_picture = forms.ImageField(required=False)
     
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = ['username', 'email']
-
+    
     def save(self, commit=True):
         user = super().save(commit=False)
         user.user_type = 'STANDARD'
         if commit:
             user.save()
-            StandardProfile.objects.create(
-                user=user,
-                profile_picture=self.cleaned_data["profile_picture"],
-            )
+
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            if self.cleaned_data.get('profile_picture'):
+                profile.profile_picture = self.cleaned_data['profile_picture']
+            profile.save()
+
         return user
 
 class ModeratorSignupForm(UserCreationForm):
@@ -55,5 +57,8 @@ class DoctorSignupForm(UserCreationForm):
 class PartnerSignupForm(UserCreationForm):
     pass
 
-class PremiumSignupForm(UserCreationForm):
+class PremiumDataForm(UserCreationForm):
     pass
+    #TODO - maybe PaymentDataForm is a better name
+    #TODO - would it be better to create a separate object with 1:1 rel
+    #TODO - with UserProfile?

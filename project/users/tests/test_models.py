@@ -5,13 +5,15 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
 
-from users.models import CustomUser, ModeratorProfile, DoctorProfile, PartnerProfile, PremiumProfile
+from users.models import CustomUser, UserProfile, ModeratorProfile, DoctorProfile, PartnerProfile
 
 
 class UserProfilesTestCase(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(username="testuser", password="pass123", email="setupemail@example.com")
         self.user1 = CustomUser.objects.create_user(username="testuser1", password="pass123", email="setupemail1@example.com")
+        self.user2 = CustomUser.objects.create_user(username="testuser2", password="pass123", email="setupemail2@example.com")
+        self.user3 = CustomUser.objects.create_user(username="testuser3", password="pass123", email="setupemail3@example.com")
 
     def test_moderator_profile_sets_flag_and_fields(self):
         moderator_profile = ModeratorProfile.objects.create(
@@ -107,7 +109,9 @@ class UserProfilesTestCase(TestCase):
             )
 
     def test_premium_profile_sets_flag_and_defaults(self):
-        premium_profile = PremiumProfile.objects.create(user=self.user)
+        premium_profile = UserProfile.objects.get(user=self.user)
+        premium_profile.is_premium = True
+        premium_profile.save()
         self.user.refresh_from_db()
         self.assertEqual(self.user.user_type, 'PREMIUM')
         self.assertEqual(premium_profile.subscription_plan, "MONTHLY")
@@ -117,13 +121,14 @@ class UserProfilesTestCase(TestCase):
 
     def test_premium_profile_end_date_and_auto_renew(self):
         end_date = timezone.now().date() + timedelta(days=30)
-        premium_profile = PremiumProfile.objects.create(
-            user=self.user,
-            subscription_plan="YEARLY",
-            subscription_status="EXPIRED",
-            end_date=end_date,
-            auto_renew=True
-        )
+        premium_profile = UserProfile.objects.get(user=self.user)
+        premium_profile.is_premium=True
+        premium_profile.subscription_plan="YEARLY"
+        premium_profile.subscription_status="EXPIRED"
+        premium_profile.end_date=end_date
+        premium_profile.auto_renew=True
+        premium_profile.save()
+        
         self.assertEqual(premium_profile.subscription_plan, "YEARLY")
         self.assertEqual(premium_profile.subscription_status, "EXPIRED")
         self.assertTrue(premium_profile.auto_renew)

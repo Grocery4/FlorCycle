@@ -2,7 +2,7 @@ from django.test import TestCase
 
 import os
 
-from users.models import CustomUser, PremiumProfile, doctorCvUploadPath, activatePremiumSubscription
+from users.models import CustomUser, UserProfile, doctorCvUploadPath, activatePremiumSubscription
 
 
 class ServicesTestCase(TestCase):
@@ -31,25 +31,25 @@ class ServicesTestCase(TestCase):
         self.assertEqual(len(uuid_part), 32)  # UUID4 hex string length
 
     def test_activate_premium_subscription_creates_new_profile(self):
-        # No profile exists initially
-        self.assertFalse(PremiumProfile.objects.filter(user=self.user).exists())
-
+        user_profile = UserProfile.objects.get(user=self.user)
+        self.assertFalse(user_profile.is_premium)
         activatePremiumSubscription(self.user)
-        premium = PremiumProfile.objects.get(user=self.user)
+        user_profile.refresh_from_db()
 
-        self.assertEqual(premium.subscription_status.lower(), "active")
-        self.assertEqual(premium.payment_info["provider"], "mockpay")
-        self.assertEqual(premium.payment_info["subscription_id"], f"sub_{self.user.id}")
-        self.assertEqual(premium.payment_info["amount"], "9.99")
-        self.assertEqual(premium.payment_info["currency"], "USD")
+        self.assertTrue(user_profile.is_premium)
+        self.assertEqual(user_profile.user.user_type, 'PREMIUM')
+
+        self.assertEqual(user_profile.subscription_status.lower(), "active")
+        self.assertEqual(user_profile.payment_info["provider"], "mockpay")
+        self.assertEqual(user_profile.payment_info["subscription_id"], f"sub_{self.user.id}")
+        self.assertEqual(user_profile.payment_info["amount"], "9.99")
+        self.assertEqual(user_profile.payment_info["currency"], "EUR")
 
     def test_activate_premium_subscription_updates_existing_profile(self):
         # Create a premium profile with different status
-        premium = PremiumProfile.objects.create(
-            user=self.user,
-            subscription_status="EXPIRED",
-            payment_info={}
-        )
+        premium = UserProfile.objects.get(user=self.user)
+        premium.subscription_status="EXPIRED",
+        premium.payment_info={}
 
         activatePremiumSubscription(self.user)
         premium.refresh_from_db()

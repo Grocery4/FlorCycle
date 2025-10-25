@@ -21,7 +21,7 @@ def configured_required(view_func):
         if not user.is_authenticated:
             return redirect('login')
 
-        profile = getattr(user, 'standardprofile', None) or getattr(user, 'premiumprofile', None)
+        profile = getattr(user, 'userprofile', None)
         if not profile or not profile.is_configured:
             return redirect('dashboard:setup_page')
 
