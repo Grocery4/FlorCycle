@@ -1,6 +1,8 @@
 from functools import wraps
 from django.shortcuts import redirect
 
+from cycle_core.services import PredictionBuilder
+
 def user_type_required(allowed_types, redirect_url='login'):
     def decorator(view_func):
         @wraps(view_func)
@@ -28,3 +30,8 @@ def configured_required(view_func):
         return view_func(request, *args, **kwargs)
 
     return _wrapped_view
+
+#FIXME - dashboard.views.homepage
+# should render next_prediction based on last CycleWindow, not setup CycleDetails.
+def get_next_prediction(cycle_details):
+    return PredictionBuilder.generatePrediction(cycle_details)

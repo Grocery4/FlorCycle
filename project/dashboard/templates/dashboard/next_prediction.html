@@ -1,0 +1,6 @@
+{% if next_prediction %}
+    <b>Next menstruation:</b>
+    <p>from {{ next_prediction.menstruation_start }} to {{ next_prediction.menstruation_end }}</p>
+    <b>Next ovulation:</b>
+    <p>from {{ next_prediction.min_ovulation_window }} to {{ next_prediction.max_ovulation_window }}</p>
+{% endif %}
