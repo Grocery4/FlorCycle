@@ -117,8 +117,14 @@ class UserProfile(models.Model):
             
             if self.payment_info:
                 raise ValidationError(("Payment info should be empty for non-premium users."))
-
+    #TODO - test method for premium fields
     def save(self, *args, **kwargs):
+        if not self.is_premium:
+            self.subscription_plan = None
+            self.subscription_status = None
+            self.auto_renew = None
+            self.payment_info = None
+
         self.full_clean()
 
         cycledetails = getattr(self.user, 'cycledetails', None)
