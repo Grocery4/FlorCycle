@@ -16,6 +16,7 @@ def show_form(request):
             cd = form.save(commit=False)
             predictions = PredictionBuilder.generateMultiplePredictions(cd, 3)
 
+            ctx['form'] = form
             ctx['predictions'] = predictions
             ctx['calendars'] = generateCalendars(predictions)
 
