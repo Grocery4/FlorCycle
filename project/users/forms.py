@@ -57,5 +57,8 @@ class DoctorSignupForm(UserCreationForm):
 class PartnerSignupForm(UserCreationForm):
     pass
 
-class PremiumSignupForm(UserCreationForm):
+class PremiumDataForm(UserCreationForm):
     pass
+    #TODO - maybe PaymentDataForm is a better name
+    #TODO - would it be better to create a separate object with 1:1 rel
+    #TODO - with UserProfile?

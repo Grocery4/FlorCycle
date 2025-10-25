@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from cycle_core.models import CycleDetails
 from cycle_core.forms import CycleDetailsForm
+from users.forms import PremiumDataForm
 from .services import user_type_required, configured_required
 
 # Create your views here.
@@ -45,7 +46,7 @@ def settings(request):
     ctx = {}
     if request.method == 'GET':
         ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, instance=request.user.cycledetails)
-    
+
     if request.method == 'POST':
         try:
             instance = request.user.cycledetails
