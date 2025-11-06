@@ -67,6 +67,7 @@ class CycleDetails(models.Model):
 
 
 class CycleWindow(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     menstruation_start = models.DateField(
         blank=False,
@@ -85,6 +86,8 @@ class CycleWindow(models.Model):
     max_ovulation_window = models.DateField(
         blank=False,
     )
+
+    is_prediction = models.BooleanField(default=True)
 
     def getMenstruationDatesAsList(self):
         if self.menstruation_start is None or self.menstruation_end is None:
