@@ -12,7 +12,8 @@ class PredictionBuilder():
             menstruation_start=predicted_menstruation_start,
             menstruation_end=predicted_menstruation_end,
             min_ovulation_window=min_ovulation_window,
-            max_ovulation_window=max_ovulation_window
+            max_ovulation_window=max_ovulation_window,
+            is_prediction = True
         )
         return cwp
 
@@ -45,7 +46,8 @@ class PredictionBuilder():
                 menstruation_start=predicted_menstruation_start,
                 menstruation_end=predicted_menstruation_end,
                 min_ovulation_window=predicted_ovulation_start,
-                max_ovulation_window=predicted_ovulation_end
+                max_ovulation_window=predicted_ovulation_end,
+                is_prediction = True
             )
 
             prediction_list.append(cw)

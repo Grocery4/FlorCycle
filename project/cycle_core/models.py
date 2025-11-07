@@ -44,7 +44,9 @@ class CycleDetails(models.Model):
             menstruation_start=self.base_menstruation_date,
             menstruation_end=self.base_menstruation_date + timedelta(days=self.avg_menstruation_duration-1),
             min_ovulation_window=self.base_menstruation_date + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY),
-            max_ovulation_window=self.base_menstruation_date + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
+            max_ovulation_window=self.base_menstruation_date + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY),
+            is_prediction = False
+
         )
         
         return cw
