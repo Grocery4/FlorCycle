@@ -51,25 +51,13 @@ class CycleDetails(models.Model):
         
         return cw
     
-    #TODO - implement methods
-    # external function could pass last x=12 cycle/menstruation durations
-    # and make an average of those durations
-    # if total_entry_count % x == 0: take last x logs
-
-    # these methods are strictly accessible by logged users.
-    def updateAverageCycleDuration(self):
-        pass
-
-    def updateAverageMenstruationDuration(self):
-        pass
-
     def __str__(self):
         return f'last menstruation: {self.base_menstruation_date}\n average cycle duration:{self.avg_cycle_duration}\n average menstruation duration:{self.avg_menstruation_duration}'
 
 
 
 class CycleWindow(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     menstruation_start = models.DateField(
         blank=False,
@@ -131,3 +119,15 @@ class CycleStats(models.Model):
     avg_cycle_duration = models.FloatField(default=28)
     avg_menstruation_duration = models.FloatField(default=5)
     updated_at = models.DateTimeField(auto_now=True)
+
+    #TODO - implement methods
+    # external function could pass last x=12 cycle/menstruation durations
+    # and make an average of those durations
+    # if total_entry_count % x == 0: take last x logs
+
+    # these methods are strictly accessible by logged users.
+    def updateAverageCycleDuration(self):
+        pass
+
+    def updateAverageMenstruationDuration(self):
+        pass
