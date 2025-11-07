@@ -69,7 +69,7 @@ class CycleDetails(models.Model):
 
 
 class CycleWindow(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     menstruation_start = models.DateField(
         blank=False,
