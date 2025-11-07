@@ -34,4 +34,8 @@ def configured_required(view_func):
 #FIXME - dashboard.views.homepage
 # should render next_prediction based on last CycleWindow, not setup CycleDetails.
 def get_next_prediction(cycle_details):
-    return PredictionBuilder.generatePrediction(cycle_details)
+    return PredictionBuilder.generatePrediction(
+        cycle_details.base_menstruation_date,
+        cycle_details.avg_cycle_duration,
+        cycle_details.avg_menstruation_duration,
+    )

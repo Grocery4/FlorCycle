@@ -39,7 +39,11 @@ class TestPredictionBuilder(TestCase):
         self.assertEqual(end, expected_end)
 
     def test_generate_prediction(self):
-        cwp = PredictionBuilder.generatePrediction(self.cd)
+        cwp = PredictionBuilder.generatePrediction(
+            self.cd.base_menstruation_date,
+            self.cd.avg_cycle_duration,
+            self.cd.avg_menstruation_duration,
+        )
         # Expected menstruation window
         expected_menstruation_start = self.base_menstruation_date + timedelta(days=self.avg_cycle_duration)
         expected_menstruation_end = expected_menstruation_start + timedelta(days=self.avg_menstruation_duration-1)
