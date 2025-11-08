@@ -3,6 +3,7 @@ from .models import CycleDetails, CycleWindow, CycleStats
 from datetime import datetime, timedelta, date
 
 #TODO - test this mf
+# This should be the 
 def generatePredictionBasedOnLogCount(user, threshold = 6):
     stats = user.cyclestats
 
@@ -14,6 +15,11 @@ def generatePredictionBasedOnLogCount(user, threshold = 6):
             predictions = PredictionBuilder.generateMultiplePredictions(stats)
 
         return predictions
+
+    # Redundant raise, should not happen
+    raise ValueError('CycleStats not found.')
+
+
 
 class PredictionBuilder():
     @staticmethod
