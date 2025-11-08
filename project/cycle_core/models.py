@@ -120,6 +120,10 @@ class CycleStats(models.Model):
     avg_menstruation_duration = models.FloatField(default=5)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def log_count(self):
+        return CycleWindow.objects.filter(user=self.user, is_prediction=False).count()
+
     #TODO - implement methods
     # external function could pass last x=12 cycle/menstruation durations
     # and make an average of those durations
