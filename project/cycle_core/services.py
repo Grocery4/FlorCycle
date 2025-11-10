@@ -1,33 +1,91 @@
-from .models import CycleDetails, CycleWindow, CycleStats
+from django.conf import settings
 
+from .models import CycleDetails, CycleWindow, CycleStats, MIN_LOG_FOR_STATS
 from datetime import datetime, timedelta, date
+import statistics
 
 #TODO - test this mf
-# This should be the 
-def generatePredictionBasedOnLogCount(user, threshold = 6):
+def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
     stats = user.cyclestats
-
-    # If stats exists   
+    cycledetails = user.cycledetails
+    
     if stats:
-        if stats.log_count < threshold:
-            predictions = PredictionBuilder.generateMultiplePredictions(user.cycledetails)
-        elif stats.log_count >= threshold:
-            predictions = PredictionBuilder.generateMultiplePredictions(stats)
+        if stats.log_count >= threshold:
+            predictions = PredictionBuilder.generateMultiplePredictions(stats, user=user)
+        elif stats.log_count < threshold:
+            predictions = PredictionBuilder.generateMultiplePredictions(cycledetails, user=user)
 
         return predictions
 
-    # Redundant raise, should not happen
-    raise ValueError('CycleStats not found.')
+    elif cycledetails:
+        return PredictionBuilder.generateMultiplePredictions(cycledetails)
+    
+    raise ValueError('CycleStats and CycleDetails not found.')
 
 
+def updateCycleStats(cs: CycleStats):
+        user = cs.user
+        if user:
+            logs = CycleWindow.objects.filter(user=user, is_prediction=False)
+        
+            if logs.count() <= MIN_LOG_FOR_STATS:
+                return
+        
+            # compute avg cycle duration and menstruation duration from last 6 logs
+            # foreach CycleWindow compute
+            #   timedelta between menstruation_start and menstruation_end (inclusive)
+            #   timedelta between menstruation_start and menstruation_start of next CycleWindow
+
+            recent_windows = list(logs.order_by('-menstruation_start')[:6])  # newest first
+            if not recent_windows:
+                return
+
+            # work in chronological order (oldest -> newest)
+            recent_windows.reverse()
+
+            menstruation_lengths = []
+            cycle_lengths = []
+
+            for idx, cw in enumerate(recent_windows):
+                start = cw.menstruation_start
+                end = cw.menstruation_end
+
+                # normalize possible datetime -> date (subtraction works for both)
+                if isinstance(start, datetime):
+                    start = start.date()
+                if isinstance(end, datetime):
+                    end = end.date()
+
+                # menstruation duration: inclusive days (end - start + 1)
+                men_days = (end - start).days + 1
+                if men_days > 0:
+                    menstruation_lengths.append(men_days)
+
+                # cycle length: days between this start and next start
+                if idx < len(recent_windows) - 1:
+                    next_start = recent_windows[idx + 1].menstruation_start
+                    if isinstance(next_start, datetime):
+                        next_start = next_start.date()
+                    cycle_days = (next_start - start).days
+                    if cycle_days > 0:
+                        cycle_lengths.append(cycle_days)
+
+            # update cyclestats values (round to nearest int)
+            if cycle_lengths:
+                cs.avg_cycle_duration = int(round(statistics.mean(cycle_lengths)))
+            if menstruation_lengths:
+                cs.avg_menstruation_duration = int(round(statistics.mean(menstruation_lengths)))
+
+            cs.save()
 
 class PredictionBuilder():
     @staticmethod
-    def generatePrediction(base_menstruation_date: date, avg_cycle_duration: int, avg_menstruation_duration: int) -> CycleWindow:
+    def generatePrediction(base_menstruation_date: date, avg_cycle_duration: int, avg_menstruation_duration: int, user = None) -> CycleWindow:
         predicted_menstruation_start, predicted_menstruation_end = PredictionBuilder.predictMenstruation(base_menstruation_date, avg_cycle_duration, avg_menstruation_duration)
         min_ovulation_window, max_ovulation_window = PredictionBuilder.predictOvulation(predicted_menstruation_start)
 
         cwp = CycleWindow(
+            user=user,
             menstruation_start=predicted_menstruation_start,
             menstruation_end=predicted_menstruation_end,
             min_ovulation_window=min_ovulation_window,
@@ -51,7 +109,7 @@ class PredictionBuilder():
         return(ovulation_start, ovulation_end)
 
     @staticmethod
-    def generateMultiplePredictions(source, times: int = 3) -> list:
+    def generateMultiplePredictions(source, times: int = 3, user = None) -> list:
         prediction_list = []
 
         # Normalize to an initial CycleWindow and avg values
@@ -82,11 +140,10 @@ class PredictionBuilder():
             raise TypeError('source must be a CycleDetails or CycleStats instance')
 
 
-        prediction_list.append(initial_cw)
-
-        for i in range(1, times):
-            previous_cw = prediction_list[i - 1]
-            cw = PredictionBuilder.generatePrediction(previous_cw.menstruation_start, avg_cycle, avg_menstruation)
+        current_start = initial_cw.menstruation_start
+        for i in range(times):
+            cw = PredictionBuilder.generatePrediction(current_start, avg_cycle, avg_menstruation, user=user)
             prediction_list.append(cw)
+            current_start = cw.menstruation_start
 
         return prediction_list
