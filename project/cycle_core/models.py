@@ -5,6 +5,9 @@ from django.conf import settings
 from datetime import timedelta
 
 # Create your models here.
+
+MIN_LOG_FOR_STATS = 6
+
 class CycleDetails(models.Model):
     #TODO - test this mf
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
@@ -116,22 +119,8 @@ class CycleWindow(models.Model):
 # fillled by the user through UI.
 class CycleStats(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    avg_cycle_duration = models.FloatField(default=28)
-    avg_menstruation_duration = models.FloatField(default=5)
+    avg_cycle_duration = models.IntegerField(default=28)
+    avg_menstruation_duration = models.IntegerField(default=5)
     updated_at = models.DateTimeField(auto_now=True)
 
-    @property
-    def log_count(self):
-        return CycleWindow.objects.filter(user=self.user, is_prediction=False).count()
-
-    #TODO - implement methods
-    # external function could pass last x=12 cycle/menstruation durations
-    # and make an average of those durations
-    # if total_entry_count % x == 0: take last x logs
-
-    # these methods are strictly accessible by logged users.
-    def updateAverageCycleDuration(self):
-        pass
-
-    def updateAverageMenstruationDuration(self):
-        pass
+    log_count = models.PositiveIntegerField(default=0)
