@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, date
 import statistics
 
 #TODO - test this mf
+# authenticated users only
 def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
     stats = user.cyclestats
     cycledetails = user.cycledetails
@@ -17,8 +18,9 @@ def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
 
         return predictions
 
+    #should never get in this branch, it's a fall-back in case cyclestats were not to exist for some reason
     elif cycledetails:
-        return PredictionBuilder.generateMultiplePredictions(cycledetails)
+        return PredictionBuilder.generateMultiplePredictions(cycledetails, user)
     
     raise ValueError('CycleStats and CycleDetails not found.')
 
@@ -27,8 +29,7 @@ def updateCycleStats(cs: CycleStats):
         user = cs.user
         if user:
             logs = CycleWindow.objects.filter(user=user, is_prediction=False)
-        
-            if logs.count() <= MIN_LOG_FOR_STATS:
+            if cs.log_count < MIN_LOG_FOR_STATS:
                 return
         
             # compute avg cycle duration and menstruation duration from last 6 logs
@@ -71,12 +72,20 @@ def updateCycleStats(cs: CycleStats):
                         cycle_lengths.append(cycle_days)
 
             # update cyclestats values (round to nearest int)
+            updated = False
             if cycle_lengths:
-                cs.avg_cycle_duration = int(round(statistics.mean(cycle_lengths)))
+                new_avg_cycle = int(round(statistics.mean(cycle_lengths)))
+                if new_avg_cycle != cs.avg_cycle_duration:
+                    cs.avg_cycle_duration = new_avg_cycle
+                    updated = True
             if menstruation_lengths:
-                cs.avg_menstruation_duration = int(round(statistics.mean(menstruation_lengths)))
+                new_avg_men = int(round(statistics.mean(menstruation_lengths)))
+                if new_avg_men != cs.avg_menstruation_duration:
+                    cs.avg_menstruation_duration = new_avg_men
+                    updated = True
 
-            cs.save()
+            if updated:
+                cs.save(update_fields=['avg_cycle_duration', 'avg_menstruation_duration'])
 
 class PredictionBuilder():
     @staticmethod
@@ -116,11 +125,11 @@ class PredictionBuilder():
         if isinstance(source, CycleDetails):
             cd = source
             
-            last_real_cw = None
+            latest_real_cw = None
             if user:
-                last_real_cw = CycleWindow.objects.filter(user=user, is_prediction=False).order_by('-menstruation_start').first()
+                latest_real_cw = CycleWindow.objects.filter(user=user, is_prediction=False).order_by('-menstruation_start').first()
             
-            initial_cw = last_real_cw or cd.asCycleWindow()
+            initial_cw = latest_real_cw or cd.asCycleWindow()
 
             avg_cycle = cd.avg_cycle_duration
             avg_menstruation = cd.avg_menstruation_duration
@@ -133,12 +142,9 @@ class PredictionBuilder():
                 raise ValueError('CycleStats provided but related CycleDetails (user.cycledetails) not found.')
 
             # Prefer the most recent CycleWindow for the user (chronological by menstruation_start).
-            latest_cw = CycleWindow.objects.filter(user=stats.user).order_by('-menstruation_start').first()
-            if latest_cw is not None:
-                initial_cw = latest_cw
-            else:
-                # Fallback to initial CycleWindow generated from CycleDetails
-                initial_cw = cd.asCycleWindow()
+            latest_real_cw = CycleWindow.objects.filter(user=stats.user, is_prediction=False).order_by('-menstruation_start').first()
+
+            initial_cw = latest_real_cw or cd.asCycleWindow()
 
             avg_cycle = stats.avg_cycle_duration
             avg_menstruation = stats.avg_menstruation_duration
