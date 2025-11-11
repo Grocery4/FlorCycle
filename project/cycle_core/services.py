@@ -20,7 +20,7 @@ def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
 
     #should never get in this branch, it's a fall-back in case cyclestats were not to exist for some reason
     elif cycledetails:
-        return PredictionBuilder.generateMultiplePredictions(cycledetails, user)
+        return PredictionBuilder.generateMultiplePredictions(cycledetails, user=user)
     
     raise ValueError('CycleStats and CycleDetails not found.')
 
