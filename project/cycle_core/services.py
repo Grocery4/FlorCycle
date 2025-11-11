@@ -36,7 +36,7 @@ def updateCycleStats(cs: CycleStats):
             #   timedelta between menstruation_start and menstruation_end (inclusive)
             #   timedelta between menstruation_start and menstruation_start of next CycleWindow
 
-            recent_windows = list(logs.order_by('-menstruation_start')[:6])  # newest first
+            recent_windows = list(logs.order_by('-menstruation_start')[:MIN_LOG_FOR_STATS])  # newest first
             if not recent_windows:
                 return
 
@@ -115,7 +115,13 @@ class PredictionBuilder():
         # Normalize to an initial CycleWindow and avg values
         if isinstance(source, CycleDetails):
             cd = source
-            initial_cw = cd.asCycleWindow()
+            
+            last_real_cw = None
+            if user:
+                last_real_cw = CycleWindow.objects.filter(user=user, is_prediction=False).order_by('-menstruation_start').first()
+            
+            initial_cw = last_real_cw or cd.asCycleWindow()
+
             avg_cycle = cd.avg_cycle_duration
             avg_menstruation = cd.avg_menstruation_duration
         
