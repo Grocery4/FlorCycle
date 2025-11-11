@@ -18,11 +18,11 @@ def show_form(request):
 
             # use some method to generate a prediction and send it to the template
             print(type(ctx['base_menstruation_date']))
-            ctx['prediction'] = PredictionBuilder().generatePrediction(CycleDetails(
-                base_menstruation_date=ctx['base_menstruation_date'],
-                avg_cycle_duration=ctx['avg_cycle_duration'],
-                avg_menstruation_duration=ctx['avg_menstruation_duration']
-            ))
+            ctx['prediction'] = PredictionBuilder.generatePrediction(
+                ctx['base_menstruation_date'],
+                ctx['avg_cycle_duration'],
+                ctx['avg_menstruation_duration'],
+            )
 
             return render(request, 'cycle_core/cycle_details_test.html', ctx)
 

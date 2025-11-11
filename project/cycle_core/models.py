@@ -5,6 +5,9 @@ from django.conf import settings
 from datetime import timedelta
 
 # Create your models here.
+
+MIN_LOG_FOR_STATS = 6
+
 class CycleDetails(models.Model):
     #TODO - test this mf
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
@@ -44,29 +47,20 @@ class CycleDetails(models.Model):
             menstruation_start=self.base_menstruation_date,
             menstruation_end=self.base_menstruation_date + timedelta(days=self.avg_menstruation_duration-1),
             min_ovulation_window=self.base_menstruation_date + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY),
-            max_ovulation_window=self.base_menstruation_date + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
+            max_ovulation_window=self.base_menstruation_date + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY),
+            is_prediction = False
+
         )
         
         return cw
     
-    #TODO - implement methods
-    # external function could pass last x=12 cycle/menstruation durations
-    # and make an average of those durations
-    # if total_entry_count % x == 0: take last x logs
-
-    # these methods are strictly accessible by logged users.
-    def updateAverageCycleDuration(self):
-        pass
-
-    def updateAverageMenstruationDuration(self):
-        pass
-
     def __str__(self):
         return f'last menstruation: {self.base_menstruation_date}\n average cycle duration:{self.avg_cycle_duration}\n average menstruation duration:{self.avg_menstruation_duration}'
 
 
 
 class CycleWindow(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     menstruation_start = models.DateField(
         blank=False,
@@ -85,6 +79,8 @@ class CycleWindow(models.Model):
     max_ovulation_window = models.DateField(
         blank=False,
     )
+
+    is_prediction = models.BooleanField(default=True)
 
     def getMenstruationDatesAsList(self):
         if self.menstruation_start is None or self.menstruation_end is None:
@@ -123,6 +119,8 @@ class CycleWindow(models.Model):
 # fillled by the user through UI.
 class CycleStats(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    avg_cycle_duration = models.FloatField(default=28)
-    avg_menstruation_duration = models.FloatField(default=5)
+    avg_cycle_duration = models.IntegerField(default=28)
+    avg_menstruation_duration = models.IntegerField(default=5)
     updated_at = models.DateTimeField(auto_now=True)
+
+    log_count = models.PositiveIntegerField(default=0)

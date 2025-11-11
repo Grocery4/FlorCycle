@@ -4,3 +4,6 @@ from django.apps import AppConfig
 class CycleCoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'cycle_core'
+
+    def ready(self):
+        import cycle_core.signals
