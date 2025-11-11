@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.views import generic
 
-from cycle_core.models import CycleDetails
+from cycle_core.models import CycleDetails, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from .services import user_type_required, configured_required, fetch_closest_prediction
 
@@ -67,3 +67,18 @@ def settings(request):
     
     return render(request, 'dashboard/settings.html', ctx)
 
+class PredictionsListView(generic.ListView):
+    model = CycleWindow
+    context_object_name = 'cw_list'
+    template_name = 'dashboard/logs/cycle_window_list.html'
+    
+    def get_queryset(self):
+        return CycleWindow.objects.filter(user=self.request.user, is_prediction=True)
+
+class PeriodListView(generic.ListView):
+    model = CycleWindow
+    context_object_name = 'cw_list'
+    template_name = 'dashboard/logs/cycle_window_list.html'
+
+    def get_queryset(self):
+        return CycleWindow.objects.filter(user=self.request.user, is_prediction=False)
