@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from cycle_core.models import CycleDetails
 from cycle_core.forms import CycleDetailsForm
-from .services import user_type_required, configured_required, get_next_prediction
+from .services import user_type_required, configured_required, fetch_closest_prediction
 
 
 # Create your views here.
@@ -11,7 +11,7 @@ from .services import user_type_required, configured_required, get_next_predicti
 @configured_required
 def homepage(request):
     ctx = {}
-    ctx['next_prediction'] = get_next_prediction(request.user.cycledetails)
+    ctx['next_prediction'] = fetch_closest_prediction(request.user)
 
     return render(request, 'dashboard/dashboard.html', ctx)
     
