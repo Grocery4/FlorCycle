@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import generic
 
-from cycle_core.models import CycleDetails, CycleWindow
+from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from .services import user_type_required, configured_required, fetch_closest_prediction
 
@@ -67,18 +67,27 @@ def settings(request):
     
     return render(request, 'dashboard/settings.html', ctx)
 
-class PredictionsListView(generic.ListView):
-    model = CycleWindow
-    context_object_name = 'cw_list'
-    template_name = 'dashboard/logs/cycle_window_list.html'
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def cycle_logs(request):
+    ctx = {}
+
+    user = request.user
+    try:
+        cs = user.cyclestats
+    except CycleStats.DoesNotExist:
+        cs = None
+
+    if cs:
+        ctx['avg_cycle_duration'] = cs.avg_cycle_duration
+        ctx['avg_menstruation_duration'] = cs.avg_menstruation_duration
+
+    show_history_view = request.GET.get('view') == 'history'
     
-    def get_queryset(self):
-        return CycleWindow.objects.filter(user=self.request.user, is_prediction=True)
+    periods_history = CycleWindow.objects.filter(user=user, is_prediction=False)
+    predictions_log = CycleWindow.objects.filter(user=user, is_prediction=True)
 
-class PeriodListView(generic.ListView):
-    model = CycleWindow
-    context_object_name = 'cw_list'
-    template_name = 'dashboard/logs/cycle_window_list.html'
+    ctx['objects'] = periods_history if show_history_view else predictions_log
+    ctx['active_view'] = 'history' if show_history_view else 'predictions'
 
-    def get_queryset(self):
-        return CycleWindow.objects.filter(user=self.request.user, is_prediction=False)
+    return render(request, 'dashboard/logs/logs.html', ctx)
