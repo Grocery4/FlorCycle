@@ -1,6 +1,18 @@
+{% load static %}
+
+<link rel="stylesheet" href={% static "dashboard/css/next_prediction.css" %}>
+
+
 {% if next_prediction %}
-    <b>Next menstruation:</b>
-    <p>from {{ next_prediction.menstruation_start }} to {{ next_prediction.menstruation_end }}</p>
-    <b>Next ovulation:</b>
-    <p>from {{ next_prediction.min_ovulation_window }} to {{ next_prediction.max_ovulation_window }}</p>
+    <div class="prediction-wrapper">
+        <div class="prediction-item menstruation">
+            <b>{{ next_prediction.menstruation_start }}</b>
+            <p>Next menstruation</p>
+        </div>
+        
+        <div class="prediction-item ovulation">
+            <b>{{ next_prediction.min_ovulation_window }}</b>
+            <p>Next ovulation</p>
+        </div>
+    </div>
 {% endif %}

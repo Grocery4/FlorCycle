@@ -1,0 +1,17 @@
+<div class="cycle-container">
+    <span class="prediction-badge {% if cycle.is_prediction %}predicted{% else %}confirmed{% endif %}">
+        {{ cycle.is_prediction|yesno:"Prediction,Confirmed" }}
+    </span>
+
+    <div class="cycle-data-section menstruation">
+        <div class="label">Menstruation:</div>
+        <div class="date-range">{{ cycle.menstruation_start|date:"M j" }} - {{ cycle.menstruation_end|date:"M j, Y" }}</div>
+        <div class="duration-badge">{{ cycle.menstruation_start|timesince:cycle.menstruation_end }} days</div>
+    </div>
+
+    <div class="cycle-data-section ovulation">
+        <div class="label">Ovulation:</div>
+        <div class="date-range"> {{ cycle.min_ovulation_window|date:"M j" }} - {{ cycle.max_ovulation_window|date:"M j" }}</div>
+        <div class="duration-badge">{{ cycle.min_ovulation_window|timesince:cycle.max_ovulation_window }} days</div>
+    </div>
+</div>

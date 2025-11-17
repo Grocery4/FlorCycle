@@ -1,0 +1,11 @@
+.prediction-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.prediction-item {
+    flex: 1;
+    margin: 0 10px;
+    border: 1px solid black;
+}
