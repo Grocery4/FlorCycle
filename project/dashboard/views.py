@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.views import generic
 
-from cycle_core.models import CycleDetails
+from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from .services import user_type_required, configured_required, fetch_closest_prediction
 
@@ -67,3 +67,27 @@ def settings(request):
     
     return render(request, 'dashboard/settings.html', ctx)
 
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def cycle_logs(request):
+    ctx = {}
+
+    user = request.user
+    try:
+        cs = user.cyclestats
+    except CycleStats.DoesNotExist:
+        cs = None
+
+    if cs:
+        ctx['avg_cycle_duration'] = cs.avg_cycle_duration
+        ctx['avg_menstruation_duration'] = cs.avg_menstruation_duration
+
+    show_history_view = request.GET.get('view') == 'history'
+    
+    periods_history = CycleWindow.objects.filter(user=user, is_prediction=False)
+    predictions_log = CycleWindow.objects.filter(user=user, is_prediction=True)
+
+    ctx['objects'] = periods_history if show_history_view else predictions_log
+    ctx['active_view'] = 'history' if show_history_view else 'predictions'
+
+    return render(request, 'dashboard/logs/logs.html', ctx)

@@ -8,15 +8,13 @@
 
 {% block content %}
     <div class="dashboard-content-wrapper">
-        <div class="dashboard-top-bar">
-            {% include "dashboard/dashboard_topbar.html" %}
-        </div>
+        {% include "dashboard/dashboard_topbar.html" %}
 
         <div class="dashboard-data">
             <div class="period-prediction">{% include "dashboard/next_prediction.html" %}</div>
             <div class="add-symptoms-section">add symptoms</div>
             <div class="cycle-phases">cycle phases</div>
-            <div class="logs">logs</div>
+            <div class="logs"><a href="{% url 'dashboard:logs_page' %}">logs</a></div>
         </div>
 
         <div class="dashboard-action-bar">
