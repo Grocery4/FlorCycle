@@ -1,0 +1,13 @@
+<form method="post">
+    {% csrf_token %}
+    {{ dl_form }}
+    <br>
+    {{ sl_form }}
+    <br>
+    {{ ml_form }}
+    <br>
+    {{ il_form }}
+    <br>
+    {{ medlog_form }}
+    <button type="submit">Submit</button>
+</form>
