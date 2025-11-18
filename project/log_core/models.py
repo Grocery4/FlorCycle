@@ -5,7 +5,7 @@ from cycle_core.models import CycleWindow
 
 # Create your models here.
 class Symptom(models.Model):
-    name = models.Charfield(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True)
     category = models.CharField(max_length=50, blank=True, null=True)
 
 class Mood(models.Model):
@@ -35,8 +35,8 @@ class DailyLog(models.Model):
     # optional metadata for each day
     note = models.TextField(max_length=500, blank=True, null=True)
     flow = models.IntegerField(choices=FLOW_CHOICES, blank=True, null=True)
-    weight = models.FloatField(null=True, blank=True, null=True)
-    temperature = models.FloatField(null=True, blank=True, null=True)
+    weight = models.FloatField(blank=True, null=True)
+    temperature = models.FloatField(blank=True, null=True)
     # TODO - calculate ovulation date average and ovulation window average through ovulation_test=POSITIVE query \
     # MAYBE IN ANALYTICS APP, not MVP
     ovulation_test = models.CharField(choices=OVULATION_TEST_CHOICES, blank=True, null=True)
