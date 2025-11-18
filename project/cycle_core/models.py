@@ -68,8 +68,8 @@ class CycleWindow(models.Model):
     )
 
     menstruation_end = models.DateField(
-        blank=False,
-        default=now
+        null=True,
+        blank=True,
     )
 
     min_ovulation_window = models.DateField(
