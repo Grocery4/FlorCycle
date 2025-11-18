@@ -5,6 +5,7 @@ from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from .services import user_type_required, configured_required, fetch_closest_prediction
 
+from log_core.forms import DailyLogForm, SymptomLogForm, MoodLogForm, IntercourseLogForm, MedicationLogForm
 
 # Create your views here.
 @user_type_required(['STANDARD', 'PREMIUM'])
@@ -91,3 +92,15 @@ def cycle_logs(request):
     ctx['active_view'] = 'history' if show_history_view else 'predictions'
 
     return render(request, 'dashboard/logs/logs.html', ctx)
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def add_log(request):
+    ctx = {}
+
+    ctx['dl_form'] = DailyLogForm()
+    ctx['sl_form'] = SymptomLogForm()
+    ctx['ml_form'] = MoodLogForm()
+    ctx['il_form'] = IntercourseLogForm()
+    ctx['medlog_form'] = MedicationLogForm()
+    return render(request, 'dashboard/add_log/add_log.html', ctx)
