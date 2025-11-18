@@ -70,7 +70,7 @@ class IntercourseLog(models.Model):
     log = models.OneToOneField(DailyLog, on_delete=models.CASCADE, related_name='intercourse')
     protected = models.BooleanField(blank=True, null=True)
     orgasm = models.BooleanField(blank=True, null=True)
-    quantity = models.PositiveSmallIntegerField()
+    quantity = models.PositiveSmallIntegerField(blank=True, null=True)
 
 class MedicationLog(models.Model):
     log = models.ForeignKey(DailyLog, on_delete=models.CASCADE, related_name='medication')
