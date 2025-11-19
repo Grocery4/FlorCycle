@@ -98,6 +98,16 @@ def cycle_logs(request):
 def add_log(request):
     ctx = {}
 
+    #TODO - implement date selector, with default selected date: today
+    #TODO - period start can be inserted only if selected_date <= today, else show period end button only
+    #TODO -  if GET: fetch submitted data for a certain date if it already exists.
+
+
+    #TODO - if POST: clean data and submit a new DailyLog
+    # TODO - add Period Start/End logic
+    # TODO - if DailyLog in range of a real Period window: sync DailyLog to closest real Period
+
+    
     ctx['dl_form'] = DailyLogForm()
     ctx['sl_form'] = SymptomLogForm()
     ctx['ml_form'] = MoodLogForm()
