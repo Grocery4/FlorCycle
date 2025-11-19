@@ -58,11 +58,8 @@ class DailyLog(models.Model):
         return f"{self.user} - {self.date}"
 
 class SymptomLog(models.Model):
-    INTENSITY_CHOICES = [(1, 'Low'), (2, 'Medium'), (3, 'High')]
-
     log = models.ForeignKey(DailyLog, on_delete=models.CASCADE, related_name='symptoms')
     symptom = models.ForeignKey(Symptom, on_delete=models.CASCADE)
-    intensity = models.IntegerField(choices=INTENSITY_CHOICES, null=True, blank=True)
 
     class Meta:
         unique_together = ('log', 'symptom')

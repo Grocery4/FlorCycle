@@ -10,7 +10,7 @@ class DailyLogForm(forms.ModelForm):
 class SymptomLogForm(forms.ModelForm):
     class Meta:
         model = SymptomLog
-        fields = ['symptom', 'intensity']
+        fields = ['symptom']
         widgets = {
             'symptom': forms.CheckboxSelectMultiple(),
             'class': 'hidden-checkbox'
