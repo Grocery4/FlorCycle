@@ -1,0 +1,117 @@
+.add-entry-container {
+    width: 100%;
+    margin: 0;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.sub-form {
+    border: 2px solid #000;
+    padding: 16px;
+    margin: 16px 0;
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sub-form h3 {
+    margin-top: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ccc;
+}
+
+.dl-form {
+    border-left: 4px solid black;
+}
+
+.sl-form {
+    border-left: 4px solid black;
+}
+
+.ml-form {
+    border-left: 4px solid black;
+}
+
+.il-form {
+    border-left: 4px solid black;
+}
+
+.medlog-form {
+    border-left: 4px solid black;
+}
+
+.sub-form label {
+    display: block;
+    margin: 8px 0 4px;
+    font-weight: bold;
+}
+
+.sub-form input,
+.sub-form select,
+.sub-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.sub-form input:focus,
+.sub-form select:focus,
+.sub-form textarea:focus {
+    outline: none;
+    border-color: #000;
+}
+
+button[type="submit"] {
+    background-color: #000;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 16px;
+    width: 100%;
+}
+
+button[type="submit"]:hover {
+    background-color: #333;
+}
+
+.form-errors {
+    color: #ff6b6b;
+    background-color: #ffeaea;
+    padding: 8px;
+    border: 1px solid #ff6b6b;
+    margin: 8px 0;
+    border-radius: 4px;
+}
+
+.form-field-errors {
+    color: #ff6b6b;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* Remove max-width constraint to fill full page */
+.add-entry-container {
+    max-width: none;
+}
+
+/* Ensure form takes full width */
+form {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .add-entry-container {
+        padding: 10px;
+    }
+    
+    .sub-form {
+        padding: 12px;
+        margin: 12px 0;
+    }
+}
