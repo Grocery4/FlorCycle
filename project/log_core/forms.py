@@ -5,7 +5,10 @@ from .models import DailyLog, SymptomLog, MoodLog, IntercourseLog, MedicationLog
 class DailyLogForm(forms.ModelForm):
     class Meta:
         model = DailyLog
-        fields = ['note', 'flow', 'weight', 'temperature', 'ovulation_test']
+        fields = ['date', 'note', 'flow', 'weight', 'temperature', 'ovulation_test']
+        widgets = {
+            'date' : forms.DateInput(attrs={"type": "date"})
+        }
 
 class SymptomLogForm(forms.ModelForm):
     class Meta:
