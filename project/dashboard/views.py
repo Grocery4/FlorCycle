@@ -81,6 +81,7 @@ def cycle_logs(request):
 
     if cs:
         ctx['avg_cycle_duration'] = cs.avg_cycle_duration
+        ctx['log_count'] = cs.log_count
         ctx['avg_menstruation_duration'] = cs.avg_menstruation_duration
 
     show_history_view = request.GET.get('view') == 'history'
