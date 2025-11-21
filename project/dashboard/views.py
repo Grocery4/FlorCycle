@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 from django.views import generic
 
+from datetime import date
+
+from .services import user_type_required, configured_required, fetch_closest_prediction
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
-from .services import user_type_required, configured_required, fetch_closest_prediction
-
-from log_core.forms import DailyLogForm, SymptomLogForm, MoodLogForm, IntercourseLogForm, MedicationLogForm
+from log_core.services import get_day_log
+from log_core.models import DailyLog, IntercourseLog
+from log_core.forms import DailyLogForm, IntercourseLogForm
 
 # Create your views here.
 @user_type_required(['STANDARD', 'PREMIUM'])
@@ -99,19 +102,53 @@ def cycle_logs(request):
 def add_log(request):
     ctx = {}
 
-    #TODO - implement date selector, with default selected date: today
     #TODO - period start can be inserted only if selected_date <= today, else show period end button only
-    #TODO -  if GET: fetch submitted data for a certain date if it already exists.
-
-
-    #TODO - if POST: clean data and submit a new DailyLog
     # TODO - add Period Start/End logic
     # TODO - if DailyLog in range of a real Period window: sync DailyLog to closest real Period
 
+    current_day_log = get_day_log(request.user, date.today())
     
-    ctx['dl_form'] = DailyLogForm()
-    ctx['sl_form'] = SymptomLogForm()
-    ctx['ml_form'] = MoodLogForm()
-    ctx['il_form'] = IntercourseLogForm()
-    ctx['medlog_form'] = MedicationLogForm()
+    if current_day_log:
+        ctx['dl_form'] = DailyLogForm(instance=current_day_log)
+        ctx['il_form'] = IntercourseLogForm(instance=getattr(current_day_log, 'intercourse', None))
+    else:
+        ctx['dl_form'] = DailyLogForm()
+        ctx['il_form'] = IntercourseLogForm()
+
+
+
+    if request.method == 'POST':
+
+        dl_form = DailyLogForm(request.POST)
+        il_form = IntercourseLogForm(request.POST)
+        
+        if all((dl_form.is_valid(), il_form.is_valid())):
+            daily_log, created = DailyLog.objects.get_or_create(
+                user=request.user,
+                date=dl_form.cleaned_data['date'],
+                defaults={}
+            )
+
+            for field, value in dl_form.cleaned_data.items():
+                if field not in ['symptoms', 'moods', 'medications']:
+                    setattr(daily_log, field, value)
+            daily_log.user = request.user
+            daily_log.save()
+
+            if 'symptoms' in dl_form.cleaned_data:
+                daily_log.symptoms_field.set(dl_form.cleaned_data['symptoms'])
+            if 'moods' in dl_form.cleaned_data:
+                daily_log.moods_field.set(dl_form.cleaned_data['moods'])
+            if 'medications' in dl_form.cleaned_data:
+                daily_log.medications_field.set(dl_form.cleaned_data['medications'])
+
+            intercourse_log, _ = IntercourseLog.objects.get_or_create(log=daily_log)
+            for field, value in il_form.cleaned_data.items():
+                setattr(intercourse_log, field, value)
+            intercourse_log.save()
+
+            ctx['dl_form'] = DailyLogForm(instance=daily_log)
+            ctx['il_form'] = IntercourseLogForm(instance=intercourse_log)
+
+
     return render(request, 'dashboard/add_log/add_log.html', ctx)
