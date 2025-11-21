@@ -14,29 +14,27 @@
     box-sizing: border-box;
 }
 
+fieldset {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
 .sub-form h3 {
     margin-top: 0;
     padding-bottom: 8px;
     border-bottom: 1px solid #ccc;
+    top: 0;
+    background: white;
+    z-index: 1;
 }
 
 .dl-form {
     border-left: 4px solid black;
 }
 
-.sl-form {
-    border-left: 4px solid black;
-}
-
-.ml-form {
-    border-left: 4px solid black;
-}
-
 .il-form {
-    border-left: 4px solid black;
-}
-
-.medlog-form {
     border-left: 4px solid black;
 }
 
@@ -94,12 +92,6 @@ button[type="submit"]:hover {
     margin-top: 4px;
 }
 
-/* Remove max-width constraint to fill full page */
-.add-entry-container {
-    max-width: none;
-}
-
-/* Ensure form takes full width */
 form {
     width: 100%;
     box-sizing: border-box;
@@ -116,31 +108,19 @@ form {
     }
 }
 
-/* Add scrollable styles for mood and symptom sections */
-.sl-form,
-.ml-form {
-    max-height: 500px;
-    overflow-y: auto;
+.error-message {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
 }
-
-.sl-form::-webkit-scrollbar,
-.ml-form::-webkit-scrollbar {
-    width: 8px;
+.form-field.error {
+    border-color: #dc3545;
 }
-
-.sl-form::-webkit-scrollbar-track,
-.ml-form::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.sl-form::-webkit-scrollbar-thumb,
-.ml-form::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-}
-
-.sl-form::-webkit-scrollbar-thumb:hover,
-.ml-form::-webkit-scrollbar-thumb:hover {
-    background: #555;
+.form-errors {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
 }
