@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 
 from cycle_core.models import CycleWindow
@@ -45,10 +46,18 @@ class DailyLog(models.Model):
     note = models.TextField(max_length=500, blank=True, null=True)
     flow = models.IntegerField(choices=FLOW_CHOICES, blank=True, null=True)
     weight = models.FloatField(blank=True, null=True)
-    temperature = models.FloatField(blank=True, null=True)
+    temperature = models.FloatField(blank=True, null=True, validators=[
+            MinValueValidator(30.0),
+            MaxValueValidator(50.0),
+        ])
     # TODO - calculate ovulation date average and ovulation window average through ovulation_test=POSITIVE query \
     # MAYBE IN ANALYTICS APP, not MVP
     ovulation_test = models.CharField(choices=OVULATION_TEST_CHOICES, blank=True, null=True)
+
+    symptoms_field = models.ManyToManyField('Symptom', through='SymptomLog')
+    moods_field = models.ManyToManyField('Mood', through='MoodLog')
+    medications_field = models.ManyToManyField('Medication', through='MedicationLog')
+
 
     class Meta:
         unique_together = ('user', 'date')  # one log per day
