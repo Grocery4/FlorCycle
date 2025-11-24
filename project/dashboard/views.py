@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
-from django.views import generic
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 from datetime import date
+import json
 
 from .services import user_type_required, configured_required, fetch_closest_prediction
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow
@@ -152,3 +154,65 @@ def add_log(request):
 
 
     return render(request, 'dashboard/add_log/add_log.html', ctx)
+
+
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+@require_POST
+def ajax_load_log(request):
+    data = json.loads(request.body)
+    date = data.get("date")
+    if not date:
+        print(date)
+
+    try:
+        log = DailyLog.objects.get(user=request.user, date=date)
+        exists = True
+    except DailyLog.DoesNotExist:
+        log = None
+        exists = False
+    
+    response_data = {"exists": exists}
+
+    # Return data only if exists. Return empty form if it doesn't
+    if log:
+        il = IntercourseLog.objects.filter(log=log).first()
+
+        response_data.update({
+            # Daily log data
+            "note": log.note,
+            "flow": log.flow,
+            "weight": log.weight,
+            "temperature": log.temperature,
+            "ovulation_test": log.ovulation_test,
+
+            # M2M fields
+            "symptoms": list(log.symptoms_field.values_list("id", flat=True)),
+            "moods": list(log.moods_field.values_list("id", flat=True)),
+            "medications": list(log.medications_field.values_list("id", flat=True)),
+
+            # Intercourse
+            "protected": il.protected if il else None,
+            "orgasm": il.orgasm if il else None,
+            "quantity": il.quantity if il else None,
+        })
+
+    else:
+        response_data.update({
+            "note": "",
+            "flow": "",
+            "weight": "",
+            "temperature": "",
+            "ovulation_test": "",
+
+            "symptoms": [],
+            "moods": [],
+            "medications": [],
+
+            "protected": "",
+            "orgasm": "",
+            "quantity": "",
+        })
+
+    return JsonResponse(response_data)
