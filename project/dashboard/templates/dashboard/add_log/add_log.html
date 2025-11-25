@@ -4,6 +4,9 @@
 {% block extra_head %}
     <link rel="stylesheet" href={% static "dashboard/css/add_log.css" %}>
 {% endblock extra_head %}
+{% block extra_js %}
+    <script type="text/javascript" src="{% static "dashboard/js/date_change_listener.js" %}"></script>
+{% endblock extra_js %}
 {% block title %}Add Entry{% endblock title %}
 
 
@@ -11,33 +14,55 @@
     <div class="add-entry-container">
         {% include "dashboard/subpage_topbar.html" %}
         
+        {% if dl_form.errors or il_form.errors %}
+            <div class="form-errors">
+                <strong>Please correct the following errors:</strong>
+                {% for field, errors in dl_form.errors.items %}
+                    {% for error in errors %}
+                        <div>{{ field|title }}: {{ error }}</div>
+                    {% endfor %}
+                {% endfor %}
+                {% for field, errors in il_form.errors.items %}
+                    {% for error in errors %}
+                        <div>{{ field|title }}: {{ error }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <form method="post">
             {% csrf_token %}
             <div class="sub-form dl-form">
                 <h3>General data</h3>
-                {{ dl_form }}
-            </div>
-
-            <div class="sub-form sl-form">
-                {{ sl_form }}
-            </div>
-
-            <div class="sub-form ml-form">
-                {{ ml_form }}
+                {% for field in dl_form %}
+                    <div class="field-wrapper">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <div class="error-message">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
 
             <div class="sub-form il-form">
                 <h3>Intercourse</h3>
-                {{ il_form }}
+                {% for field in il_form %}
+                    <div class="field-wrapper">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <div class="error-message">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
 
-            <div class="sub-form medlog-form">
-                <h3>Medication</h3>
-                {{ medlog_form }}
-            </div>
-            
-            <button type="submit">Submit</button>
+            <button type="submit">Save</button>
         </form>
     </div>
-
 {% endblock content %}
