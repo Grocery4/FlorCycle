@@ -34,6 +34,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Clear form errors
+    function clearFormErrors() {
+        // Remove all error messages
+        document.querySelectorAll('.error-message').forEach(error => {
+            error.remove();
+        });
+
+        // Remove error classes from form fields
+        document.querySelectorAll('.form-field').forEach(field => {
+            field.classList.remove('error');
+        });
+
+        // Clear the main form errors container
+        const formErrors = document.querySelector('.form-errors');
+        if (formErrors) {
+            formErrors.remove();
+        }
+    }
+
     function clearForm(mapping) {
         for (const id of Object.values(mapping)) {
             const el = document.getElementById(id);
@@ -50,6 +69,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Listen for date changes
     dateInput.addEventListener("change", () => {
         const selectedDate = dateInput.value
+
+        clearFormErrors();
+
         if(!selectedDate) {
             clearForm(mapping);
             return;
