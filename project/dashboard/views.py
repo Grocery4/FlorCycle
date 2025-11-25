@@ -108,21 +108,21 @@ def add_log(request):
     # TODO - add Period Start/End logic
     # TODO - if DailyLog in range of a real Period window: sync DailyLog to closest real Period
 
-    current_day_log = get_day_log(request.user, date.today())
-    
-    if current_day_log:
-        ctx['dl_form'] = DailyLogForm(instance=current_day_log)
-        ctx['il_form'] = IntercourseLogForm(instance=getattr(current_day_log, 'intercourse', None))
-    else:
-        ctx['dl_form'] = DailyLogForm()
-        ctx['il_form'] = IntercourseLogForm()
-
-
-
     if request.method == 'POST':
+        # Get the date from POST data first
+        selected_date = request.POST.get('date')
+        
+        # Try to get existing log for the selected date
+        existing_log = None
+        if selected_date:
+            try:
+                existing_log = DailyLog.objects.get(user=request.user, date=selected_date)
+            except DailyLog.DoesNotExist:
+                pass
 
-        dl_form = DailyLogForm(request.POST)
-        il_form = IntercourseLogForm(request.POST)
+        # Create forms with POST data and existing instances if they exist
+        dl_form = DailyLogForm(request.POST, instance=existing_log)
+        il_form = IntercourseLogForm(request.POST, instance=getattr(existing_log, 'intercourse', None) if existing_log else None)
         
         if all((dl_form.is_valid(), il_form.is_valid())):
             daily_log, created = DailyLog.objects.get_or_create(
@@ -151,8 +151,21 @@ def add_log(request):
 
             ctx['dl_form'] = DailyLogForm(instance=daily_log)
             ctx['il_form'] = IntercourseLogForm(instance=intercourse_log)
-
-
+        else:
+            # Form validation failed - keep the forms with errors and selected date
+            ctx['dl_form'] = dl_form
+            ctx['il_form'] = il_form
+    else:
+        # GET request - load forms for today's date
+        current_day_log = get_day_log(request.user, date.today())
+        
+        if current_day_log:
+            ctx['dl_form'] = DailyLogForm(instance=current_day_log)
+            ctx['il_form'] = IntercourseLogForm(instance=getattr(current_day_log, 'intercourse', None))
+        else:
+            ctx['dl_form'] = DailyLogForm()
+            ctx['il_form'] = IntercourseLogForm()
+        
     return render(request, 'dashboard/add_log/add_log.html', ctx)
 
 
