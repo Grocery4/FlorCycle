@@ -6,9 +6,9 @@
 {% endblock extra_head %}
 {% block extra_js %}
     <script type="text/javascript" src="{% static "dashboard/js/date_change_listener.js" %}"></script>
+    <script type="text/javascript" src="{% static "dashboard/js/reset_buttons.js" %}"></script>
 {% endblock extra_js %}
 {% block title %}Add Entry{% endblock title %}
-
 
 {% block content %}
     <div class="add-entry-container">
@@ -38,7 +38,14 @@
                 {% for field in dl_form %}
                     <div class="field-wrapper">
                         {{ field.label_tag }}
-                        {{ field }}
+                        {% if field.name == 'symptoms' or field.name == 'moods' or field.name == 'medications' %}
+                            <div class="field-with-reset">
+                                {{ field }}
+                                <button type="button" class="reset-btn" data-field="id_{{ field.name }}">Reset {{ field.label }}</button>
+                            </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
                         {% if field.errors %}
                             {% for error in field.errors %}
                                 <div class="error-message">{{ error }}</div>
