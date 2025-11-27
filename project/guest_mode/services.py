@@ -3,6 +3,8 @@ from datetime import date
 from calendar_core.services import render_multiple_calendars
 
 
+#TODO - refactor to use relativedelta
+#TODO - might move into calendar_core
 # returns a list of (year, month)
 def get_months_range(predictions: list) -> list[tuple[int,int]]:
     if not predictions:
