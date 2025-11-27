@@ -1,12 +1,5 @@
-<style>
-    .highlight-menstruation {
-        background-color : pink;
-    }
-
-    .highlight-ovulation {
-        background-color : green;
-    }
-</style>
+{% load static %}
+<link rel="stylesheet" href={% static "calendar_core/css/calendars.css" %}>
 
 {% for cal in calendars %}
     <div class="cal">
