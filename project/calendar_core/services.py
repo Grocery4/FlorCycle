@@ -74,6 +74,7 @@ def render_calendar(year, month, menstruation_dates: dict=None, ovulation_dates:
     elif calendar_type == CalendarType.SELECTABLE:
         return SelectableCycleCalendar(highlights=highlights).formatmonth(year,month)
 
+#FIXME - months format (year,month) does not convince me. look into this stuff
 # accepts a list of (year, month)
 def render_multiple_calendars(months: list[tuple[int, int]], menstruation_dates: dict=None, ovulation_dates: dict=None, calendar_type: CalendarType=CalendarType.STANDARD) -> list[str]:
     highlights = {
@@ -88,9 +89,7 @@ def render_multiple_calendars(months: list[tuple[int, int]], menstruation_dates:
 
     html_calendars = []
     for year, month in months:
-        cal = ''
-        cal += calendar.formatmonth(year, month)
-        cal += '\n'
+        cal = calendar.formatmonth(year, month)
         html_calendars.append(cal)
 
     return html_calendars
