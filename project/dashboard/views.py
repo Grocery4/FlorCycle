@@ -91,13 +91,20 @@ def cycle_logs(request):
 
     show_history_view = request.GET.get('view') == 'history'
     
-    periods_history = CycleWindow.objects.filter(user=user, is_prediction=False)
-    predictions_log = CycleWindow.objects.filter(user=user, is_prediction=True)
+    periods_history = CycleWindow.objects.filter(user=user, is_prediction=False).order_by('menstruation_start')
+    predictions_log = CycleWindow.objects.filter(user=user, is_prediction=True).order_by('menstruation_start')
 
     ctx['objects'] = periods_history if show_history_view else predictions_log
     ctx['active_view'] = 'history' if show_history_view else 'predictions'
 
     return render(request, 'dashboard/logs/logs.html', ctx)
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def add_period(request):
+    ctx = {}
+
+    return render(request, 'dashboard/log_period/log_period.html', ctx)
 
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
