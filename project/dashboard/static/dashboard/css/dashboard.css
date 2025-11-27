@@ -19,7 +19,7 @@ html, body {
 }
 
 
-.dashboard-data > div {
+.dashboard-data > section {
     padding: 10px 0;
     border: 1px solid black;
     width: 80%;
