@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_js %}
+    <script type="text/javascript">window.selectedDates = {{ selected_dates | safe }};</script>
+    <script type="text/javascript" src="{% static "dashboard/js/period_selector.js" %}"></script>
+{% endblock extra_js %}
+
+{% block title %}Add Period{% endblock title %}
+
+
+{% block content %}
+    <div class="log-period-container">
+                {% include "dashboard/subpage_topbar.html" %}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% include "calendar_core/calendars.html" %}
+
+        <button type="submit">Save</button>
+    </form>
+{% endblock content %}

@@ -2,6 +2,10 @@ from functools import wraps
 from django.shortcuts import redirect
 
 from cycle_core.models import CycleWindow
+from calendar_core.services import render_multiple_calendars, CalendarType
+from datetime import timedelta
+from dateutil import relativedelta
+
 
 def user_type_required(allowed_types, redirect_url='login'):
     def decorator(view_func):
@@ -31,8 +35,35 @@ def configured_required(view_func):
 
     return _wrapped_view
 
-#FIXME - dashboard.views.homepage
-# should render next_prediction based on last CycleWindow, not setup CycleDetails.
 def fetch_closest_prediction(user):
     prediction = CycleWindow.objects.filter(user=user, is_prediction=True).order_by('menstruation_start').first()
     return prediction
+
+def render_selectable_calendars(user, date):
+    date_start = date.replace(day=1)
+    one_month_ago = date_start - relativedelta.relativedelta(months=1)
+    two_months_ago = date_start - relativedelta.relativedelta(months=2)
+    one_month_fwd = date_start + relativedelta.relativedelta(months=1)
+
+
+    rendered_months = [
+        (two_months_ago.year, two_months_ago.month),
+        (one_month_ago.year, one_month_ago.month),
+        (date_start.year, date_start.month),
+        (one_month_fwd.year, one_month_fwd.month)
+    ]
+
+    start_date = two_months_ago
+    end_date = (one_month_fwd + relativedelta.relativedelta(months=1)) - timedelta(days=1)
+
+    cw_in_rendered_months = CycleWindow.objects.filter(user=user, is_prediction=False, menstruation_start__lte=end_date, menstruation_end__gte=start_date)
+    
+    menstruation_dates = []
+    
+    for cw in cw_in_rendered_months:
+        menstruation_dates.extend(cw.getMenstruationDatesAsList())
+
+    return {
+        'calendars': render_multiple_calendars(months=rendered_months, menstruation_dates=menstruation_dates, calendar_type=CalendarType.SELECTABLE),
+        'selected_dates': menstruation_dates
+    }
