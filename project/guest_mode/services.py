@@ -4,7 +4,7 @@ from calendar_core.services import render_multiple_calendars
 
 
 # returns a list of (year, month)
-def getMonthsRange(predictions: list) -> list[tuple[int,int]]:
+def get_months_range(predictions: list) -> list[tuple[int,int]]:
     if not predictions:
         return []
 
@@ -24,7 +24,7 @@ def getMonthsRange(predictions: list) -> list[tuple[int,int]]:
     return months
 
 
-def getHighlightedDates(predictions:list) -> tuple[list, list]:
+def get_highlighted_dates(predictions:list) -> tuple[list, list]:
     menstruation_highlights = []
     ovulation_highlights = []
     for elem in predictions:
@@ -34,7 +34,7 @@ def getHighlightedDates(predictions:list) -> tuple[list, list]:
     return (menstruation_highlights, ovulation_highlights)
 
 
-def generateCalendars(predictions):
-        months = getMonthsRange(predictions)
-        menstruation_highlights, ovulation_highlights = getHighlightedDates(predictions)
+def generate_calendars(predictions):
+        months = get_months_range(predictions)
+        menstruation_highlights, ovulation_highlights = get_highlighted_dates(predictions)
         return render_multiple_calendars(months, menstruation_highlights, ovulation_highlights)
