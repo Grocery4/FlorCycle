@@ -63,7 +63,7 @@ class SelectableCycleCalendar(CycleCalendar):
             f'</td>'
         )
 
-def renderCalendar(year, month, menstruation_dates: dict=None, ovulation_dates: dict=None, calendar_type: CalendarType=CalendarType.STANDARD):
+def render_calendar(year, month, menstruation_dates: dict=None, ovulation_dates: dict=None, calendar_type: CalendarType=CalendarType.STANDARD):
     highlights = {
         'highlight-menstruation' : menstruation_dates or {},
         'highlight-ovulation' : ovulation_dates or {}
@@ -75,7 +75,7 @@ def renderCalendar(year, month, menstruation_dates: dict=None, ovulation_dates: 
         return SelectableCycleCalendar(highlights=highlights).formatmonth(year,month)
 
 # accepts a list of (year, month)
-def renderMultipleCalendars(months: list[tuple[int, int]], menstruation_dates: dict=None, ovulation_dates: dict=None, calendar_type: CalendarType=CalendarType.STANDARD) -> list[str]:
+def render_multiple_calendars(months: list[tuple[int, int]], menstruation_dates: dict=None, ovulation_dates: dict=None, calendar_type: CalendarType=CalendarType.STANDARD) -> list[str]:
     highlights = {
         'highlight-menstruation': menstruation_dates or {},
         'highlight-ovulation': ovulation_dates or {}
@@ -102,5 +102,5 @@ def renderMultipleCalendars(months: list[tuple[int, int]], menstruation_dates: d
 # to figure out which months to render: get the month of first prediction day and last prediction day
 if __name__ == '__main__':
 
-    html_calendar = renderMultipleCalendars(2024, [1,2,3,4], {'2024-02-12'})
+    html_calendar = render_multiple_calendars(2024, [1,2,3,4], {'2024-02-12'})
     print(html_calendar)

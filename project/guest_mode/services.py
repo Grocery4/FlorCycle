@@ -1,6 +1,6 @@
 from datetime import date
 
-from calendar_core.services import renderMultipleCalendars
+from calendar_core.services import render_multiple_calendars
 
 
 # returns a list of (year, month)
@@ -37,4 +37,4 @@ def getHighlightedDates(predictions:list) -> tuple[list, list]:
 def generateCalendars(predictions):
         months = getMonthsRange(predictions)
         menstruation_highlights, ovulation_highlights = getHighlightedDates(predictions)
-        return renderMultipleCalendars(months, menstruation_highlights, ovulation_highlights)
+        return render_multiple_calendars(months, menstruation_highlights, ovulation_highlights)
