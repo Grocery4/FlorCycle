@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from datetime import date
 import json
 
-from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars
+from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, reconcile_cycle_windows
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
@@ -104,9 +104,13 @@ def cycle_logs(request):
 def add_period(request):
     ctx = {}
     
-    calendar_data = render_selectable_calendars(request.user, date.today())
-    ctx['calendars'] = calendar_data['calendars']
-    ctx['selected_dates'] = calendar_data['selected_dates']
+    if request.method == 'POST': 
+        pass
+
+    else:
+        calendar_data = render_selectable_calendars(request.user, date.today())
+        ctx['calendars'] = calendar_data['calendars']
+        ctx['selected_dates'] = calendar_data['selected_dates']
 
     return render(request, 'dashboard/log_period/log_period.html', ctx)
 
