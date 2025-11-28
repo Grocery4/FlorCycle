@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from datetime import date
 import json
 
-from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, reconcile_cycle_windows
+from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
