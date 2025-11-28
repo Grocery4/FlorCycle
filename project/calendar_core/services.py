@@ -57,7 +57,7 @@ class SelectableCycleCalendar(CycleCalendar):
             f'<td{td_class}>'
             f'  <label class="day-label" for="{checkbox_id}">'
             f'    <input type="checkbox" id="{checkbox_id}" '
-            f'           name="selected_days[]" value="{date_str}" />'
+            f'           name="selected_days" value="{date_str}" />'
             f'    <span class="day-number">{day}</span>'
             f'  </label>'
             f'</td>'
