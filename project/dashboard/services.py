@@ -87,3 +87,10 @@ def group_consecutive_days(selected_dates):
         
     periods.append(current_period)
     return periods
+
+def generate_date_intervals(consecutive_days):
+    period_ranges = []
+    for window in consecutive_days:
+        period_ranges.append((window[0], window[-1]))
+    
+    return period_ranges
