@@ -1,7 +1,9 @@
 {% load static %}
 
-{% for cal in calendars %}
-    <div class="cal">
-        {{ cal|safe }}
-    </div>
-{% endfor %}
+<div class="calendar-container">
+    {% for cal in calendars %}
+        <div class="cal">
+            {{ cal|safe }}
+        </div>
+    {% endfor %}
+</div>

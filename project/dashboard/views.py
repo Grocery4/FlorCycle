@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
-from datetime import date
+from datetime import datetime, date
+from dateutil import relativedelta
 import json
 
 from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars
@@ -108,11 +109,38 @@ def add_period(request):
         pass
 
     else:
-        calendar_data = render_selectable_calendars(request.user, date.today())
+        reference_month = date.today()
+        calendar_data = render_selectable_calendars(request.user, reference_month)
+        ctx['reference_month'] = reference_month
         ctx['calendars'] = calendar_data['calendars']
         ctx['selected_dates'] = calendar_data['selected_dates']
 
     return render(request, 'dashboard/log_period/log_period.html', ctx)
+
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+@require_POST
+def ajax_navigate_calendar(request):
+    data = json.loads(request.body)
+
+    reference_month = datetime.strptime(data.get('reference_month'), '%Y-%m-%d')
+    button_type = data.get('button_type')
+
+    if button_type == 'next_btn':
+        new_reference_month = reference_month.replace(day=1) + relativedelta.relativedelta(months=1)
+    elif button_type == 'prev_btn':
+        new_reference_month = reference_month.replace(day=1) + relativedelta.relativedelta(months=-1)
+
+    calendar_data = render_selectable_calendars(request.user, new_reference_month.date())
+
+    response_data = {
+        'reference_month': new_reference_month.strftime('%Y-%m-%d'),
+        'calendars': calendar_data['calendars'],
+        'selected_dates': calendar_data['selected_dates']
+    }
+
+    return JsonResponse(response_data)
 
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
