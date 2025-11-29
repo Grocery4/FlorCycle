@@ -6,7 +6,7 @@ from datetime import datetime, date
 from dateutil import relativedelta
 import json
 
-from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days
+from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, check_existing_windows, create_cycle_window
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
@@ -106,11 +106,18 @@ def add_period(request):
     ctx = {}
     
     if request.method == 'POST': 
+        reference_month = datetime.strptime(request.POST.get('reference_month'), "%Y-%m-%d").date()
+        
+        
         selected_days = request.POST.getlist('selected_days')
         menstruation_windows_list = group_consecutive_days(selected_days)
+        
+        menstruation_ranges = generate_date_intervals(menstruation_windows_list)
+        window_check = check_existing_windows(request.user, menstruation_ranges)
 
-        reference_month = datetime.strptime(request.POST.get('reference_month'), "%Y-%m-%d").date()
-
+        for new_range in window_check['new']:
+            create_cycle_window(request.user, new_range[0], new_range[-1])
+            
     else:
         reference_month = date.today()
 
