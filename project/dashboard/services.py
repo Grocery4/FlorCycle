@@ -2,6 +2,7 @@ from functools import wraps
 from django.shortcuts import redirect
 
 from cycle_core.models import CycleWindow
+from cycle_core.services import PredictionBuilder
 from calendar_core.services import render_multiple_calendars, CalendarType
 from datetime import timedelta, datetime
 from dateutil import relativedelta
@@ -116,3 +117,16 @@ def check_existing_windows(user, period_ranges):
         'existing': existing_windows,
         'new': new_ranges
     }
+
+#TODO - accomodate for both cyclestats and cycledetails
+def create_cycle_window(user, start_date, end_date):
+    ovulation_start, ovulation_end = PredictionBuilder.predictOvulation(start_date)
+
+    return CycleWindow.objects.create(
+        user=user,
+        menstruation_start=start_date,
+        menstruation_end=end_date,
+        min_ovulation_window=ovulation_start,
+        max_ovulation_window=ovulation_end,
+        is_prediction=False
+    )
