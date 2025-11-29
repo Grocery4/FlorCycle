@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 
 from cycle_core.models import CycleWindow
 from calendar_core.services import render_multiple_calendars, CalendarType
-from datetime import timedelta
+from datetime import timedelta, datetime
 from dateutil import relativedelta
 
 
@@ -67,3 +67,23 @@ def render_selectable_calendars(user, date):
         'calendars': render_multiple_calendars(months=rendered_months, menstruation_dates=menstruation_dates, calendar_type=CalendarType.SELECTABLE),
         'selected_dates': menstruation_dates
     }
+
+def group_consecutive_days(selected_dates):
+    if not selected_dates:
+        return []
+    
+    selected_dates = [datetime.strptime(date, '%Y-%m-%d').date() for date in selected_dates]
+    sorted_dates = sorted(selected_dates)
+    
+    periods = []
+    current_period = [sorted_dates[0]]
+    
+    for i in range(1, len(sorted_dates)):
+        if sorted_dates[i] == sorted_dates[i-1] + timedelta(days=1):
+            current_period.append(sorted_dates[i])
+        else:
+            periods.append(current_period)
+            current_period = [sorted_dates[i]]
+        
+    periods.append(current_period)
+    return periods
