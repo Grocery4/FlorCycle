@@ -6,7 +6,7 @@ from datetime import datetime, date
 from dateutil import relativedelta
 import json
 
-from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars
+from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
@@ -106,14 +106,19 @@ def add_period(request):
     ctx = {}
     
     if request.method == 'POST': 
-        pass
+        selected_days = request.POST.getlist('selected_days')
+        menstruation_windows_list = group_consecutive_days(selected_days)
+
+        reference_month = datetime.strptime(request.POST.get('reference_month'), "%Y-%m-%d").date()
 
     else:
         reference_month = date.today()
-        calendar_data = render_selectable_calendars(request.user, reference_month)
-        ctx['reference_month'] = reference_month
-        ctx['calendars'] = calendar_data['calendars']
-        ctx['selected_dates'] = calendar_data['selected_dates']
+
+
+    calendar_data = render_selectable_calendars(request.user, reference_month)
+    ctx['reference_month'] = reference_month
+    ctx['calendars'] = calendar_data['calendars']
+    ctx['selected_dates'] = calendar_data['selected_dates']
 
     return render(request, 'dashboard/log_period/log_period.html', ctx)
 
@@ -210,8 +215,6 @@ def add_log(request):
             ctx['il_form'] = IntercourseLogForm()
         
     return render(request, 'dashboard/add_log/add_log.html', ctx)
-
-
 
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
