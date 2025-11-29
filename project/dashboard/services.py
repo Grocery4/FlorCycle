@@ -94,3 +94,25 @@ def generate_date_intervals(consecutive_days):
         period_ranges.append((window[0], window[-1]))
     
     return period_ranges
+
+def check_existing_windows(user, period_ranges):
+    existing_windows = []
+    new_ranges = []
+    
+    for start_date, end_date in period_ranges:
+        existing = CycleWindow.objects.filter(
+            user=user,
+            is_prediction=False,
+            menstruation_start__lte=end_date,
+            menstruation_end__gte=start_date
+        ).exists()
+        
+        if existing:
+            existing_windows.append((start_date, end_date))
+        else:
+            new_ranges.append((start_date, end_date))
+    
+    return {
+        'existing': existing_windows,
+        'new': new_ranges
+    }
