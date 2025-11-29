@@ -32,6 +32,7 @@
         </div>
 
         {% include "calendar_core/calendars.html" %}
+        <input type="hidden" name="reference_month" id="reference_month" value="{{ reference_month|date:'Y-m-d' }}">
 
         <button type="submit">Save</button>
     </form>
