@@ -6,7 +6,7 @@ from datetime import datetime, date
 from dateutil import relativedelta
 import json
 
-from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, check_existing_windows, create_cycle_window
+from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, parse_list_of_dates, apply_period_windows
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
@@ -109,16 +109,15 @@ def add_period(request):
         reference_month = datetime.strptime(request.POST.get('reference_month'), "%Y-%m-%d").date()
         calendar_data = render_selectable_calendars(request.user, reference_month)
         
-        
-        selected_days = request.POST.getlist('selected_days')
+        selected_days = parse_list_of_dates(request.POST.getlist('selected_days'))
         menstruation_windows_list = group_consecutive_days(selected_days)
-        
         menstruation_ranges = generate_date_intervals(menstruation_windows_list)
-        window_check = check_existing_windows(request.user, menstruation_ranges)
 
-        for new_range in window_check['new']:
-            create_cycle_window(request.user, new_range[0], new_range[-1])
-            
+
+        apply_period_windows(request.user, menstruation_ranges, calendar_data['rendered_month_start'], calendar_data['rendered_month_end'])
+        # re-render changes
+        calendar_data = render_selectable_calendars(request.user, reference_month)
+
     else:
         reference_month = date.today()
         calendar_data = render_selectable_calendars(request.user, reference_month)
