@@ -18,7 +18,7 @@ class GetMonthsRangeTests(TestCase):
             min_ovulation_window=date(2025, 1, 20),
             max_ovulation_window=date(2025, 1, 23),
         )
-        self.assertEqual(get_months_range([cw]), [(2025, 1)])
+        self.assertEqual(get_months_range([cw]), [date(2025, 1, 1)])
 
     def test_multiple_months(self):
         cw1 = CycleWindow(
@@ -34,7 +34,7 @@ class GetMonthsRangeTests(TestCase):
             max_ovulation_window=date(2025, 3, 18),
         )
         result = get_months_range([cw1, cw2])
-        self.assertEqual(result, [(2025, 1), (2025, 2), (2025, 3), (2025, 4)])
+        self.assertEqual(result, [date(2025, 1, 1), date(2025, 2, 1), date(2025, 3, 1), date(2025, 4, 1)])
 
     def test_cross_year(self):
         cw = CycleWindow(
@@ -44,7 +44,7 @@ class GetMonthsRangeTests(TestCase):
             max_ovulation_window=date(2026, 1, 15),
         )
         result = get_months_range([cw])
-        self.assertEqual(result, [(2025, 12), (2026, 1)])
+        self.assertEqual(result, [date(2025, 12, 1), date(2026, 1, 1)])
 
 
 class GetHighlightedDatesTests(TestCase):

@@ -48,10 +48,10 @@ def render_selectable_calendars(user, date):
 
 
     rendered_months = [
-        (two_months_ago.year, two_months_ago.month),
-        (one_month_ago.year, one_month_ago.month),
-        (date_start.year, date_start.month),
-        (one_month_fwd.year, one_month_fwd.month)
+        two_months_ago,
+        one_month_ago,
+        date_start,
+        one_month_fwd
     ]
 
     rendered_month_start = two_months_ago
@@ -70,6 +70,13 @@ def render_selectable_calendars(user, date):
         'rendered_month_start': rendered_month_start,
         'rendered_month_end': rendered_month_end
     }
+
+def get_visible_windows(user, visible_start, visible_end):
+    return CycleWindow.objects.filter(
+        user=user,
+        menstruation_start__lte=visible_end,
+        menstruation_end__gte=visible_start
+    )
 
 def group_consecutive_days(selected_dates):
     if not selected_dates:
