@@ -54,10 +54,10 @@ def render_selectable_calendars(user, date):
         (one_month_fwd.year, one_month_fwd.month)
     ]
 
-    start_date = two_months_ago
-    end_date = (one_month_fwd + relativedelta.relativedelta(months=1)) - timedelta(days=1)
+    rendered_month_start = two_months_ago
+    rendered_month_end = (one_month_fwd + relativedelta.relativedelta(months=1)) - timedelta(days=1)
 
-    cw_in_rendered_months = CycleWindow.objects.filter(user=user, is_prediction=False, menstruation_start__lte=end_date, menstruation_end__gte=start_date)
+    cw_in_rendered_months = CycleWindow.objects.filter(user=user, is_prediction=False, menstruation_start__lte=rendered_month_end, menstruation_end__gte=rendered_month_start)
     
     menstruation_dates = []
     
@@ -66,7 +66,9 @@ def render_selectable_calendars(user, date):
 
     return {
         'calendars': render_multiple_calendars(months=rendered_months, menstruation_dates=menstruation_dates, calendar_type=CalendarType.SELECTABLE),
-        'selected_dates': menstruation_dates
+        'selected_dates': menstruation_dates,
+        'rendered_month_start': rendered_month_start,
+        'rendered_month_end': rendered_month_end
     }
 
 def group_consecutive_days(selected_dates):
