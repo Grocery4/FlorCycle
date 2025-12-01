@@ -9,7 +9,7 @@
 {% block extra_js %}
     <script type="text/javascript">
         window.selectedDates = {{ selected_dates | safe }};
-        window.referenceMonth = "{{ reference_month|date:'Y-m-d' }}";
+        window.referenceMonth = "{{ reference_month | date:'Y-m-d' }}";
     </script>
     <script type="text/javascript" src="{% static "dashboard/js/period_selector.js" %}"></script>
     <script type="text/javascript" src="{% static "dashboard/js/month_navigator.js" %}"></script>
@@ -21,6 +21,13 @@
 {% block content %}
     <div class="log-period-container">
                 {% include "dashboard/subpage_topbar.html" %}
+    </div>
+
+    <p>Debug purposes:</p>
+    <div class="debug">
+        <label id="mo_start">{{ rendered_month_start }}</label>
+        to
+        <label id="mo_end">{{ rendered_month_end}}</label>
     </div>
 
     <form method="post">

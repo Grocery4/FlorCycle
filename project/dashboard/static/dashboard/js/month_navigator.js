@@ -32,7 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(response => response.json())
             .then(data => {
                 setNewCalendars(data.calendars);
-                window.referenceMonth = data.reference_month
+                window.referenceMonth = data.reference_month;
+                
+                document.getElementById('mo_start').innerHTML = data.rendered_month_start;
+                document.getElementById('mo_end').innerHTML = data.rendered_month_end;
             })
         })
     });

@@ -107,6 +107,7 @@ def add_period(request):
     
     if request.method == 'POST': 
         reference_month = datetime.strptime(request.POST.get('reference_month'), "%Y-%m-%d").date()
+        calendar_data = render_selectable_calendars(request.user, reference_month)
         
         
         selected_days = request.POST.getlist('selected_days')
@@ -120,12 +121,14 @@ def add_period(request):
             
     else:
         reference_month = date.today()
+        calendar_data = render_selectable_calendars(request.user, reference_month)
 
 
-    calendar_data = render_selectable_calendars(request.user, reference_month)
     ctx['reference_month'] = reference_month
     ctx['calendars'] = calendar_data['calendars']
     ctx['selected_dates'] = calendar_data['selected_dates']
+    ctx['rendered_month_start'] = calendar_data['rendered_month_start']
+    ctx['rendered_month_end'] = calendar_data['rendered_month_end']
 
     return render(request, 'dashboard/log_period/log_period.html', ctx)
 
@@ -149,7 +152,9 @@ def ajax_navigate_calendar(request):
     response_data = {
         'reference_month': new_reference_month.strftime('%Y-%m-%d'),
         'calendars': calendar_data['calendars'],
-        'selected_dates': calendar_data['selected_dates']
+        'selected_dates': calendar_data['selected_dates'],
+        'rendered_month_start': calendar_data['rendered_month_start'],
+        'rendered_month_end': calendar_data['rendered_month_end']
     }
 
     return JsonResponse(response_data)
