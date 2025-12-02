@@ -8,8 +8,6 @@ from log_core.models import IntercourseLog
 def get_intercourse_activity_metrics(user, end_date=date.today(), month_range=1):
     start_date = end_date - relativedelta.relativedelta(months=month_range)
 
-    print(IntercourseLog.objects.filter(log__user=user, log__date__range=[start_date,end_date]))
-
     intercourse_count = IntercourseLog.objects.filter(
         log__user=user,
         log__date__range=[start_date,end_date]

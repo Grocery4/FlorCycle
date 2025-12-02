@@ -289,15 +289,14 @@ def ajax_load_log(request):
     return JsonResponse(response_data)
 
 #TODO - might turn into a CBV
+#TODO - add form to choose month_range
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
 def stats(request):
     ctx = {}
 
-    activity_month_range = 1
-    frequency_month_range = 6
-    activity_metrics = get_intercourse_activity_metrics(user=request.user, month_range=activity_month_range)
-    frequency_metrics = get_intercourse_frequency_metrics(user=request.user, month_range=frequency_month_range)
-    print(activity_metrics)
-    print(frequency_metrics)
+    activity_metrics = get_intercourse_activity_metrics(user=request.user)
+    frequency_metrics = get_intercourse_frequency_metrics(user=request.user)
 
     ctx['intercourse_count'] = activity_metrics['intercourse_count']
     ctx['orgasm_percentage'] = activity_metrics['orgasm_percentage']
@@ -308,3 +307,31 @@ def stats(request):
     ctx['frequency_orgasm'] = frequency_metrics['frequency_orgasm']
 
     return render(request, 'dashboard/stats/stats.html', ctx)
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+@require_POST
+def ajax_load_stats(request):
+    data = json.loads(request.body)
+    month_range= int(data.get('month_range', 1))
+    type=str(data.get('type'))
+
+    response_data = {}
+    if type == 'activity_dropdown':
+        activity_metrics = get_intercourse_activity_metrics(user=request.user, month_range=month_range)
+        response_data.update({
+            'intercourse_count': activity_metrics['intercourse_count'],
+            'orgasm_percentage': activity_metrics['orgasm_percentage'],
+            'protected_count': activity_metrics['protected_count'],
+            'unprotected_count': activity_metrics['unprotected_count']
+
+        })
+
+    elif type == 'frequency_dropdown':
+        frequency_metrics = get_intercourse_frequency_metrics(user=request.user, month_range=month_range)
+        response_data.update({
+            'frequency_intercourse' : frequency_metrics['frequency_intercourse'],
+            'frequency_orgasm' : frequency_metrics['frequency_orgasm']
+        })
+
+    return JsonResponse(response_data)
