@@ -286,3 +286,9 @@ def ajax_load_log(request):
         })
 
     return JsonResponse(response_data)
+
+#TODO - might turn into a CBV
+def stats(request):
+    ctx = {}
+
+    return render(request, 'dashboard/stats/stats.html', ctx)

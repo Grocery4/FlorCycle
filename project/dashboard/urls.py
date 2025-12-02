@@ -14,4 +14,6 @@ urlpatterns = [
     path('add-log/', views.add_log, name='add_log'),
     path("ajax/load-log/", views.ajax_load_log, name="ajax_load_log"),
     path("ajax/navigate-calendar/", views.ajax_navigate_calendar, name="ajax_navigate_calendar"),
+
+    path('stats/', views.stats, name='stats')
 ]
