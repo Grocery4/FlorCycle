@@ -8,8 +8,8 @@
 
 {% block extra_js %}
     <script type="text/javascript">
-        window.selectedDates = {{ selected_dates | safe }};
-        window.referenceMonth = "{{ reference_month|date:'Y-m-d' }}";
+        window.selectedDates = {{ selected_dates | safe }}; 
+        window.referenceMonth = "{{ reference_month | date:'Y-m-d' }}";
     </script>
     <script type="text/javascript" src="{% static "dashboard/js/period_selector.js" %}"></script>
     <script type="text/javascript" src="{% static "dashboard/js/month_navigator.js" %}"></script>
@@ -32,7 +32,9 @@
         </div>
 
         {% include "calendar_core/calendars.html" %}
-        <input type="hidden" name="reference_month" id="reference_month" value="{{ reference_month|date:'Y-m-d' }}">
+        <input type="hidden" name="reference_month" id="reference_month" value="{{ reference_month | date:'Y-m-d' }}">
+        <input type="hidden" name="mo_start" id="mo_start" value="{{ rendered_month_start |date:'Y-m-d' }}">
+        <input type="hidden" name="mo_end" id="mo_end" value="{{ rendered_month_end | date:'Y-m-d' }}">
 
         <button type="submit">Save</button>
     </form>

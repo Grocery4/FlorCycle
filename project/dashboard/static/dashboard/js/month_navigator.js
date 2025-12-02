@@ -31,8 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .then(response => response.json())
             .then(data => {
+                window.referenceMonth = data.reference_month;
+                window.selectedDates = data.selected_dates;
                 setNewCalendars(data.calendars);
-                window.referenceMonth = data.reference_month
+                document.getElementById('reference_month').value = data.reference_month;
+                document.getElementById('mo_start').value = data.rendered_month_start;
+                document.getElementById('mo_end').value = data.rendered_month_end;
             })
         })
     });

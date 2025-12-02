@@ -5,8 +5,8 @@ from calendar_core.services import render_multiple_calendars
 
 #TODO - refactor to use relativedelta
 #TODO - might move into calendar_core
-# returns a list of (year, month)
-def get_months_range(predictions: list) -> list[tuple[int,int]]:
+# returns a list of date objects
+def get_months_range(predictions: list) -> list[date]:
     if not predictions:
         return []
 
@@ -17,7 +17,7 @@ def get_months_range(predictions: list) -> list[tuple[int,int]]:
     current = date(first_date.year, first_date.month, 1)
 
     while current <= date(last_date.year, last_date.month, 1):
-        months.append((current.year, current.month))
+        months.append(current)
         if current.month == 12:
             current = date(current.year + 1, 1, 1)
         else:

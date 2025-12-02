@@ -1,5 +1,7 @@
 from functools import wraps
 from django.shortcuts import redirect
+from django.db import transaction
+
 
 from cycle_core.models import CycleWindow
 from cycle_core.services import PredictionBuilder
@@ -48,46 +50,58 @@ def render_selectable_calendars(user, date):
 
 
     rendered_months = [
-        (two_months_ago.year, two_months_ago.month),
-        (one_month_ago.year, one_month_ago.month),
-        (date_start.year, date_start.month),
-        (one_month_fwd.year, one_month_fwd.month)
+        two_months_ago,
+        one_month_ago,
+        date_start,
+        one_month_fwd
     ]
 
-    start_date = two_months_ago
-    end_date = (one_month_fwd + relativedelta.relativedelta(months=1)) - timedelta(days=1)
+    rendered_month_start = two_months_ago
+    rendered_month_end = (one_month_fwd + relativedelta.relativedelta(months=1)) - timedelta(days=1)
 
-    cw_in_rendered_months = CycleWindow.objects.filter(user=user, is_prediction=False, menstruation_start__lte=end_date, menstruation_end__gte=start_date)
-    
-    menstruation_dates = []
-    
-    for cw in cw_in_rendered_months:
-        menstruation_dates.extend(cw.getMenstruationDatesAsList())
+    rendered_menstruation_windows = get_visible_windows(user, rendered_month_start, rendered_month_end)
 
     return {
-        'calendars': render_multiple_calendars(months=rendered_months, menstruation_dates=menstruation_dates, calendar_type=CalendarType.SELECTABLE),
-        'selected_dates': menstruation_dates
+        'calendars': render_multiple_calendars(months=rendered_months, menstruation_dates=rendered_menstruation_windows, calendar_type=CalendarType.SELECTABLE),
+        'selected_dates': rendered_menstruation_windows,
+        'rendered_month_start': rendered_month_start,
+        'rendered_month_end': rendered_month_end
     }
+
+def get_visible_windows(user, visible_start, visible_end):
+    visible_cw = CycleWindow.objects.filter(
+        user=user,
+        is_prediction=False,
+        menstruation_start__lte=visible_end,
+        menstruation_end__gte=visible_start
+    )
+
+    visible_menstruation_windows = []
+
+    for cw in visible_cw:
+        visible_menstruation_windows.extend(cw.getMenstruationDatesAsList())
+
+    return visible_menstruation_windows
+
+def parse_list_of_dates(dates):
+    return sorted([datetime.strptime(d, '%Y-%m-%d').date() for d in dates])
 
 def group_consecutive_days(selected_dates):
     if not selected_dates:
         return []
     
-    selected_dates = [datetime.strptime(date, '%Y-%m-%d').date() for date in selected_dates]
-    sorted_dates = sorted(selected_dates)
+    consecutive_date_ranges = []
+    current_window = [selected_dates[0]]
     
-    periods = []
-    current_period = [sorted_dates[0]]
-    
-    for i in range(1, len(sorted_dates)):
-        if sorted_dates[i] == sorted_dates[i-1] + timedelta(days=1):
-            current_period.append(sorted_dates[i])
+    for i in range(1, len(selected_dates)):
+        if selected_dates[i] == selected_dates[i-1] + timedelta(days=1):
+            current_window.append(selected_dates[i])
         else:
-            periods.append(current_period)
-            current_period = [sorted_dates[i]]
+            consecutive_date_ranges.append(current_window)
+            current_window = [selected_dates[i]]
         
-    periods.append(current_period)
-    return periods
+    consecutive_date_ranges.append(current_window)
+    return consecutive_date_ranges
 
 def generate_date_intervals(consecutive_days):
     period_ranges = []
@@ -96,33 +110,11 @@ def generate_date_intervals(consecutive_days):
     
     return period_ranges
 
-def check_existing_windows(user, period_ranges):
-    existing_windows = []
-    new_ranges = []
-    
-    for start_date, end_date in period_ranges:
-        existing = CycleWindow.objects.filter(
-            user=user,
-            is_prediction=False,
-            menstruation_start__lte=end_date,
-            menstruation_end__gte=start_date
-        ).exists()
-        
-        if existing:
-            existing_windows.append((start_date, end_date))
-        else:
-            new_ranges.append((start_date, end_date))
-    
-    return {
-        'existing': existing_windows,
-        'new': new_ranges
-    }
-
 #TODO - accomodate for both cyclestats and cycledetails
 def create_cycle_window(user, start_date, end_date):
     ovulation_start, ovulation_end = PredictionBuilder.predictOvulation(start_date)
 
-    return CycleWindow.objects.create(
+    return CycleWindow(
         user=user,
         menstruation_start=start_date,
         menstruation_end=end_date,
@@ -130,3 +122,104 @@ def create_cycle_window(user, start_date, end_date):
         max_ovulation_window=ovulation_end,
         is_prediction=False
     )
+
+def _normalize_ranges(ranges):
+    """
+    Merge overlapping or adjacent date ranges and return a sorted list.
+    """
+    if not ranges:
+        return []
+
+    ranges = sorted(ranges, key=lambda x: x[0])
+    merged = []
+    cur_start, cur_end = ranges[0]
+
+    for s, e in ranges[1:]:
+        if cur_end + timedelta(days=1) >= s:
+            cur_end = max(cur_end, e)
+        else:
+            merged.append((cur_start, cur_end))
+            cur_start, cur_end = s, e
+
+    merged.append((cur_start, cur_end))
+    return merged
+
+
+def _validate_ranges(ranges):
+    for s, e in ranges:
+        if s > e:
+            raise ValueError("Invalid range: {} > {}".format(s, e))
+
+
+@transaction.atomic
+def apply_period_windows(user, selected_ranges, visible_start, visible_end, month_offset=1):
+    _validate_ranges(selected_ranges)
+    selected_norm = _normalize_ranges(selected_ranges)
+
+    # Extend the search range by month_offset on both sides to catch adjacent periods
+    search_start = visible_start - relativedelta.relativedelta(months=month_offset)
+    search_end = visible_end + relativedelta.relativedelta(months=month_offset)
+
+    # Load all existing windows that overlap the extended search range
+    existing_windows = list(
+        CycleWindow.objects.filter(
+            user=user,
+            is_prediction=False,
+            menstruation_start__lte=search_end,
+            menstruation_end__gte=search_start
+        )
+    )
+
+    preserved_fragments = []
+    existing_ids_to_delete = []
+
+    for w in existing_windows:
+        w_start = w.menstruation_start
+        w_end = w.menstruation_end
+
+        # Preserve entire windows that are completely outside the visible range
+        # but within the offset range (i.e., in adjacent months)
+        if (w_end < visible_start or w_start > visible_end):
+            # Window is entirely in the offset months - preserve it completely
+            preserved_fragments.append((w_start, w_end))
+        else:
+            # Window overlaps with visible range - preserve only the parts outside visible range
+            # Left fragment before visible_start
+            if w_start < visible_start:
+                left_end = min(w_end, visible_start - timedelta(days=1))
+                if left_end >= w_start:
+                    preserved_fragments.append((w_start, left_end))
+
+            # Right fragment after visible_end
+            if w_end > visible_end:
+                right_start = max(w_start, visible_end + timedelta(days=1))
+                if right_start <= w_end:
+                    preserved_fragments.append((right_start, w_end))
+
+        existing_ids_to_delete.append(w.id)
+
+    preserved_fragments = _normalize_ranges(preserved_fragments)
+
+    # Final set of ranges to create
+    create_ranges = _normalize_ranges(selected_norm + preserved_fragments)
+
+    deleted_count = 0
+    created_objs = []
+
+    if existing_ids_to_delete:
+        deleted_count = CycleWindow.objects.filter(id__in=existing_ids_to_delete).delete()[0]
+
+    objs_to_create = []
+    for s, e in create_ranges:
+        objs_to_create.append(create_cycle_window(user, s, e))
+
+    if objs_to_create:
+        created_objs = CycleWindow.objects.bulk_create(objs_to_create)
+
+    return {
+        "deleted_count": deleted_count,
+        "created_count": len(created_objs),
+        "created_ranges": [(obj.menstruation_start, obj.menstruation_end) for obj in created_objs],
+        "preserved_fragments": preserved_fragments,
+        "selected_ranges_normalized": selected_norm,
+    }
