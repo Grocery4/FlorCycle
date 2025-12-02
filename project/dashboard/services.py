@@ -3,8 +3,8 @@ from django.shortcuts import redirect
 from django.db import transaction
 
 
-from cycle_core.models import CycleWindow
-from cycle_core.services import PredictionBuilder
+from cycle_core.models import CycleWindow, CycleStats
+from cycle_core.services import PredictionBuilder, updateCycleStats
 from calendar_core.services import render_multiple_calendars, CalendarType
 from datetime import timedelta, datetime
 from dateutil import relativedelta
@@ -215,6 +215,16 @@ def apply_period_windows(user, selected_ranges, visible_start, visible_end, mont
 
     if objs_to_create:
         created_objs = CycleWindow.objects.bulk_create(objs_to_create)
+
+    # Manually update CycleStats since bulk_create doesn't trigger post_save signals
+    try:
+        stats = CycleStats.objects.get(user=user)
+        stats.log_count = CycleWindow.objects.filter(user=user, is_prediction=False).count()
+        stats.save()
+        # Update avg durations if we have enough logs
+        updateCycleStats(stats)
+    except CycleStats.DoesNotExist:
+        pass
 
     return {
         "deleted_count": deleted_count,

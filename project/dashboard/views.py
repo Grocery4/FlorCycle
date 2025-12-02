@@ -163,10 +163,6 @@ def ajax_navigate_calendar(request):
 def add_log(request):
     ctx = {}
 
-    #TODO - period start can be inserted only if selected_date <= today, else show period end button only
-    # TODO - add Period Start/End logic
-    # TODO - if DailyLog in range of a real Period window: sync DailyLog to closest real Period
-
     if request.method == 'POST':
         # Get the date from POST data first
         selected_date = request.POST.get('date')
