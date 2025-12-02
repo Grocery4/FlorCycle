@@ -8,6 +8,24 @@
 
 {% block content %}
     <div class="stats-container">
-        
+        {% include "dashboard/subpage_topbar.html" %}
+
+        <div class="intercourse-stats">
+            <ul>
+                <li>intercourse activity (over 1mo, 3mo, 6mo, 12mo, all data)</li>
+                <ul>
+                    <li>intercourse count: {{ intercourse_count }}</li>
+                    <li>orgasm%: {{ orgasm_percentage }}</li>
+                    <li>protected count: {{ protected_count }}</li>
+                    <li>unprotected count: {{ unprotected_count }}</li>
+                </ul>
+
+                <li>frequency (over 1mo, 3mo, 6mo, 12mo, all data)</li>
+                    <ul>
+                        <li>intercourse (times / total): every {{ frequency_intercourse }} days</li>
+                        <li>orgasm (times / total) every {{ frequency_orgasm }} days</li>
+                    </ul>
+            </ul>
+        </div>
     </div>
 {% endblock content %}

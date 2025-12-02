@@ -7,6 +7,7 @@ from dateutil import relativedelta
 import json
 
 from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, parse_list_of_dates, apply_period_windows
+from .dashboard_analytics import get_intercourse_activity_metrics, get_intercourse_frequency_metrics
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
@@ -290,5 +291,20 @@ def ajax_load_log(request):
 #TODO - might turn into a CBV
 def stats(request):
     ctx = {}
+
+    activity_month_range = 1
+    frequency_month_range = 6
+    activity_metrics = get_intercourse_activity_metrics(user=request.user, month_range=activity_month_range)
+    frequency_metrics = get_intercourse_frequency_metrics(user=request.user, month_range=frequency_month_range)
+    print(activity_metrics)
+    print(frequency_metrics)
+
+    ctx['intercourse_count'] = activity_metrics['intercourse_count']
+    ctx['orgasm_percentage'] = activity_metrics['orgasm_percentage']
+    ctx['protected_count'] = activity_metrics['protected_count']
+    ctx['unprotected_count'] = activity_metrics['unprotected_count']
+    
+    ctx['frequency_intercourse'] = frequency_metrics['frequency_intercourse']
+    ctx['frequency_orgasm'] = frequency_metrics['frequency_orgasm']
 
     return render(request, 'dashboard/stats/stats.html', ctx)
