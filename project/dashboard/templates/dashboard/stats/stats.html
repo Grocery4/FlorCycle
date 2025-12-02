@@ -1,31 +1,51 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block extra_head %}{% endblock extra_head %}
-{% block extra_js %}{% endblock extra_js %}
+{% block extra_head %}
+    <link rel="stylesheet" href={% static "dashboard/css/stats.css" %}>
+{% endblock extra_head %}
 
-{% block title %}See your stats{% endblock title %}
+{% block title %}Statistics{% endblock title %}
 
 {% block content %}
     <div class="stats-container">
         {% include "dashboard/subpage_topbar.html" %}
 
-        <div class="intercourse-stats">
-            <ul>
-                <li>intercourse activity (over 1mo, 3mo, 6mo, 12mo, all data)</li>
-                <ul>
-                    <li>intercourse count: {{ intercourse_count }}</li>
-                    <li>orgasm%: {{ orgasm_percentage }}</li>
-                    <li>protected count: {{ protected_count }}</li>
-                    <li>unprotected count: {{ unprotected_count }}</li>
-                </ul>
+        <div class="stat-section activity">
+            <div class="stat-section-title">Activity - Last 1 Month</div>
+            <div class="stat-items-grid">
+                <div class="stat-item">
+                    <h3 class="stat-title">Total Intercourse</h3>
+                    <p class="stat-value">{{ intercourse_count|default:"-" }}</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-title">Orgasm Rate</h3>
+                    <p class="stat-value percentage">{{ orgasm_percentage|floatformat:1|default:"-" }}</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-title">Protected</h3>
+                    <p class="stat-value">{{ protected_count|default:"-" }}</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-title">Unprotected</h3>
+                    <p class="stat-value">{{ unprotected_count|default:"-" }}</p>
+                </div>
+            </div>
+        </div>
 
-                <li>frequency (over 1mo, 3mo, 6mo, 12mo, all data)</li>
-                    <ul>
-                        <li>intercourse (times / total): every {{ frequency_intercourse }} days</li>
-                        <li>orgasm (times / total) every {{ frequency_orgasm }} days</li>
-                    </ul>
-            </ul>
+        <div class="stat-section frequency">
+            <div class="stat-section-title">Frequency - Last 6 Months</div>
+            <div class="stat-items-grid">
+                <div class="stat-item">
+                    <h3 class="stat-title">Intercourse Frequency</h3>
+                    <p class="stat-value days">{{ frequency_intercourse|default:"—" }}</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-title">Orgasm Frequency</h3>
+                    <p class="stat-value days">{{ frequency_orgasm|default:"—" }}</p>
+                </div>
+            </div>
         </div>
     </div>
+
 {% endblock content %}
