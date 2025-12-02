@@ -152,8 +152,8 @@ def ajax_navigate_calendar(request):
         'reference_month': new_reference_month.strftime('%Y-%m-%d'),
         'calendars': calendar_data['calendars'],
         'selected_dates': calendar_data['selected_dates'],
-        'rendered_month_start': calendar_data['rendered_month_start'],
-        'rendered_month_end': calendar_data['rendered_month_end']
+        'rendered_month_start': calendar_data['rendered_month_start'].strftime('%Y-%m-%d'),
+        'rendered_month_end': calendar_data['rendered_month_end'].strftime('%Y-%m-%d')
     }
 
     return JsonResponse(response_data)
