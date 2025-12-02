@@ -25,3 +25,12 @@
     background-color: lightgray;
     border-radius: 4px;
 }
+
+.day-label input:disabled + .day-number {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.day-label input:disabled:hover + .day-number {
+    background-color: transparent;
+}

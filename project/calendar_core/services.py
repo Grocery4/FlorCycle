@@ -45,6 +45,7 @@ class SelectableCycleCalendar(CycleCalendar):
             return '<td class="noday">&nbsp;</td>'
 
         date_str = f"{self._year:04d}-{self._month:02d}-{day:02d}"
+        current_date = date(self._year, self._month, day)
         css_class = self._date_to_class.get(date_str, "")
 
         # Ensure consistent td class string
@@ -53,11 +54,15 @@ class SelectableCycleCalendar(CycleCalendar):
         # Checkbox ID for <label for="">
         checkbox_id = f"day_{date_str}"
 
+        # Disable checkbox if date is in the future
+        is_future = current_date > date.today()
+        disabled_attr = ' disabled' if is_future else ''
+
         return (
             f'<td{td_class}>'
             f'  <label class="day-label" for="{checkbox_id}">'
             f'    <input type="checkbox" id="{checkbox_id}" '
-            f'           name="selected_days" value="{date_str}" />'
+            f'           name="selected_days" value="{date_str}"{disabled_attr} />'
             f'    <span class="day-number">{day}</span>'
             f'  </label>'
             f'</td>'
