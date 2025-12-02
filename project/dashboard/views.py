@@ -80,15 +80,19 @@ def cycle_logs(request):
     ctx = {}
 
     user = request.user
-    try:
-        cs = user.cyclestats
-    except CycleStats.DoesNotExist:
-        cs = None
-
+    cs = getattr(user, 'cyclestats', None)
+    
     if cs:
-        ctx['avg_cycle_duration'] = cs.avg_cycle_duration
         ctx['log_count'] = cs.log_count
-        ctx['avg_menstruation_duration'] = cs.avg_menstruation_duration
+        
+        if cs.log_count < 6:
+            cd = getattr(user, 'cycledetails', None)
+            if cd:
+                ctx['avg_cycle_duration'] = cd.avg_cycle_duration
+                ctx['avg_menstruation_duration'] = cd.avg_menstruation_duration
+        else:
+            ctx['avg_cycle_duration'] = cs.avg_cycle_duration
+            ctx['avg_menstruation_duration'] = cs.avg_menstruation_duration
 
     show_history_view = request.GET.get('view') == 'history'
     
