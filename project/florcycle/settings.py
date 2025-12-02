@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'guest_mode',
     'dashboard',
     'cycle_core',
+    'log_core',
     'calendar_core',
     'users.apps.UsersConfig',
     'forum',

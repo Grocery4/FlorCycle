@@ -11,8 +11,8 @@
         {% include "dashboard/dashboard_topbar.html" %}
 
         <div class="dashboard-data">
+            <div class="add-symptoms-section"><a href="{% url "dashboard:add_log" %}">add symptoms</a></div>
             <div class="period-prediction">{% include "dashboard/next_prediction.html" %}</div>
-            <div class="add-symptoms-section">add symptoms</div>
             <div class="cycle-phases">cycle phases</div>
             <div class="logs"><a href="{% url 'dashboard:logs_page' %}">logs</a></div>
         </div>
