@@ -23,13 +23,6 @@
                 {% include "dashboard/subpage_topbar.html" %}
     </div>
 
-    <div class="debug">
-        <p>Debug purposes:</p>
-        <label id="mo_start">{{ rendered_month_start }}</label>
-        to
-        <label id="mo_end">{{ rendered_month_end}}</label>
-    </div>
-
     <form method="post">
         {% csrf_token %}
 
@@ -39,7 +32,9 @@
         </div>
 
         {% include "calendar_core/calendars.html" %}
-        <input type="hidden" name="reference_month" id="reference_month" value="{{ reference_month|date:'Y-m-d' }}">
+        <input type="hidden" name="reference_month" id="reference_month" value="{{ reference_month | date:'Y-m-d' }}">
+        <input type="hidden" name="mo_start" id="mo_start" value="{{ rendered_month_start |date:'Y-m-d' }}">
+        <input type="hidden" name="mo_end" id="mo_end" value="{{ rendered_month_end | date:'Y-m-d' }}">
 
         <button type="submit">Save</button>
     </form>
