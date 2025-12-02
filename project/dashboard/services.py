@@ -152,22 +152,21 @@ def _validate_ranges(ranges):
 
 
 @transaction.atomic
-def apply_period_windows(user, selected_ranges, visible_start, visible_end):
-    """
-    Reconcile DB CycleWindow rows with the selected_ranges posted from the
-    calendar covering the visible 4-month date range.
-    """
-
+def apply_period_windows(user, selected_ranges, visible_start, visible_end, month_offset=1):
     _validate_ranges(selected_ranges)
     selected_norm = _normalize_ranges(selected_ranges)
 
-    # Load all existing windows that overlap the visible calendar
+    # Extend the search range by month_offset on both sides to catch adjacent periods
+    search_start = visible_start - relativedelta.relativedelta(months=month_offset)
+    search_end = visible_end + relativedelta.relativedelta(months=month_offset)
+
+    # Load all existing windows that overlap the extended search range
     existing_windows = list(
         CycleWindow.objects.filter(
             user=user,
             is_prediction=False,
-            menstruation_start__lte=visible_end,
-            menstruation_end__gte=visible_start
+            menstruation_start__lte=search_end,
+            menstruation_end__gte=search_start
         )
     )
 
@@ -178,17 +177,24 @@ def apply_period_windows(user, selected_ranges, visible_start, visible_end):
         w_start = w.menstruation_start
         w_end = w.menstruation_end
 
-        # Left fragment before visible_start
-        if w_start < visible_start:
-            left_end = min(w_end, visible_start - timedelta(days=1))
-            if left_end >= w_start:
-                preserved_fragments.append((w_start, left_end))
+        # Preserve entire windows that are completely outside the visible range
+        # but within the offset range (i.e., in adjacent months)
+        if (w_end < visible_start or w_start > visible_end):
+            # Window is entirely in the offset months - preserve it completely
+            preserved_fragments.append((w_start, w_end))
+        else:
+            # Window overlaps with visible range - preserve only the parts outside visible range
+            # Left fragment before visible_start
+            if w_start < visible_start:
+                left_end = min(w_end, visible_start - timedelta(days=1))
+                if left_end >= w_start:
+                    preserved_fragments.append((w_start, left_end))
 
-        # Right fragment after visible_end
-        if w_end > visible_end:
-            right_start = max(w_start, visible_end + timedelta(days=1))
-            if right_start <= w_end:
-                preserved_fragments.append((right_start, w_end))
+            # Right fragment after visible_end
+            if w_end > visible_end:
+                right_start = max(w_start, visible_end + timedelta(days=1))
+                if right_start <= w_end:
+                    preserved_fragments.append((right_start, w_end))
 
         existing_ids_to_delete.append(w.id)
 
