@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
-from datetime import date
+from datetime import datetime, date
+from dateutil import relativedelta
 import json
 
-from .services import user_type_required, configured_required, fetch_closest_prediction
+from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, parse_list_of_dates, apply_period_windows
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
@@ -91,13 +92,71 @@ def cycle_logs(request):
 
     show_history_view = request.GET.get('view') == 'history'
     
-    periods_history = CycleWindow.objects.filter(user=user, is_prediction=False)
-    predictions_log = CycleWindow.objects.filter(user=user, is_prediction=True)
+    periods_history = CycleWindow.objects.filter(user=user, is_prediction=False).order_by('menstruation_start')
+    predictions_log = CycleWindow.objects.filter(user=user, is_prediction=True).order_by('menstruation_start')
 
     ctx['objects'] = periods_history if show_history_view else predictions_log
     ctx['active_view'] = 'history' if show_history_view else 'predictions'
 
     return render(request, 'dashboard/logs/logs.html', ctx)
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def add_period(request):
+    ctx = {}
+    
+    if request.method == 'POST': 
+        reference_month = datetime.strptime(request.POST.get('reference_month'), "%Y-%m-%d").date()
+        calendar_data = render_selectable_calendars(request.user, reference_month)
+        
+        selected_days = parse_list_of_dates(request.POST.getlist('selected_days'))
+        menstruation_windows_list = group_consecutive_days(selected_days)
+        menstruation_ranges = generate_date_intervals(menstruation_windows_list)
+
+
+        apply_period_windows(request.user, menstruation_ranges, calendar_data['rendered_month_start'], calendar_data['rendered_month_end'])
+        # re-render changes
+        calendar_data = render_selectable_calendars(request.user, reference_month)
+
+    else:
+        reference_month = date.today()
+        calendar_data = render_selectable_calendars(request.user, reference_month)
+
+
+    ctx['reference_month'] = reference_month
+    ctx['calendars'] = calendar_data['calendars']
+    ctx['selected_dates'] = calendar_data['selected_dates']
+    ctx['rendered_month_start'] = calendar_data['rendered_month_start']
+    ctx['rendered_month_end'] = calendar_data['rendered_month_end']
+
+    return render(request, 'dashboard/log_period/log_period.html', ctx)
+
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+@require_POST
+def ajax_navigate_calendar(request):
+    data = json.loads(request.body)
+
+    reference_month = datetime.strptime(data.get('reference_month'), '%Y-%m-%d')
+    button_type = data.get('button_type')
+
+    if button_type == 'next_btn':
+        new_reference_month = reference_month.replace(day=1) + relativedelta.relativedelta(months=1)
+    elif button_type == 'prev_btn':
+        new_reference_month = reference_month.replace(day=1) + relativedelta.relativedelta(months=-1)
+
+    calendar_data = render_selectable_calendars(request.user, new_reference_month.date())
+
+    response_data = {
+        'reference_month': new_reference_month.strftime('%Y-%m-%d'),
+        'calendars': calendar_data['calendars'],
+        'selected_dates': calendar_data['selected_dates'],
+        'rendered_month_start': calendar_data['rendered_month_start'].strftime('%Y-%m-%d'),
+        'rendered_month_end': calendar_data['rendered_month_end'].strftime('%Y-%m-%d')
+    }
+
+    return JsonResponse(response_data)
 
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
@@ -167,8 +226,6 @@ def add_log(request):
             ctx['il_form'] = IntercourseLogForm()
         
     return render(request, 'dashboard/add_log/add_log.html', ctx)
-
-
 
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required

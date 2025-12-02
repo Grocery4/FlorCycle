@@ -110,6 +110,7 @@ class PredictionBuilder():
 
         return(menstruation_start, menstruation_end)
 
+    #FIXME - instead of depending on cycle_details, pass avg values to make it compatible with both CycleDetails and CycleStats
     @staticmethod
     def predictOvulation(first_day_cycle: datetime) -> tuple[datetime, datetime]:
         ovulation_start = first_day_cycle + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY)

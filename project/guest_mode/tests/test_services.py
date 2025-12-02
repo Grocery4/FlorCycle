@@ -4,12 +4,12 @@ from datetime import date
 from unittest.mock import patch
 
 from cycle_core.models import CycleWindow, CycleDetails
-from guest_mode.services import getMonthsRange, getHighlightedDates, generateCalendars
+from guest_mode.services import get_months_range, get_highlighted_dates, generate_calendars
 
 
 class GetMonthsRangeTests(TestCase):
     def test_empty_predictions(self):
-        self.assertEqual(getMonthsRange([]), [])
+        self.assertEqual(get_months_range([]), [])
 
     def test_single_month(self):
         cw = CycleWindow(
@@ -18,7 +18,7 @@ class GetMonthsRangeTests(TestCase):
             min_ovulation_window=date(2025, 1, 20),
             max_ovulation_window=date(2025, 1, 23),
         )
-        self.assertEqual(getMonthsRange([cw]), [(2025, 1)])
+        self.assertEqual(get_months_range([cw]), [date(2025, 1, 1)])
 
     def test_multiple_months(self):
         cw1 = CycleWindow(
@@ -33,8 +33,8 @@ class GetMonthsRangeTests(TestCase):
             min_ovulation_window=date(2025, 3, 15),
             max_ovulation_window=date(2025, 3, 18),
         )
-        result = getMonthsRange([cw1, cw2])
-        self.assertEqual(result, [(2025, 1), (2025, 2), (2025, 3), (2025, 4)])
+        result = get_months_range([cw1, cw2])
+        self.assertEqual(result, [date(2025, 1, 1), date(2025, 2, 1), date(2025, 3, 1), date(2025, 4, 1)])
 
     def test_cross_year(self):
         cw = CycleWindow(
@@ -43,8 +43,8 @@ class GetMonthsRangeTests(TestCase):
             min_ovulation_window=date(2026, 1, 10),
             max_ovulation_window=date(2026, 1, 15),
         )
-        result = getMonthsRange([cw])
-        self.assertEqual(result, [(2025, 12), (2026, 1)])
+        result = get_months_range([cw])
+        self.assertEqual(result, [date(2025, 12, 1), date(2026, 1, 1)])
 
 
 class GetHighlightedDatesTests(TestCase):
@@ -55,7 +55,7 @@ class GetHighlightedDatesTests(TestCase):
             min_ovulation_window=date(2025, 1, 10),
             max_ovulation_window=date(2025, 1, 12),
         )
-        menstruation, ovulation = getHighlightedDates([cw])
+        menstruation, ovulation = get_highlighted_dates([cw])
         self.assertEqual(
             menstruation,
             [date(2025, 1, 1).strftime('%Y-%m-%d'), date(2025, 1, 2).strftime('%Y-%m-%d'), date(2025, 1, 3).strftime('%Y-%m-%d')],

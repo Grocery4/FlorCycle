@@ -62,10 +62,16 @@ class TestPredictionBuilder(TestCase):
         predictions = PredictionBuilder.generateMultiplePredictions(self.cd, 3)
 
         self.assertEqual(len(predictions), 3)
-        self.assertEqual(predictions[0].menstruation_start, self.cd.asCycleWindow().menstruation_start)
-        self.assertEqual(predictions[0].menstruation_end, self.cd.asCycleWindow().menstruation_end)
-        self.assertEqual(predictions[0].min_ovulation_window, self.cd.asCycleWindow().min_ovulation_window)
-        self.assertEqual(predictions[0].max_ovulation_window, self.cd.asCycleWindow().max_ovulation_window)
+        
+        expected_first_start = self.base_menstruation_date + timedelta(days=self.avg_cycle_duration)
+        expected_first_end = expected_first_start + timedelta(days=self.avg_menstruation_duration-1)
+        
+        self.assertEqual(predictions[0].menstruation_start, expected_first_start)
+        self.assertEqual(predictions[0].menstruation_end, expected_first_end)
+        
+        for i in range(1, len(predictions)):
+            expected_start = predictions[i-1].menstruation_start + timedelta(days=self.avg_cycle_duration)
+            self.assertEqual(predictions[i].menstruation_start, expected_start)
 
 if __name__ == "__main__":
     TestCase.main()
