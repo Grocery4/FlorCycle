@@ -105,6 +105,24 @@ class CycleWindow(models.Model):
     def getOvulationDuration(self):
         return (self.max_ovulation_window - self.min_ovulation_window) + timedelta(days=1)
 
+    def getPhasesBreakdown(self):
+        # calculate probable ovulation date (midpoint of ovulation window)
+        ovulation_duration = self.getOvulationDuration()
+        probable_ovulation_date = self.min_ovulation_window + (ovulation_duration / 2) - timedelta(days=0.5)
+        
+        return {
+            'menstruation': {
+                'start': self.menstruation_start,
+                'end': self.menstruation_end,
+                'duration': (self.menstruation_end - self.menstruation_start).days + 1
+            },
+            'ovulation': {
+                'start': self.min_ovulation_window,
+                'end': self.max_ovulation_window,
+                'probable_date': probable_ovulation_date.date() if hasattr(probable_ovulation_date, 'date') else probable_ovulation_date,
+                'duration': ovulation_duration.days
+            }
+        }
 
     def __str__(self):
         return (
