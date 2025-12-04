@@ -3,6 +3,7 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href={% static "dashboard/css/dashboard.css" %}>
+    <link rel="stylesheet" href={% static "dashboard/css/timeline_bar.css" %}>
 {% endblock extra_head %}
 {% block title %}Dashboard{% endblock title %}
 
@@ -14,7 +15,7 @@
             <section class="log-period-section"><a href="{% url "dashboard:add_period" %}">log period</a></section>
             <section class="add-symptoms-section"><a href="{% url "dashboard:add_log" %}">add symptoms</a></section>
             <section class="period-prediction">{% include "dashboard/next_prediction.html" %}</section>
-            <section class="cycle-phases">current cycle phases</section>
+            <section class="cycle-phases">{% include "dashboard/stats/timeline_bar.html" %}</section>
             <section class="logs"><a href="{% url 'dashboard:logs_page' %}">logs</a></section>
         </div>
 

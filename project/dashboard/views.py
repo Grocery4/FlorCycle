@@ -6,7 +6,7 @@ from datetime import datetime, date
 from dateutil import relativedelta
 import json
 
-from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, parse_list_of_dates, apply_period_windows
+from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, parse_list_of_dates, apply_period_windows, calculate_timeline_data
 from .dashboard_analytics import get_intercourse_activity_metrics, get_intercourse_frequency_metrics
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow
 from cycle_core.forms import CycleDetailsForm
@@ -20,6 +20,7 @@ from log_core.forms import DailyLogForm, IntercourseLogForm
 def homepage(request):
     ctx = {}
     ctx['next_prediction'] = fetch_closest_prediction(request.user)
+    ctx['timeline_data'] = calculate_timeline_data(request.user)
 
     return render(request, 'dashboard/dashboard.html', ctx)
     

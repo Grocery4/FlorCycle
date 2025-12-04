@@ -3,10 +3,11 @@ from django.shortcuts import redirect
 from django.db import transaction
 
 
-from cycle_core.models import CycleWindow, CycleStats
+from cycle_core.models import CycleWindow, CycleStats, CycleDetails, MIN_LOG_FOR_STATS
+
 from cycle_core.services import PredictionBuilder, updateCycleStats
 from calendar_core.services import render_multiple_calendars, CalendarType
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, date
 from dateutil import relativedelta
 
 
@@ -232,4 +233,117 @@ def apply_period_windows(user, selected_ranges, visible_start, visible_end, mont
         "created_ranges": [(obj.menstruation_start, obj.menstruation_end) for obj in created_objs],
         "preserved_fragments": preserved_fragments,
         "selected_ranges_normalized": selected_norm,
+    }
+
+
+def get_current_cycle(user):
+    # returns the most recent non-prediction cycle.
+    current_cycle = CycleWindow.objects.filter(
+        user=user,
+        is_prediction=False
+    ).order_by('-menstruation_start').first()
+    
+    return current_cycle
+
+
+def get_cycle_length(user):
+    # returns the average cycle duration in days from either cyclestats or cycledetails based on log_count.
+    try:
+        stats = CycleStats.objects.get(user=user)
+        if stats.log_count >= MIN_LOG_FOR_STATS:
+            return stats.avg_cycle_duration
+    except CycleStats.DoesNotExist:
+        pass
+    
+    # Fallback to CycleDetails
+    try:
+        cycle_details = CycleDetails.objects.get(user=user)
+        return cycle_details.avg_cycle_duration
+    except CycleDetails.DoesNotExist:
+        return 28  # Default fallback
+
+
+def calculate_timeline_data(user):
+    """
+    Calculate timeline data for the current cycle.
+    Returns a dict with phase boundaries and marker positions as percentages.
+    """
+    today = date.today()
+    cycle = get_current_cycle(user)
+    
+    if not cycle:
+        return {
+            'has_cycle': False,
+            'current_day': today,
+        }
+    
+    cycle_length = get_cycle_length(user)
+    cycle_start = cycle.menstruation_start
+    cycle_end = cycle_start + timedelta(days=cycle_length - 1)
+    
+    # Get adaptive ovulation timing from CycleStats if available
+    try:
+        stats = CycleStats.objects.get(user=user)
+        ovulation_start_day = stats.avg_ovulation_start_day
+        ovulation_end_day = stats.avg_ovulation_end_day
+    except CycleStats.DoesNotExist:
+        # Fallback to defaults
+        ovulation_start_day = CycleDetails.AVG_MIN_OVULATION_DAY
+        ovulation_end_day = CycleDetails.AVG_MAX_OVULATION_DAY
+    
+    # Recalculate ovulation with adaptive timing
+    ovulation_start, ovulation_end = PredictionBuilder.predictOvulation(
+        cycle_start,
+        ovulation_start_day=ovulation_start_day,
+        ovulation_end_day=ovulation_end_day
+    )
+    
+    # Calculate phase data
+    phases = cycle.getPhasesBreakdown()
+    
+    # Calculate percentages relative to cycle length
+    menstruation_duration = phases['menstruation']['duration']
+    
+    menstruation_start_day = (cycle.menstruation_start - cycle_start).days
+    ovulation_start_day_offset = (ovulation_start - cycle_start).days
+    ovulation_end_day_offset = (ovulation_end - cycle_start).days
+    probable_ovulation = phases['ovulation']['probable_date']
+    probable_ovulation_day = (probable_ovulation - cycle_start).days
+    
+    menstruation_start_percent = (menstruation_start_day / cycle_length) * 100
+    menstruation_end_percent = ((menstruation_start_day + menstruation_duration - 1) / cycle_length) * 100
+    ovulation_start_percent = (ovulation_start_day_offset / cycle_length) * 100
+    ovulation_end_percent = ((ovulation_end_day_offset + 1) / cycle_length) * 100
+    probable_ovulation_percent = (probable_ovulation_day / cycle_length) * 100
+    
+    # Check if today is within cycle
+    is_today_in_cycle = cycle_start <= today <= cycle_end
+    
+    if is_today_in_cycle:
+        current_day_offset = (today - cycle_start).days
+        current_day_percent = (current_day_offset / cycle_length) * 100
+    else:
+        current_day_percent = None
+    
+    return {
+        'has_cycle': True,
+        'cycle_start': cycle_start,
+        'cycle_end': cycle_end,
+        'cycle_length': cycle_length,
+        'menstruation': {
+            'start_percent': menstruation_start_percent,
+            'end_percent': menstruation_end_percent,
+            'width_percent': menstruation_end_percent - menstruation_start_percent,
+            'duration': menstruation_duration,
+        },
+        'ovulation': {
+            'start_percent': ovulation_start_percent,
+            'end_percent': ovulation_end_percent,
+            'width_percent': ovulation_end_percent - ovulation_start_percent,
+            'probable_percent': probable_ovulation_percent,
+            'duration': (ovulation_end_day_offset - ovulation_start_day_offset) + 1,
+        },
+        'current_day_percent': current_day_percent,
+        'current_day': today,
+        'show_markers': is_today_in_cycle,
     }
