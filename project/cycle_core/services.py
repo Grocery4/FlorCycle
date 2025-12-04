@@ -86,6 +86,77 @@ def updateCycleStats(cs: CycleStats):
 
             if updated:
                 cs.save(update_fields=['avg_cycle_duration', 'avg_menstruation_duration'])
+            
+            # Update ovulation stats based on logged ovulation tests
+            update_ovulation_stats(cs)
+
+def calculate_ovulation_timing_from_logs(user, min_logs=MIN_LOG_FOR_STATS):
+    """
+    Calculate average ovulation timing based on positive ovulation tests in DailyLog.
+    
+    Returns a tuple: (avg_ovulation_start_day, avg_ovulation_end_day)
+    Where days are relative to menstruation_start (0-indexed, 1-based cycle day).
+    
+    Returns None if insufficient data.
+    """
+    from log_core.models import DailyLog
+    
+    logged_cycles = CycleWindow.objects.filter(
+        user=user,
+        is_prediction=False
+    ).order_by('-menstruation_start')[:min_logs]
+    
+    if logged_cycles.count() < min_logs:
+        return None
+    
+    ovulation_day_offsets = []
+    
+    for cycle in logged_cycles:
+        # Find positive ovulation tests within this cycle window
+        positive_tests = DailyLog.objects.filter(
+            user=user,
+            date__gte=cycle.menstruation_start,
+            date__lte=cycle.menstruation_end,
+            ovulation_test='POSITIVE'
+        ).order_by('date')
+        
+        if positive_tests.exists():
+            # Record the day offset of the first positive test (ovulation typically occurs around this time)
+            first_positive = positive_tests.first()
+            day_offset = (first_positive.date - cycle.menstruation_start).days
+            ovulation_day_offsets.append(day_offset)
+    
+    if not ovulation_day_offsets:
+        return None
+    
+    # Calculate average ovulation day
+    avg_ovulation_day = statistics.mean(ovulation_day_offsets)
+    
+    # Define ovulation window as ±2 days from average (typical 5-day window)
+    ovulation_start_day = max(0, int(avg_ovulation_day - 2))
+    ovulation_end_day = int(avg_ovulation_day + 2)
+    
+    return (ovulation_start_day, ovulation_end_day)
+
+
+def update_ovulation_stats(cs: CycleStats):
+    """
+    Update CycleStats with calculated ovulation timing based on logged ovulation tests.
+    Falls back to defaults if insufficient data.
+    """
+    ovulation_timing = calculate_ovulation_timing_from_logs(cs.user)
+    
+    if ovulation_timing:
+        cs.avg_ovulation_start_day = ovulation_timing[0]
+        cs.avg_ovulation_end_day = ovulation_timing[1]
+        cs.save()
+    else:
+        # Use defaults if no ovulation test data
+        cs.avg_ovulation_start_day = CycleDetails.AVG_MIN_OVULATION_DAY
+        cs.avg_ovulation_end_day = CycleDetails.AVG_MAX_OVULATION_DAY
+        cs.save()
+
+
 
 class PredictionBuilder():
     @staticmethod
@@ -112,9 +183,9 @@ class PredictionBuilder():
 
     #FIXME - instead of depending on cycle_details, pass avg values to make it compatible with both CycleDetails and CycleStats
     @staticmethod
-    def predictOvulation(first_day_cycle: datetime) -> tuple[datetime, datetime]:
-        ovulation_start = first_day_cycle + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY)
-        ovulation_end = first_day_cycle + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
+    def predictOvulation(first_day_cycle: datetime, ovulation_start_day: int = CycleDetails.AVG_MIN_OVULATION_DAY, ovulation_end_day: int = CycleDetails.AVG_MAX_OVULATION_DAY) -> tuple[datetime, datetime]:
+        ovulation_start = first_day_cycle + timedelta(days=ovulation_start_day)
+        ovulation_end = first_day_cycle + timedelta(days=ovulation_end_day)
 
         return(ovulation_start, ovulation_end)
 

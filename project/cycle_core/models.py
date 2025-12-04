@@ -139,6 +139,8 @@ class CycleStats(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     avg_cycle_duration = models.IntegerField(default=28)
     avg_menstruation_duration = models.IntegerField(default=5)
+    avg_ovulation_start_day = models.IntegerField(default=CycleDetails.AVG_MIN_OVULATION_DAY)
+    avg_ovulation_end_day = models.IntegerField(default=CycleDetails.AVG_MAX_OVULATION_DAY)
     updated_at = models.DateTimeField(auto_now=True)
 
     log_count = models.PositiveIntegerField(default=0)
