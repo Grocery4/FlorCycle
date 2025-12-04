@@ -8,7 +8,7 @@ import json
 
 from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, parse_list_of_dates, apply_period_windows, calculate_timeline_data
 from .dashboard_analytics import get_intercourse_activity_metrics, get_intercourse_frequency_metrics
-from cycle_core.models import CycleDetails, CycleStats, CycleWindow
+from cycle_core.models import CycleDetails, CycleStats, CycleWindow, MIN_LOG_FOR_STATS
 from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
 from log_core.models import DailyLog, IntercourseLog
@@ -87,7 +87,7 @@ def cycle_logs(request):
     if cs:
         ctx['log_count'] = cs.log_count
         
-        if cs.log_count < 6:
+        if cs.log_count < MIN_LOG_FOR_STATS:
             cd = getattr(user, 'cycledetails', None)
             if cd:
                 ctx['avg_cycle_duration'] = cd.avg_cycle_duration
