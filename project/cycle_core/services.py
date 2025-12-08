@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.utils.timezone import now
+
 
 from .models import CycleDetails, CycleWindow, CycleStats, MIN_LOG_FOR_STATS
 from log_core.models import DailyLog
@@ -196,7 +198,7 @@ class PredictionBuilder():
     @staticmethod
     def generateMultiplePredictions(source, times: int = 3, user = None) -> list:
         prediction_list = []
-
+        
         # Normalize to an initial CycleWindow and avg values
         if isinstance(source, CycleDetails):
             cd = source
@@ -206,29 +208,32 @@ class PredictionBuilder():
                 latest_real_cw = CycleWindow.objects.filter(user=user, is_prediction=False).order_by('-menstruation_start').first()
             
             initial_cw = latest_real_cw or cd.asCycleWindow()
-
             avg_cycle = cd.avg_cycle_duration
             avg_menstruation = cd.avg_menstruation_duration
         
         elif isinstance(source, CycleStats):
             stats = source
-            # stats.user should exist; try to get that user's CycleDetails
             cd = getattr(stats.user, 'cycledetails', None)
             if cd is None:
                 raise ValueError('CycleStats provided but related CycleDetails (user.cycledetails) not found.')
 
-            # Prefer the most recent CycleWindow for the user (chronological by menstruation_start).
             latest_real_cw = CycleWindow.objects.filter(user=stats.user, is_prediction=False).order_by('-menstruation_start').first()
-
+            
             initial_cw = latest_real_cw or cd.asCycleWindow()
-
             avg_cycle = stats.avg_cycle_duration
             avg_menstruation = stats.avg_menstruation_duration
         else:
             raise TypeError('source must be a CycleDetails or CycleStats instance')
 
-
+        # Calculate starting point for predictions based on current date
+        # If the last period + average cycle length is in the past, jump to next expected period
+        today = now().date()
         current_start = initial_cw.menstruation_start
+        
+        # Keep advancing until we reach a prediction that starts on or after today
+        while current_start + timedelta(days=avg_cycle) < today:
+            current_start = current_start + timedelta(days=avg_cycle)
+        
         for i in range(times):
             cw = PredictionBuilder.generatePrediction(current_start, avg_cycle, avg_menstruation, user=user)
             prediction_list.append(cw)
