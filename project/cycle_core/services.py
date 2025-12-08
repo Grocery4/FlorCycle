@@ -1,6 +1,9 @@
 from django.conf import settings
 
 from .models import CycleDetails, CycleWindow, CycleStats, MIN_LOG_FOR_STATS
+from log_core.models import DailyLog
+
+
 from datetime import datetime, timedelta, date
 import statistics
 
@@ -25,11 +28,11 @@ def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
     raise ValueError('CycleStats and CycleDetails not found.')
 
 
-def updateCycleStats(cs: CycleStats):
+def updateCycleStats(cs: CycleStats, min_logs:int=MIN_LOG_FOR_STATS):
         user = cs.user
         if user:
             logs = CycleWindow.objects.filter(user=user, is_prediction=False)
-            if cs.log_count < MIN_LOG_FOR_STATS:
+            if cs.log_count < min_logs:
                 return
         
             # compute avg cycle duration and menstruation duration from last 6 logs
@@ -37,7 +40,7 @@ def updateCycleStats(cs: CycleStats):
             #   timedelta between menstruation_start and menstruation_end (inclusive)
             #   timedelta between menstruation_start and menstruation_start of next CycleWindow
 
-            recent_windows = list(logs.order_by('-menstruation_start')[:MIN_LOG_FOR_STATS])  # newest first
+            recent_windows = list(logs.order_by('-menstruation_start')[:min_logs])  # newest first
             if not recent_windows:
                 return
 
@@ -99,8 +102,6 @@ def calculate_ovulation_timing_from_logs(user, min_logs=MIN_LOG_FOR_STATS):
     
     Returns None if insufficient data.
     """
-    from log_core.models import DailyLog
-    
     logged_cycles = CycleWindow.objects.filter(
         user=user,
         is_prediction=False
@@ -113,10 +114,27 @@ def calculate_ovulation_timing_from_logs(user, min_logs=MIN_LOG_FOR_STATS):
     
     for cycle in logged_cycles:
         # Find positive ovulation tests within this cycle window
+        # Search from menstruation_start to the next cycle (cycle_length days)
+        # Use the actual cycle length from the current cycle or fall back to average
+        # Determine cycle length based on log count
+        stats = getattr(user, 'cyclestats', None)
+        if stats and stats.log_count >= MIN_LOG_FOR_STATS:
+            # Use CycleStats if we have enough logs
+            cycle_length = stats.avg_cycle_duration
+        else:
+            # Use CycleDetails if insufficient logs
+            cycledetails = getattr(user, 'cycledetails', None)
+            if cycledetails:
+                cycle_length = cycledetails.avg_cycle_duration
+            else:
+                cycle_length = 28  # Final fallback
+                
+        cycle_end = cycle.menstruation_start + timedelta(days=cycle_length - 1)
+        
         positive_tests = DailyLog.objects.filter(
             user=user,
             date__gte=cycle.menstruation_start,
-            date__lte=cycle.menstruation_end,
+            date__lte=cycle_end,
             ovulation_test='POSITIVE'
         ).order_by('date')
         
@@ -181,7 +199,6 @@ class PredictionBuilder():
 
         return(menstruation_start, menstruation_end)
 
-    #FIXME - instead of depending on cycle_details, pass avg values to make it compatible with both CycleDetails and CycleStats
     @staticmethod
     def predictOvulation(first_day_cycle: datetime, ovulation_start_day: int = CycleDetails.AVG_MIN_OVULATION_DAY, ovulation_end_day: int = CycleDetails.AVG_MAX_OVULATION_DAY) -> tuple[datetime, datetime]:
         ovulation_start = first_day_cycle + timedelta(days=ovulation_start_day)
