@@ -92,9 +92,13 @@ def cycle_logs(request):
             if cd:
                 ctx['avg_cycle_duration'] = cd.avg_cycle_duration
                 ctx['avg_menstruation_duration'] = cd.avg_menstruation_duration
+                ctx['avg_ovulation_start_day'] = cd.AVG_MIN_OVULATION_DAY
+                ctx['avg_ovulation_end_day'] = cd.AVG_MAX_OVULATION_DAY
         else:
             ctx['avg_cycle_duration'] = cs.avg_cycle_duration
             ctx['avg_menstruation_duration'] = cs.avg_menstruation_duration
+            ctx['avg_ovulation_start_day'] = cs.avg_ovulation_start_day
+            ctx['avg_ovulation_end_day'] = cs.avg_ovulation_end_day
 
     show_history_view = request.GET.get('view') == 'history'
     
