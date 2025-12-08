@@ -98,48 +98,35 @@ def calculate_ovulation_timing_from_logs(user, min_logs=MIN_LOG_FOR_STATS):
     Calculate average ovulation timing based on positive ovulation tests in DailyLog.
     
     Returns a tuple: (avg_ovulation_start_day, avg_ovulation_end_day)
-    Where days are relative to menstruation_start (0-indexed, 1-based cycle day).
+    Where days are relative to menstruation_start (1-based cycle day).
     
     Returns None if insufficient data.
     """
-    logged_cycles = CycleWindow.objects.filter(
-        user=user,
-        is_prediction=False
-    ).order_by('-menstruation_start')[:min_logs]
+    logged_cycles = list(
+        CycleWindow.objects.filter(
+            user=user,
+            is_prediction=False
+        ).order_by('menstruation_start')  # Chronological order
+    )
     
-    if logged_cycles.count() < min_logs:
+    if len(logged_cycles) < min_logs:
         return None
     
+    # Only use cycles where we have boundary data (current + next cycle)
     ovulation_day_offsets = []
     
-    for cycle in logged_cycles:
-        # Find positive ovulation tests within this cycle window
-        # Search from menstruation_start to the next cycle (cycle_length days)
-        # Use the actual cycle length from the current cycle or fall back to average
-        # Determine cycle length based on log count
-        stats = getattr(user, 'cyclestats', None)
-        if stats and stats.log_count >= MIN_LOG_FOR_STATS:
-            # Use CycleStats if we have enough logs
-            cycle_length = stats.avg_cycle_duration
-        else:
-            # Use CycleDetails if insufficient logs
-            cycledetails = getattr(user, 'cycledetails', None)
-            if cycledetails:
-                cycle_length = cycledetails.avg_cycle_duration
-            else:
-                cycle_length = 28  # Final fallback
-                
-        cycle_end = cycle.menstruation_start + timedelta(days=cycle_length - 1)
+    for idx, cycle in enumerate(logged_cycles[:-1]):  # Exclude the last cycle
+        # Use actual next cycle start as boundary (real cycle length)
+        next_cycle_start = logged_cycles[idx + 1].menstruation_start
         
         positive_tests = DailyLog.objects.filter(
             user=user,
             date__gte=cycle.menstruation_start,
-            date__lte=cycle_end,
+            date__lt=next_cycle_start,  # Cycle ends before next menstruation starts
             ovulation_test='POSITIVE'
         ).order_by('date')
         
         if positive_tests.exists():
-            # Record the day offset of the first positive test (ovulation typically occurs around this time)
             first_positive = positive_tests.first()
             day_offset = (first_positive.date - cycle.menstruation_start).days
             ovulation_day_offsets.append(day_offset)
@@ -147,12 +134,12 @@ def calculate_ovulation_timing_from_logs(user, min_logs=MIN_LOG_FOR_STATS):
     if not ovulation_day_offsets:
         return None
     
-    # Calculate average ovulation day
+    # Calculate average ovulation day (use round() for better precision)
     avg_ovulation_day = statistics.mean(ovulation_day_offsets)
     
-    # Define ovulation window as ±2 days from average (typical 5-day window)
-    ovulation_start_day = max(0, int(avg_ovulation_day - 2))
-    ovulation_end_day = int(avg_ovulation_day + 2)
+    # Define ovulation window as ±2 days from average
+    ovulation_start_day = max(0, round(avg_ovulation_day - 2))
+    ovulation_end_day = round(avg_ovulation_day + 2)
     
     return (ovulation_start_day, ovulation_end_day)
 
