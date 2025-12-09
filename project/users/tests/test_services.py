@@ -2,7 +2,7 @@ from django.test import TestCase
 
 import os
 
-from users.models import CustomUser, UserProfile, doctorCvUploadPath, activatePremiumSubscription
+from users.models import CustomUser, UserProfile, PartnerProfile, doctorCvUploadPath, activatePremiumSubscription
 
 
 class ServicesTestCase(TestCase):
@@ -57,3 +57,11 @@ class ServicesTestCase(TestCase):
         self.assertEqual(premium.subscription_status.lower(), "active")
         self.assertEqual(premium.payment_info["provider"], "mockpay")
         self.assertIn("subscription_id", premium.payment_info)
+
+    def test_generate_partner_code(self):
+        main_user = CustomUser.objects.create_user(username='main', password='pass123', email='main@example.com')
+
+        partner_user = CustomUser.objects.create_user(username='partner', password='pass123', email='partner@example.com', user_type='PARTNER')
+        partner_profile = PartnerProfile.objects.create(user=partner_user, linked_user=main_user)
+        
+        self.assertIsNotNone(partner_profile.partner_code)
