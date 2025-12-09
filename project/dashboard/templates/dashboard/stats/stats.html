@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href={% static "dashboard/css/stats.css" %}>
+{% endblock extra_head %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static "dashboard/js/stats.js" %}"></script>
+{% endblock extra_js %}
+
+{% block title %}Statistics{% endblock title %}
+
+{% block content %}
+    <div class="stats-container">
+        {% include "dashboard/subpage_topbar.html" %}
+
+        <select id="activity-range-dropdown" class="range-dropdown">
+                <option value="1" {% if activity_month_range == 1 %}selected{% endif %}>Last 1 Month</option>
+                <option value="3" {% if activity_month_range == 3 %}selected{% endif %}>Last 3 Months</option>
+                <option value="6" {% if activity_month_range == 6 %}selected{% endif %}>Last 6 Months</option>
+                <option value="12" {% if activity_month_range == 12 %}selected{% endif %}>Last Year</option>
+        </select>
+        <div class="stat-section activity">
+            <div class="stat-section-title">Activity - Last 1 Month</div>
+            <div class="stat-items-grid">
+                <div class="stat-item">
+                    <h3 class="stat-title">Total Intercourse</h3>
+                    <p class="stat-value" id="intercourse-count">{{ intercourse_count|default:"-" }}</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-title">Orgasm Rate</h3>
+                    <p class="stat-value percentage" id="orgasm-percentage">{{ orgasm_percentage|floatformat:1|default:"-" }}</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-title">Protected</h3>
+                    <p class="stat-value" id="protected-count">{{ protected_count|default:"-" }}</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-title">Unprotected</h3>
+                    <p class="stat-value" id="unprotected-count">{{ unprotected_count|default:"-" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <select id="frequency-range-dropdown" class="range-dropdown">
+                <option value="1" {% if frequency_month_range == 1 %}selected{% endif %}>Last 1 Month</option>
+                <option value="3" {% if frequency_month_range == 3 %}selected{% endif %}>Last 3 Months</option>
+                <option value="6" {% if frequency_month_range == 6 %}selected{% endif %}>Last 6 Months</option>
+                <option value="12" {% if frequency_month_range == 12 %}selected{% endif %}>Last Year</option>
+        </select>
+        <div class="stat-section frequency">
+            <div class="stat-section-title">Frequency - Last 6 Months</div>
+            <div class="stat-items-grid">
+                <div class="stat-item">
+                    <h3 class="stat-title">Intercourse Frequency</h3>
+                    <p class="stat-value days" id="frequency-intercourse">{{ frequency_intercourse|default:"—" }}</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-title">Orgasm Frequency</h3>
+                    <p class="stat-value days" id="frequency-orgasm">{{ frequency_orgasm|default:"—" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

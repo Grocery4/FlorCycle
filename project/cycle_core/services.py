@@ -1,6 +1,11 @@
 from django.conf import settings
+from django.utils.timezone import now
+
 
 from .models import CycleDetails, CycleWindow, CycleStats, MIN_LOG_FOR_STATS
+from log_core.models import DailyLog
+
+
 from datetime import datetime, timedelta, date
 import statistics
 
@@ -25,11 +30,11 @@ def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
     raise ValueError('CycleStats and CycleDetails not found.')
 
 
-def updateCycleStats(cs: CycleStats):
+def updateCycleStats(cs: CycleStats, min_logs:int=MIN_LOG_FOR_STATS):
         user = cs.user
         if user:
             logs = CycleWindow.objects.filter(user=user, is_prediction=False)
-            if cs.log_count < MIN_LOG_FOR_STATS:
+            if cs.log_count < min_logs:
                 return
         
             # compute avg cycle duration and menstruation duration from last 6 logs
@@ -37,7 +42,7 @@ def updateCycleStats(cs: CycleStats):
             #   timedelta between menstruation_start and menstruation_end (inclusive)
             #   timedelta between menstruation_start and menstruation_start of next CycleWindow
 
-            recent_windows = list(logs.order_by('-menstruation_start')[:MIN_LOG_FOR_STATS])  # newest first
+            recent_windows = list(logs.order_by('-menstruation_start')[:min_logs])  # newest first
             if not recent_windows:
                 return
 
@@ -86,6 +91,79 @@ def updateCycleStats(cs: CycleStats):
 
             if updated:
                 cs.save(update_fields=['avg_cycle_duration', 'avg_menstruation_duration'])
+            
+            # Update ovulation stats based on logged ovulation tests
+            update_ovulation_stats(cs)
+
+def calculate_ovulation_timing_from_logs(user, min_logs=MIN_LOG_FOR_STATS):
+    """
+    Calculate average ovulation timing based on positive ovulation tests in DailyLog.
+    
+    Returns a tuple: (avg_ovulation_start_day, avg_ovulation_end_day)
+    Where days are relative to menstruation_start (1-based cycle day).
+    
+    Returns None if insufficient data.
+    """
+    logged_cycles = list(
+        CycleWindow.objects.filter(
+            user=user,
+            is_prediction=False
+        ).order_by('menstruation_start')  # Chronological order
+    )
+    
+    if len(logged_cycles) < min_logs:
+        return None
+    
+    # Only use cycles where we have boundary data (current + next cycle)
+    ovulation_day_offsets = []
+    
+    for idx, cycle in enumerate(logged_cycles[:-1]):  # Exclude the last cycle
+        # Use actual next cycle start as boundary (real cycle length)
+        next_cycle_start = logged_cycles[idx + 1].menstruation_start
+        
+        positive_tests = DailyLog.objects.filter(
+            user=user,
+            date__gte=cycle.menstruation_start,
+            date__lt=next_cycle_start,  # Cycle ends before next menstruation starts
+            ovulation_test='POSITIVE'
+        ).order_by('date')
+        
+        if positive_tests.exists():
+            first_positive = positive_tests.first()
+            day_offset = (first_positive.date - cycle.menstruation_start).days
+            ovulation_day_offsets.append(day_offset)
+    
+    if not ovulation_day_offsets:
+        return None
+    
+    # Calculate average ovulation day (use round() for better precision)
+    avg_ovulation_day = statistics.mean(ovulation_day_offsets)
+    
+    # Define ovulation window as ±2 days from average
+    ovulation_start_day = max(0, round(avg_ovulation_day - 2))
+    ovulation_end_day = round(avg_ovulation_day + 2)
+    
+    return (ovulation_start_day, ovulation_end_day)
+
+
+def update_ovulation_stats(cs: CycleStats):
+    """
+    Update CycleStats with calculated ovulation timing based on logged ovulation tests.
+    Falls back to defaults if insufficient data.
+    """
+    ovulation_timing = calculate_ovulation_timing_from_logs(cs.user)
+    
+    if ovulation_timing:
+        cs.avg_ovulation_start_day = ovulation_timing[0]
+        cs.avg_ovulation_end_day = ovulation_timing[1]
+        cs.save()
+    else:
+        # Use defaults if no ovulation test data
+        cs.avg_ovulation_start_day = CycleDetails.AVG_MIN_OVULATION_DAY
+        cs.avg_ovulation_end_day = CycleDetails.AVG_MAX_OVULATION_DAY
+        cs.save()
+
+
 
 class PredictionBuilder():
     @staticmethod
@@ -110,18 +188,17 @@ class PredictionBuilder():
 
         return(menstruation_start, menstruation_end)
 
-    #FIXME - instead of depending on cycle_details, pass avg values to make it compatible with both CycleDetails and CycleStats
     @staticmethod
-    def predictOvulation(first_day_cycle: datetime) -> tuple[datetime, datetime]:
-        ovulation_start = first_day_cycle + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY)
-        ovulation_end = first_day_cycle + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
+    def predictOvulation(first_day_cycle: datetime, ovulation_start_day: int = CycleDetails.AVG_MIN_OVULATION_DAY, ovulation_end_day: int = CycleDetails.AVG_MAX_OVULATION_DAY) -> tuple[datetime, datetime]:
+        ovulation_start = first_day_cycle + timedelta(days=ovulation_start_day)
+        ovulation_end = first_day_cycle + timedelta(days=ovulation_end_day)
 
         return(ovulation_start, ovulation_end)
 
     @staticmethod
     def generateMultiplePredictions(source, times: int = 3, user = None) -> list:
         prediction_list = []
-
+        
         # Normalize to an initial CycleWindow and avg values
         if isinstance(source, CycleDetails):
             cd = source
@@ -131,29 +208,32 @@ class PredictionBuilder():
                 latest_real_cw = CycleWindow.objects.filter(user=user, is_prediction=False).order_by('-menstruation_start').first()
             
             initial_cw = latest_real_cw or cd.asCycleWindow()
-
             avg_cycle = cd.avg_cycle_duration
             avg_menstruation = cd.avg_menstruation_duration
         
         elif isinstance(source, CycleStats):
             stats = source
-            # stats.user should exist; try to get that user's CycleDetails
             cd = getattr(stats.user, 'cycledetails', None)
             if cd is None:
                 raise ValueError('CycleStats provided but related CycleDetails (user.cycledetails) not found.')
 
-            # Prefer the most recent CycleWindow for the user (chronological by menstruation_start).
             latest_real_cw = CycleWindow.objects.filter(user=stats.user, is_prediction=False).order_by('-menstruation_start').first()
-
+            
             initial_cw = latest_real_cw or cd.asCycleWindow()
-
             avg_cycle = stats.avg_cycle_duration
             avg_menstruation = stats.avg_menstruation_duration
         else:
             raise TypeError('source must be a CycleDetails or CycleStats instance')
 
-
+        # Calculate starting point for predictions based on current date
+        # If the last period + average cycle length is in the past, jump to next expected period
+        today = now().date()
         current_start = initial_cw.menstruation_start
+        
+        # Keep advancing until we reach a prediction that starts on or after today
+        while current_start + timedelta(days=avg_cycle) < today:
+            current_start = current_start + timedelta(days=avg_cycle)
+        
         for i in range(times):
             cw = PredictionBuilder.generatePrediction(current_start, avg_cycle, avg_menstruation, user=user)
             prediction_list.append(cw)

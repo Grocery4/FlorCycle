@@ -105,6 +105,24 @@ class CycleWindow(models.Model):
     def getOvulationDuration(self):
         return (self.max_ovulation_window - self.min_ovulation_window) + timedelta(days=1)
 
+    def getPhasesBreakdown(self):
+        # calculate probable ovulation date (midpoint of ovulation window)
+        ovulation_duration = self.getOvulationDuration()
+        probable_ovulation_date = self.min_ovulation_window + (ovulation_duration / 2) - timedelta(days=0.5)
+        
+        return {
+            'menstruation': {
+                'start': self.menstruation_start,
+                'end': self.menstruation_end,
+                'duration': (self.menstruation_end - self.menstruation_start).days + 1
+            },
+            'ovulation': {
+                'start': self.min_ovulation_window,
+                'end': self.max_ovulation_window,
+                'probable_date': probable_ovulation_date.date() if hasattr(probable_ovulation_date, 'date') else probable_ovulation_date,
+                'duration': ovulation_duration.days
+            }
+        }
 
     def __str__(self):
         return (
@@ -121,6 +139,8 @@ class CycleStats(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     avg_cycle_duration = models.IntegerField(default=28)
     avg_menstruation_duration = models.IntegerField(default=5)
+    avg_ovulation_start_day = models.IntegerField(default=CycleDetails.AVG_MIN_OVULATION_DAY)
+    avg_ovulation_end_day = models.IntegerField(default=CycleDetails.AVG_MAX_OVULATION_DAY)
     updated_at = models.DateTimeField(auto_now=True)
 
     log_count = models.PositiveIntegerField(default=0)

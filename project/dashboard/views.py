@@ -6,8 +6,9 @@ from datetime import datetime, date
 from dateutil import relativedelta
 import json
 
-from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, parse_list_of_dates, apply_period_windows
-from cycle_core.models import CycleDetails, CycleStats, CycleWindow
+from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, parse_list_of_dates, apply_period_windows, calculate_timeline_data
+from .dashboard_analytics import get_intercourse_activity_metrics, get_intercourse_frequency_metrics
+from cycle_core.models import CycleDetails, CycleStats, CycleWindow, MIN_LOG_FOR_STATS
 from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
 from log_core.models import DailyLog, IntercourseLog
@@ -19,6 +20,7 @@ from log_core.forms import DailyLogForm, IntercourseLogForm
 def homepage(request):
     ctx = {}
     ctx['next_prediction'] = fetch_closest_prediction(request.user)
+    ctx['timeline_data'] = calculate_timeline_data(request.user)
 
     return render(request, 'dashboard/dashboard.html', ctx)
     
@@ -85,14 +87,18 @@ def cycle_logs(request):
     if cs:
         ctx['log_count'] = cs.log_count
         
-        if cs.log_count < 6:
+        if cs.log_count < MIN_LOG_FOR_STATS:
             cd = getattr(user, 'cycledetails', None)
             if cd:
                 ctx['avg_cycle_duration'] = cd.avg_cycle_duration
                 ctx['avg_menstruation_duration'] = cd.avg_menstruation_duration
+                ctx['avg_ovulation_start_day'] = cd.AVG_MIN_OVULATION_DAY
+                ctx['avg_ovulation_end_day'] = cd.AVG_MAX_OVULATION_DAY
         else:
             ctx['avg_cycle_duration'] = cs.avg_cycle_duration
             ctx['avg_menstruation_duration'] = cs.avg_menstruation_duration
+            ctx['avg_ovulation_start_day'] = cs.avg_ovulation_start_day
+            ctx['avg_ovulation_end_day'] = cs.avg_ovulation_end_day
 
     show_history_view = request.GET.get('view') == 'history'
     
@@ -283,6 +289,54 @@ def ajax_load_log(request):
             "protected": "",
             "orgasm": "",
             "quantity": "",
+        })
+
+    return JsonResponse(response_data)
+
+#TODO - might turn into a CBV
+#TODO - add form to choose month_range
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def stats(request):
+    ctx = {}
+
+    activity_metrics = get_intercourse_activity_metrics(user=request.user)
+    frequency_metrics = get_intercourse_frequency_metrics(user=request.user)
+
+    ctx['intercourse_count'] = activity_metrics['intercourse_count']
+    ctx['orgasm_percentage'] = activity_metrics['orgasm_percentage']
+    ctx['protected_count'] = activity_metrics['protected_count']
+    ctx['unprotected_count'] = activity_metrics['unprotected_count']
+    
+    ctx['frequency_intercourse'] = frequency_metrics['frequency_intercourse']
+    ctx['frequency_orgasm'] = frequency_metrics['frequency_orgasm']
+
+    return render(request, 'dashboard/stats/stats.html', ctx)
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+@require_POST
+def ajax_load_stats(request):
+    data = json.loads(request.body)
+    month_range= int(data.get('month_range', 1))
+    type=str(data.get('type'))
+
+    response_data = {}
+    if type == 'activity_dropdown':
+        activity_metrics = get_intercourse_activity_metrics(user=request.user, month_range=month_range)
+        response_data.update({
+            'intercourse_count': activity_metrics['intercourse_count'],
+            'orgasm_percentage': activity_metrics['orgasm_percentage'],
+            'protected_count': activity_metrics['protected_count'],
+            'unprotected_count': activity_metrics['unprotected_count']
+
+        })
+
+    elif type == 'frequency_dropdown':
+        frequency_metrics = get_intercourse_frequency_metrics(user=request.user, month_range=month_range)
+        response_data.update({
+            'frequency_intercourse' : frequency_metrics['frequency_intercourse'],
+            'frequency_orgasm' : frequency_metrics['frequency_orgasm']
         })
 
     return JsonResponse(response_data)
