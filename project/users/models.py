@@ -149,7 +149,7 @@ class DoctorProfile(models.Model):
 class PartnerProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     partner_code = models.CharField(max_length=10, unique=True)
-    linked_user = models.ForeignKey(CustomUser, related_name="partners", on_delete=models.CASCADE)
+    linked_user = models.ForeignKey(CustomUser, related_name="partners", on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
         self.user.user_type = 'PARTNER'
