@@ -1,5 +1,3 @@
-from .models import UserProfile
-
 import secrets
 import os
 import uuid
@@ -13,9 +11,11 @@ def doctorCvUploadPath(instance, filename):
     return os.path.join("doctors", "cv", filename)
 
 def activatePremiumSubscription(user):
+    from .models import UserProfile
+    
     premium = UserProfile.objects.get(user=user)
     premium.is_premium = True
-    premium.subscription_status = "active"
+    premium.subscription_status = "ACTIVE"
     premium.payment_info = {
         "provider": "mockpay",
         "subscription_id": f"sub_{user.id}",
