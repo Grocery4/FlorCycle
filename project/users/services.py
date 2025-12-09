@@ -33,8 +33,28 @@ def userProfilePicturePath(instance, filename):
 def generate_partner_code() -> str:
     return secrets.token_urlsafe(6)
 
-def link_partner():
-    pass
+def link_partner(main_user, partner_code: str):
+    from .models import PartnerProfile
+    try:
+        partner_profile = PartnerProfile.objects.get(partner_code=partner_code)
 
-def unlink_partner():
-    pass
+        if partner_profile.linked_user is not None:
+            return None
+        
+        partner_profile.linked_user = main_user
+        partner_profile.save()
+        return partner_profile
+    
+    except PartnerProfile.DoesNotExist:
+        return None
+
+def unlink_partner(partner_user):
+    from .models import PartnerProfile
+    
+    try:
+        partner_profile = PartnerProfile.objects.get(user=partner_user)
+        partner_profile.linked_user = None
+        partner_profile.save()
+        return True
+    except PartnerProfile.DoesNotExist:
+        return None
