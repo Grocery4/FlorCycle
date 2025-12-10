@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
 
-from .forms import UserSignupForm, DoctorSignupForm
+from .forms import UserSignupForm, DoctorSignupForm, PartnerSignupForm
 
 
 # Create your views here.
@@ -27,4 +27,16 @@ def doctor_form(request):
             form.save()
             return redirect('login')
     
+    return render(request, 'registration/signup.html', ctx)
+
+def partner_form(request):
+    ctx = {}
+    ctx['form'] = PartnerSignupForm()
+    if request.method == 'POST':
+        form = PartnerSignupForm(request.POST)
+        ctx['form'] = form
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+         
     return render(request, 'registration/signup.html', ctx)
