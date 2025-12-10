@@ -40,10 +40,31 @@ def partner_setup(request):
         ctx['user'] = request.user
         ctx['partner_profile'] = partner_profile
         ctx['linked_user'] = partner_profile.linked_user
+        
     except:
         ctx['error'] = 'Partner profile not found'
     
     return render(request, 'dashboard/partner/partner_setup.html', ctx)
+
+@user_type_required(['PARTNER'])
+def homepage_readonly(request):
+    ctx = {}
+    try:
+        partner_profile = request.user.partnerprofile
+        linked_user = partner_profile.linked_user
+        
+        if not linked_user:
+            ctx['error'] = 'No linked profile. Please link to a main user in partner setup.'
+            return render(request, 'dashboard/dashboard_readonly.html', ctx)
+        
+        ctx['next_prediction'] = fetch_closest_prediction(linked_user)
+        ctx['timeline_data'] = calculate_timeline_data(linked_user)
+        
+    except:
+        ctx['error'] = 'Partner profile not found'
+        return render(request, 'dashboard/dashboard_readonly.html', ctx)
+    
+    return render(request, 'dashboard/dashboard_readonly.html', ctx)
 
 @user_type_required(['STANDARD', 'PREMIUM'])
 def setup(request):
