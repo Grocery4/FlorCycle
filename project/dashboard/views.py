@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 from datetime import datetime, date
 from dateutil import relativedelta
@@ -15,6 +16,13 @@ from log_core.models import DailyLog, IntercourseLog
 from log_core.forms import DailyLogForm, IntercourseLogForm
 
 # Create your views here.
+@login_required(login_url='login')
+def redirect_handler(request):
+    if request.user.user_type == 'STANDARD' or request.user.user_type == 'PREMIUM':
+        return redirect('dashboard:homepage')
+    elif request.user.user_type == 'PARTNER':
+        return redirect('dashboard:partner_setup')
+
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
 def homepage(request):
@@ -26,7 +34,16 @@ def homepage(request):
 
 @user_type_required(['PARTNER'])
 def partner_setup(request):
-    pass
+    ctx = {}
+    try:
+        partner_profile = request.user.partnerprofile
+        ctx['user'] = request.user
+        ctx['partner_profile'] = partner_profile
+        ctx['linked_user'] = partner_profile.linked_user
+    except:
+        ctx['error'] = 'Partner profile not found'
+    
+    return render(request, 'dashboard/partner/partner_setup.html', ctx)
 
 @user_type_required(['STANDARD', 'PREMIUM'])
 def setup(request):
