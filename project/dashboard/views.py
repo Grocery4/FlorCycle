@@ -23,7 +23,11 @@ def homepage(request):
     ctx['timeline_data'] = calculate_timeline_data(request.user)
 
     return render(request, 'dashboard/dashboard.html', ctx)
-    
+
+@user_type_required(['PARTNER'])
+def partner_setup(request):
+    pass
+
 @user_type_required(['STANDARD', 'PREMIUM'])
 def setup(request):
     profile = request.user.userprofile
