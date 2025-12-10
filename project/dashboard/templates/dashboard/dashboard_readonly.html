@@ -25,7 +25,9 @@
         </div>
 
         <div class="dashboard-action-bar">
-            {% include "dashboard/dashboard_actionbar.html" %}
+            {% if not error %}
+                {% include "dashboard/dashboard_actionbar.html" %}
+            {% endif %}
         </div>
     </div>
 {% endblock content %}
