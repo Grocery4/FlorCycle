@@ -13,6 +13,13 @@
                 <h2>Partner Setup</h2>
                 <p>Welcome {{ user|upper }}!</p>
                 
+                {% if unlink_success %}
+                    <p class="success-message">{{ unlink_success }}</p>
+                {% endif %}
+                {% if unlink_error %}
+                    <p class="error-message">{{ unlink_error }}</p>
+                {% endif %}
+                
                 {% if partner_profile %}
                     <div class="partner-code-section">
                         <p>To get started, share the following code with your partner:</p>
@@ -25,7 +32,11 @@
                         <h3>Linked Main User</h3>
                         {% if linked_user %}
                             <p>Connected to: <strong>{{ linked_user }}</strong></p>
-                            <button class="unlink-btn">Unlink</button>
+                            <form method='post'>
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="unlink">
+                                <button type="submit" class="unlink-btn">Unlink</button>
+                            </form>
                         {% else %}
                             <p>No main user linked yet.</p>
                         {% endif %}

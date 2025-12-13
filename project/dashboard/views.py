@@ -34,12 +34,25 @@ def homepage(request):
 
 @user_type_required(['PARTNER'])
 def partner_setup(request):
+    from users.services import unlink_partner
+    
     ctx = {}
     try:
         partner_profile = request.user.partnerprofile
         ctx['user'] = request.user
         ctx['partner_profile'] = partner_profile
         ctx['linked_user'] = partner_profile.linked_user
+        
+        if request.method == 'POST':
+            action = request.POST.get('action')
+            if action == 'unlink':
+                result = unlink_partner(request.user)
+                if result:
+                    ctx['unlink_success'] = 'Successfully unlinked from partner.'
+                    ctx['linked_user'] = None
+                    partner_profile.refresh_from_db()
+                else:
+                    ctx['unlink_error'] = 'Error unlinking from partner.'
         
     except:
         ctx['error'] = 'Partner profile not found'
