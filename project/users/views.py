@@ -1,10 +1,19 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
 
 
 from .forms import UserSignupForm, DoctorSignupForm, PartnerSignupForm
 
 
-# Create your views here.
+def redirect_if_authenticated(user):
+    return not user.is_authenticated
+
+
+@method_decorator(user_passes_test(redirect_if_authenticated, login_url='/dashboard/redirect'), name='dispatch')
+class CustomLoginView(LoginView):
+    template_name = 'registration/login.html'
 
 def standard_form(request):
     ctx = {}
