@@ -27,6 +27,52 @@
                 {% endif %}
             </div>
 
+            <div class="user-management">
+                <h3>Profile Settings</h3>
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="profile-pic-section">
+                    <h4>Profile Picture</h4>
+                    {% if user.userprofile.profile_picture %}
+                        <img src="{{ user.userprofile.profile_picture.url }}" alt="Current profile picture" style="max-width: 150px; border-radius: 50%;">
+                    {% else %}
+                        <p>No profile picture set.</p>
+                    {% endif %}
+                    <form method='post' enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_profile_pic">
+                        {{ profile_form.as_p }}
+                        <button type="submit">Update Picture</button>
+                    </form>
+                </div>
+
+                <div class="email-section">
+                    <h4>Account Information</h4>
+                    <form method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_user_info">
+                        {{ user_form.as_p }}
+                        <button type="submit">Update Email</button>
+                    </form>
+                </div>
+
+                <div class="password-section">
+                    <h4>Change Password</h4>
+                    <form method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="change_password">
+                        {{ password_form.as_p }}
+                        <button type="submit">Change Password</button>
+                    </form>
+                </div>
+            </div>
+
             <div class="partner-management">
                 <h3>Partner Management</h3>
                 

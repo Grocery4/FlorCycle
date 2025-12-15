@@ -15,6 +15,15 @@ from log_core.services import get_day_log
 from log_core.models import DailyLog, IntercourseLog
 from log_core.forms import DailyLogForm, IntercourseLogForm
 
+from users.models import PartnerProfile
+from users.models import PartnerProfile, UserProfile
+from users.services import link_partner, unlink_partner
+from users.forms import UserUpdateForm, ProfileUpdateForm
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+
+
 # Create your views here.
 @login_required(login_url='login')
 def redirect_handler(request):
@@ -110,16 +119,11 @@ def setup(request):
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
 def settings(request):
-    from users.models import PartnerProfile
-    from users.services import link_partner, unlink_partner
-    
     ctx = {}
     
-    # Handle partner linking/unlinking
     if request.method == 'POST':
         action = request.POST.get('action')
         
-        # Handle cycle details form submission
         if 'cycle_details' in request.POST:
             try:
                 instance = request.user.cycledetails
@@ -129,8 +133,33 @@ def settings(request):
             cycle_details_form = CycleDetailsForm(request.POST, mode='settings', user=request.user, instance=instance)
             if cycle_details_form.is_valid():
                 cycle_details_form.save()
+                messages.success(request, 'Cycle details updated successfully.')
         
-        # Handle partner link action
+        elif action == 'update_user_info':
+            user_form = UserUpdateForm(request.POST, instance=request.user)
+            if user_form.is_valid():
+                user_form.save()
+                messages.success(request, 'Email updated successfully.')
+            else:
+                 messages.error(request, 'Error updating email.')
+
+        elif action == 'update_profile_pic':
+            profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.userprofile)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, 'Profile picture updated successfully.')
+            else:
+                messages.error(request, 'Error updating profile picture.')
+
+        elif action == 'change_password':
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)  # Important!
+                messages.success(request, 'Your password was successfully updated!')
+            else:
+                messages.error(request, 'Please correct the error below.')
+        
         elif action == 'link_partner':
             partner_code = request.POST.get('partner_code', '').strip()
             if partner_code:
@@ -142,7 +171,6 @@ def settings(request):
             else:
                 ctx['partner_link_error'] = 'Please enter a partner code.'
         
-        # Handle partner unlink action
         elif action == 'unlink_partner':
             try:
                 partner_profiles = PartnerProfile.objects.filter(linked_user=request.user)
@@ -152,7 +180,6 @@ def settings(request):
             except Exception as e:
                 ctx['partner_unlink_error'] = f'Error unlinking partners: {str(e)}'
         
-        # Handle single partner unlink action
         elif action == 'unlink_single_partner':
             try:
                 partner_user_id = request.POST.get('partner_user_id')
@@ -168,10 +195,11 @@ def settings(request):
             except Exception as e:
                 ctx['partner_unlink_error'] = f'Error unlinking partner: {str(e)}'
     
-    # Display user's form data
     ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, mode='settings', instance=request.user.cycledetails)
+    ctx['user_form'] = UserUpdateForm(instance=request.user)
+    ctx['profile_form'] = ProfileUpdateForm(instance=request.user.userprofile)
+    ctx['password_form'] = PasswordChangeForm(request.user)
     
-    # Get linked partners
     try:
         ctx['linked_partners'] = PartnerProfile.objects.filter(linked_user=request.user)
     except:
