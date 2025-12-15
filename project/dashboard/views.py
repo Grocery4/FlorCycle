@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 from datetime import datetime, date
 from dateutil import relativedelta
@@ -15,6 +16,13 @@ from log_core.models import DailyLog, IntercourseLog
 from log_core.forms import DailyLogForm, IntercourseLogForm
 
 # Create your views here.
+@login_required(login_url='login')
+def redirect_handler(request):
+    if request.user.user_type == 'STANDARD' or request.user.user_type == 'PREMIUM':
+        return redirect('dashboard:homepage')
+    elif request.user.user_type == 'PARTNER':
+        return redirect('dashboard:partner_setup_page')
+
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
 def homepage(request):
@@ -23,7 +31,54 @@ def homepage(request):
     ctx['timeline_data'] = calculate_timeline_data(request.user)
 
     return render(request, 'dashboard/dashboard.html', ctx)
+
+@user_type_required(['PARTNER'])
+def partner_setup(request):
+    from users.services import unlink_partner
     
+    ctx = {}
+    try:
+        partner_profile = request.user.partnerprofile
+        ctx['user'] = request.user
+        ctx['partner_profile'] = partner_profile
+        ctx['linked_user'] = partner_profile.linked_user
+        
+        if request.method == 'POST':
+            action = request.POST.get('action')
+            if action == 'unlink':
+                result = unlink_partner(request.user)
+                if result:
+                    ctx['unlink_success'] = 'Successfully unlinked from partner.'
+                    ctx['linked_user'] = None
+                    partner_profile.refresh_from_db()
+                else:
+                    ctx['unlink_error'] = 'Error unlinking from partner.'
+        
+    except:
+        ctx['error'] = 'Partner profile not found'
+    
+    return render(request, 'dashboard/partner/partner_setup.html', ctx)
+
+@user_type_required(['PARTNER'])
+def homepage_readonly(request):
+    ctx = {}
+    try:
+        partner_profile = request.user.partnerprofile
+        linked_user = partner_profile.linked_user
+        
+        if not linked_user:
+            ctx['error'] = 'No linked profile. Please link to a main user in partner setup.'
+            return render(request, 'dashboard/dashboard_readonly.html', ctx)
+        
+        ctx['next_prediction'] = fetch_closest_prediction(linked_user)
+        ctx['timeline_data'] = calculate_timeline_data(linked_user)
+        
+    except:
+        ctx['error'] = 'Partner profile not found'
+        return render(request, 'dashboard/dashboard_readonly.html', ctx)
+    
+    return render(request, 'dashboard/dashboard_readonly.html', ctx)
+
 @user_type_required(['STANDARD', 'PREMIUM'])
 def setup(request):
     profile = request.user.userprofile
@@ -55,24 +110,72 @@ def setup(request):
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
 def settings(request):
-    ctx = {}
-
-    if request.method == 'POST':
-        # checks whether to render user values or default values in case cycledetails is instantiated.
-        # it's a redundant check, since settings page cannot be accessed if there is no cycledetails object
-        try:
-            instance = request.user.cycledetails
-        except CycleDetails.DoesNotExist:
-            instance = None
-
-        # retrieve form data
-        cycle_details_form = CycleDetailsForm(request.POST, mode='settings', user=request.user, instance=instance)
-        if cycle_details_form.is_valid():
-            cycle_details_form.save()
+    from users.models import PartnerProfile
+    from users.services import link_partner, unlink_partner
     
-    # display user's form data
+    ctx = {}
+    
+    # Handle partner linking/unlinking
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        # Handle cycle details form submission
+        if 'cycle_details' in request.POST:
+            try:
+                instance = request.user.cycledetails
+            except CycleDetails.DoesNotExist:
+                instance = None
+
+            cycle_details_form = CycleDetailsForm(request.POST, mode='settings', user=request.user, instance=instance)
+            if cycle_details_form.is_valid():
+                cycle_details_form.save()
+        
+        # Handle partner link action
+        elif action == 'link_partner':
+            partner_code = request.POST.get('partner_code', '').strip()
+            if partner_code:
+                result = link_partner(request.user, partner_code)
+                if result:
+                    ctx['partner_link_success'] = f'Successfully linked to partner!'
+                else:
+                    ctx['partner_link_error'] = 'Invalid partner code or partner already linked to someone else.'
+            else:
+                ctx['partner_link_error'] = 'Please enter a partner code.'
+        
+        # Handle partner unlink action
+        elif action == 'unlink_partner':
+            try:
+                partner_profiles = PartnerProfile.objects.filter(linked_user=request.user)
+                for profile in partner_profiles:
+                    unlink_partner(profile.user)
+                ctx['partner_unlink_success'] = 'Successfully unlinked all partners.'
+            except Exception as e:
+                ctx['partner_unlink_error'] = f'Error unlinking partners: {str(e)}'
+        
+        # Handle single partner unlink action
+        elif action == 'unlink_single_partner':
+            try:
+                partner_user_id = request.POST.get('partner_user_id')
+                if partner_user_id:
+                    from django.contrib.auth import get_user_model
+                    User = get_user_model()
+                    partner_user = User.objects.get(id=partner_user_id)
+                    result = unlink_partner(partner_user)
+                    if result:
+                        ctx['partner_unlink_success'] = f'Successfully unlinked partner.'
+                    else:
+                        ctx['partner_unlink_error'] = 'Partner profile not found.'
+            except Exception as e:
+                ctx['partner_unlink_error'] = f'Error unlinking partner: {str(e)}'
+    
+    # Display user's form data
     ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, mode='settings', instance=request.user.cycledetails)
     
+    # Get linked partners
+    try:
+        ctx['linked_partners'] = PartnerProfile.objects.filter(linked_user=request.user)
+    except:
+        ctx['linked_partners'] = []
     
     return render(request, 'dashboard/settings.html', ctx)
 

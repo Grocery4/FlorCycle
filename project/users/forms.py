@@ -55,7 +55,18 @@ class DoctorSignupForm(UserCreationForm):
 
 
 class PartnerSignupForm(UserCreationForm):
-    pass
+    
+    class Meta(UserCreationForm.Meta):
+        model = CustomUser
+        fields = ['username', 'email']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.user_type = 'PARTNER'
+        if commit:
+            user.save()
+            PartnerProfile.objects.create(user=user)
+        return user
 
 class PremiumDataForm(UserCreationForm):
     pass

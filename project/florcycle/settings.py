@@ -139,5 +139,5 @@ MEDIA_ROOT = 'project/media/'
 MEDIA_URL = '/media/'
 
 # Redirect to dashboard after login
-LOGIN_REDIRECT_URL = '/dashboard/home'
+LOGIN_REDIRECT_URL = '/dashboard/redirect'
 LOGOUT_REDIRECT_URL = '/guest-mode'

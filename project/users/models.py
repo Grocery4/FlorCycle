@@ -4,34 +4,7 @@ from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 
-import os
-import uuid
-
-def doctorCvUploadPath(instance, filename):
-    # Get file extension
-    ext = filename.split('.')[-1]
-    # Build unique filename: doctor_<user_id>_<uuid>.<ext>
-    filename = f"doctor_{instance.user.id}_{uuid.uuid4().hex}.{ext}"
-    # Save inside MEDIA_ROOT/doctors/cv/
-    return os.path.join("doctors", "cv", filename)
-
-def activatePremiumSubscription(user):
-    premium = UserProfile.objects.get(user=user)
-    premium.is_premium = True
-    premium.subscription_status = "active"
-    premium.payment_info = {
-        "provider": "mockpay",
-        "subscription_id": f"sub_{user.id}",
-        "amount": "9.99",
-        "currency": "EUR"
-    }
-
-    premium.save()
-
-def userProfilePicturePath(instance, filename):
-    ext = filename.split('.')[-1]
-    filename = f"user_{instance.user.id}_{uuid.uuid4().hex}.{ext}"
-    return os.path.join('profile_pictures', f'user_{instance.user.id}', filename)
+from .services import doctorCvUploadPath, activatePremiumSubscription, userProfilePicturePath, generate_partner_code
 
 #TODO - implement pfps, cycledata into standarduser,
 class CustomUser(AbstractUser):
@@ -175,10 +148,14 @@ class DoctorProfile(models.Model):
 
 class PartnerProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    partner_code = models.CharField(max_length=20, unique=True)
-    linked_user = models.ForeignKey(CustomUser, related_name="partners", on_delete=models.CASCADE)
+    partner_code = models.CharField(max_length=10, unique=True)
+    linked_user = models.ForeignKey(CustomUser, related_name="partners", on_delete=models.CASCADE, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         self.user.user_type = 'PARTNER'
         self.user.save(update_fields=['user_type'])
+        if not self.partner_code:
+            self.partner_code = generate_partner_code()
+            while PartnerProfile.objects.filter(partner_code=self.partner_code).exists():
+                self.partner_code = generate_partner_code()
         super().save(*args, **kwargs)

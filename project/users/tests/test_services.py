@@ -2,7 +2,8 @@ from django.test import TestCase
 
 import os
 
-from users.models import CustomUser, UserProfile, doctorCvUploadPath, activatePremiumSubscription
+from users.models import CustomUser, UserProfile, PartnerProfile, doctorCvUploadPath, activatePremiumSubscription
+from users.services import link_partner, unlink_partner
 
 
 class ServicesTestCase(TestCase):
@@ -57,3 +58,49 @@ class ServicesTestCase(TestCase):
         self.assertEqual(premium.subscription_status.lower(), "active")
         self.assertEqual(premium.payment_info["provider"], "mockpay")
         self.assertIn("subscription_id", premium.payment_info)
+
+    def test_generate_partner_code(self):
+        main_user = CustomUser.objects.create_user(username='main', password='pass123', email='main@example.com')
+
+        partner_user = CustomUser.objects.create_user(username='partner', password='pass123', email='partner@example.com', user_type='PARTNER')
+        partner_profile = PartnerProfile.objects.create(user=partner_user, linked_user=main_user)
+        
+        self.assertIsNotNone(partner_profile.partner_code)
+
+    def test_link_unlink(self):
+        main_user1 = CustomUser.objects.create_user(username='main_user1', password='pass123', email='main1@example.com')
+        main_user2 = CustomUser.objects.create_user(username='main_user2', password='pass123', email='main2@example.com')
+        
+        partner_user = CustomUser.objects.create_user(username='partner_user', password='pass123', email='partner@example.com', user_type='PARTNER')
+        partner_profile = PartnerProfile.objects.create(user=partner_user, linked_user=main_user1)
+        
+        partner_code = partner_profile.partner_code
+        
+        # link_partner with invalid code should return None
+        invalid_result = link_partner(main_user2, 'invalid_code')
+        self.assertIsNone(invalid_result)
+        
+        # link_partner to different user should return None (already linked)
+        re_link_result = link_partner(main_user2, partner_code)
+        self.assertIsNone(re_link_result)
+        
+        # Verify the link wasn't changed
+        partner_profile.refresh_from_db()
+        self.assertEqual(partner_profile.linked_user, main_user1)
+        
+        # unlink_partner should set linked_user to None
+        unlink_result = unlink_partner(partner_user)
+        self.assertTrue(unlink_result)
+        
+        partner_profile.refresh_from_db()
+        self.assertIsNone(partner_profile.linked_user)
+        
+        # after unlinking, should be able to link to a different user
+        new_link_result = link_partner(main_user2, partner_code)
+        self.assertIsNotNone(new_link_result)
+        self.assertEqual(new_link_result.linked_user, main_user2)
+        
+        # unlink_partner with non-existent partner should return None
+        non_partner_user = CustomUser.objects.create_user(username='non_partner', password='pass123', email='non@example.com')
+        unlink_invalid = unlink_partner(non_partner_user)
+        self.assertIsNone(unlink_invalid)

@@ -10,8 +10,10 @@
         
         <div class="settings-sections">
             <div class="cycle-details">
+                <h3>Cycle Settings</h3>
                 <form method='post'>
                     {% csrf_token %}
+                    <input type="hidden" name="cycle_details" value="1">
                     {{ cycle_details_form.as_p }}
                     <button type="submit">Save</button>
                 </form>
@@ -22,6 +24,57 @@
                     <button>Get premium</button>
                 {% else %}
                     You're premium!
+                {% endif %}
+            </div>
+
+            <div class="partner-management">
+                <h3>Partner Management</h3>
+                
+                {% if partner_link_success %}
+                    <p class="success-message">{{ partner_link_success }}</p>
+                {% endif %}
+                {% if partner_link_error %}
+                    <p class="error-message">{{ partner_link_error }}</p>
+                {% endif %}
+                {% if partner_unlink_success %}
+                    <p class="success-message">{{ partner_unlink_success }}</p>
+                {% endif %}
+                {% if partner_unlink_error %}
+                    <p class="error-message">{{ partner_unlink_error }}</p>
+                {% endif %}
+
+                <div class="link-partner-form">
+                    <h4>Link a Partner</h4>
+                    <form method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="link_partner">
+                        <input type="text" name="partner_code" placeholder="Enter partner code" maxlength="10" required>
+                        <button type="submit">Link Partner</button>
+                    </form>
+                </div>
+
+                {% if linked_partners %}
+                    <div class="linked-partners-list">
+                        <h4>Linked Partners</h4>
+                        <ul>
+                        {% for partner in linked_partners %}
+                            <li>
+                                {{ partner.user }}
+                                <form method='post' style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="unlink_single_partner">
+                                    <input type="hidden" name="partner_user_id" value="{{ partner.user.id }}">
+                                    <button type="submit" class="unlink-single-btn">Unlink</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                        <form method='post'>
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="unlink_partner">
+                            <button type="submit">Unlink All Partners</button>
+                        </form>
+                    </div>
                 {% endif %}
             </div>
         </div>
