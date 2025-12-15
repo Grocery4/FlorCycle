@@ -73,3 +73,22 @@ class PremiumDataForm(UserCreationForm):
     #TODO - maybe PaymentDataForm is a better name
     #TODO - would it be better to create a separate object with 1:1 rel
     #TODO - with UserProfile?
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = CustomUser
+        fields = ['email']
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['profile_picture']
+
+    def clean_profile_picture(self):
+        profile_picture = self.cleaned_data.get('profile_picture')
+        
+        if not profile_picture:
+            return 'profile_pictures/default/default_profile.jpg'
+        return profile_picture
