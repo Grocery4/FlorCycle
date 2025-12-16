@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from dateutil import relativedelta
 import json
 
@@ -14,6 +14,7 @@ from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
 from log_core.models import DailyLog, IntercourseLog
 from log_core.forms import DailyLogForm, IntercourseLogForm
+from calendar_core.services import render_multiple_calendars, CalendarType
 
 from users.models import PartnerProfile
 from users.models import PartnerProfile, UserProfile
@@ -31,6 +32,81 @@ def redirect_handler(request):
         return redirect('dashboard:homepage')
     elif request.user.user_type == 'PARTNER':
         return redirect('dashboard:partner_setup_page')
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def calendar_view(request):
+    ctx = {}
+    
+    # request GET parameter to render a specific date
+    date_param = request.GET.get('date')
+    if date_param:
+        try:
+            reference_date = datetime.strptime(date_param, '%Y-%m-%d').date()
+        except ValueError:
+            reference_date = date.today()
+    else:
+        reference_date = date.today()
+
+    start_date = reference_date.replace(day=1) - relativedelta.relativedelta(months=1)
+    
+    # compute which months to render
+    months_to_render = [
+        start_date,
+        start_date + relativedelta.relativedelta(months=1),
+        start_date + relativedelta.relativedelta(months=2),
+    ]
+    
+    visible_start = months_to_render[0]
+    visible_end = (months_to_render[-1] + relativedelta.relativedelta(months=1)) - timedelta(days=1)
+    
+    # get CycleWindows in month range
+    cycle_windows = CycleWindow.objects.filter(
+        user=request.user,
+        menstruation_start__lte=visible_end,
+        max_ovulation_window__gte=visible_start 
+    )
+    
+    menstruation_dates = set()
+    ovulation_dates = set()
+    
+    for cw in cycle_windows:
+        try:
+            menstruation_dates.update(cw.getMenstruationDatesAsList())
+            ovulation_dates.update(cw.getOvulationDatesAsList())
+        except ValueError:
+            continue
+
+    # get DailyLogs in month range
+    logs = DailyLog.objects.filter(
+        user=request.user,
+        date__gte=visible_start,
+        date__lte=visible_end
+    )
+    
+    log_dates = {log.date.strftime('%Y-%m-%d') for log in logs}
+
+    # render calendars
+    calendars = render_multiple_calendars(
+        months=months_to_render,
+        menstruation_dates=list(menstruation_dates),
+        ovulation_dates=list(ovulation_dates),
+        log_dates=list(log_dates),
+        calendar_type=CalendarType.STANDARD
+    )
+    
+    ctx['calendars'] = calendars
+
+    # compute navigation dates    
+    prev_date = reference_date - relativedelta.relativedelta(months=1)
+    next_date = reference_date + relativedelta.relativedelta(months=1)
+    
+    ctx['prev_date'] = prev_date.strftime('%Y-%m-%d')
+    ctx['next_date'] = next_date.strftime('%Y-%m-%d')
+    ctx['current_date_display'] = reference_date.strftime('%B %Y')
+
+    return render(request, 'dashboard/calendar.html', ctx)
+
 
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
@@ -305,10 +381,8 @@ def add_log(request):
     ctx = {}
 
     if request.method == 'POST':
-        # Get the date from POST data first
         selected_date = request.POST.get('date')
         
-        # Try to get existing log for the selected date
         existing_log = None
         if selected_date:
             try:
@@ -316,7 +390,7 @@ def add_log(request):
             except DailyLog.DoesNotExist:
                 pass
 
-        # Create forms with POST data and existing instances if they exist
+        # create forms with POST data and existing instances if they exist
         dl_form = DailyLogForm(request.POST, instance=existing_log)
         il_form = IntercourseLogForm(request.POST, instance=getattr(existing_log, 'intercourse', None) if existing_log else None)
         
@@ -344,22 +418,36 @@ def add_log(request):
             for field, value in il_form.cleaned_data.items():
                 setattr(intercourse_log, field, value)
             intercourse_log.save()
+            
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
 
             ctx['dl_form'] = DailyLogForm(instance=daily_log)
             ctx['il_form'] = IntercourseLogForm(instance=intercourse_log)
         else:
-            # Form validation failed - keep the forms with errors and selected date
+            # render forms with errors
             ctx['dl_form'] = dl_form
             ctx['il_form'] = il_form
     else:
-        # GET request - load forms for today's date
-        current_day_log = get_day_log(request.user, date.today())
+        # load forms for a date
+        date_param = request.GET.get('date')
+        if date_param:
+            try:
+                selected_date = datetime.strptime(date_param, '%Y-%m-%d').date()
+            except ValueError:
+                selected_date = date.today()
+        else:
+            selected_date = date.today()
+
+        current_day_log = get_day_log(request.user, selected_date)
         
         if current_day_log:
             ctx['dl_form'] = DailyLogForm(instance=current_day_log)
             ctx['il_form'] = IntercourseLogForm(instance=getattr(current_day_log, 'intercourse', None))
         else:
-            ctx['dl_form'] = DailyLogForm()
+            # pre-fill date field if selected date exists
+            ctx['dl_form'] = DailyLogForm(initial={'date': selected_date})
             ctx['il_form'] = IntercourseLogForm()
         
     return render(request, 'dashboard/add_log/add_log.html', ctx)
@@ -381,25 +469,45 @@ def ajax_load_log(request):
         exists = False
     
     response_data = {"exists": exists}
+    
+    # check for cycle status (Period/Ovulation) even if log doesn't exist
+    cycle_windows = CycleWindow.objects.filter(
+        user=request.user,
+        menstruation_start__lte=date,
+        max_ovulation_window__gte=date
+    )
+    
+    is_period = False
+    is_ovulation = False
+    
+    date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+    
+    # check if date is in a cycle window
+    for cw in cycle_windows:
+        if cw.menstruation_start <= date_obj <= cw.menstruation_end:
+            is_period = True
+        
+        if cw.min_ovulation_window <= date_obj <= cw.max_ovulation_window:
+            is_ovulation = True
 
-    # Return data only if exists. Return empty form if it doesn't
+    response_data['is_period'] = is_period
+    response_data['is_ovulation'] = is_ovulation
+
+    # return data only if exists. return empty form if it doesn't
     if log:
         il = IntercourseLog.objects.filter(log=log).first()
 
         response_data.update({
-            # Daily log data
             "note": log.note,
             "flow": log.flow,
             "weight": log.weight,
             "temperature": log.temperature,
             "ovulation_test": log.ovulation_test,
 
-            # M2M fields
-            "symptoms": list(log.symptoms_field.values_list("id", flat=True)),
-            "moods": list(log.moods_field.values_list("id", flat=True)),
-            "medications": list(log.medications_field.values_list("id", flat=True)),
+            "symptoms": list(log.symptoms_field.values_list("name", flat=True)),
+            "moods": list(log.moods_field.values_list("name", flat=True)),
+            "medications": list(log.medications_field.values_list("name", flat=True)),
 
-            # Intercourse
             "protected": il.protected if il else None,
             "orgasm": il.orgasm if il else None,
             "quantity": il.quantity if il else None,
