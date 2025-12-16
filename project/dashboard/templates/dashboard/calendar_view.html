@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% load static %} {% block extra_head %}
-<link rel="stylesheet" href="{% static 'dashboard/css/calendar.css' %}" />
-{% endblock extra_head %} {% block title %}Calendar{% endblock title %}
-{% block content %}
+<link rel="stylesheet" href="{% static 'dashboard/css/calendar_view.css' %}" />
+{% endblock extra_head %} {% block title %}Calendar{% endblock title %} {% block
+content %}
 <div
   class="calendar-page-container"
   data-ajax-url="{% url 'dashboard:ajax_load_log' %}"
@@ -94,6 +94,6 @@
   </div>
 </div>
 
-<script src="{% static 'dashboard/js/calendar.js' %}"></script>
+<script src="{% static 'dashboard/js/calendar_view.js' %}"></script>
 
 {% endblock content %}

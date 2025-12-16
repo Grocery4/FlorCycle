@@ -105,7 +105,7 @@ def calendar_view(request):
     ctx['next_date'] = next_date.strftime('%Y-%m-%d')
     ctx['current_date_display'] = reference_date.strftime('%B %Y')
 
-    return render(request, 'dashboard/calendar.html', ctx)
+    return render(request, 'dashboard/calendar_view.html', ctx)
 
 
 @user_type_required(['STANDARD', 'PREMIUM'])
