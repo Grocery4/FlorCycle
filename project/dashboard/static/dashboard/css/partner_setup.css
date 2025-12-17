@@ -1,0 +1,52 @@
+.settings-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 99vh;
+}
+
+.settings-sections {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.partner-info {
+    padding: 10px 0;
+    border: 1px solid black;
+    width: 80%;
+    text-align: center;
+}
+
+.partner-code-section,
+.linked-user-section {
+    border: 1px solid black;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.partner-code-display h1 {
+    font-size: 36px;
+    margin: 10px 0;
+    font-family: monospace;
+}
+
+.unlink-btn {
+    padding: 8px 16px;
+    border: 1px solid black;
+    background-color: #fff;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.unlink-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.error {
+    border: 1px solid red;
+    color: red;
+    padding: 10px;
+    margin: 10px 0;
+}

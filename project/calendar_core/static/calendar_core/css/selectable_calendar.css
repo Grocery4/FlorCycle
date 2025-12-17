@@ -1,0 +1,36 @@
+.day-label {
+    display: block;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.day-label input {
+    display: none;
+}
+
+.day-label .day-number {
+    display: inline-block;
+    padding: 4px 6px;
+}
+
+.day-label input:checked + .day-number {
+    background: #9370FF;
+    color: white;
+    border-radius: 4px;
+}
+
+.day-label input:hover + .day-number{
+    background-color: lightgray;
+    border-radius: 4px;
+}
+
+.day-label input:disabled + .day-number {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.day-label input:disabled:hover + .day-number {
+    background-color: transparent;
+}

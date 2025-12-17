@@ -1,0 +1,13 @@
+{% load static %}
+
+<link rel="stylesheet" href={% static 'dashboard/css/action_bar.css'%}>
+
+<div class="action-bar">
+    {% if request.user.user_type != 'PARTNER' %}
+        <a href="{% url 'dashboard:homepage' %}" class="home">home button</a>
+    {% else %}
+        <a href="{% url 'dashboard:homepage_readonly' %}" class="home">home button</a>
+    {% endif %}
+    <a href="{% url 'dashboard:calendar_view' %}" class="calendar">calendar button</a>
+    <a href="{% url "dashboard:stats" %}" class="stats">stats</a>
+</div>

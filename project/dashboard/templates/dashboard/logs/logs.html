@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href={% static "dashboard/css/logs.css" %}>
+    <link rel="stylesheet" href={% static "dashboard/css/cycle_displays.css" %}>
+{% endblock extra_head %}
+{% block title %}My cycles{% endblock title %}
+
+{% block content %}
+    <div class="logs-container">
+        {% include "dashboard/subpage_topbar.html" %}
+
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3 class="stat-title">Average cycle duration</h3>
+                <p class="stat-value">{{avg_cycle_duration}}</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="stat-title">Logged periods</h3>
+                <p class="stat-value">{{log_count}}</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="stat-title">Average period duration</h3>
+                <p class="stat-value">{{avg_menstruation_duration}}</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="stat-title">Average ovulation window</h3>
+                <p class="stat-value">Day {{avg_ovulation_start_day}}-{{avg_ovulation_end_day}}</p>
+            </div>
+        </div>
+
+        <div class="cycle-windows-container">
+            <div class="button-group">
+                <a href="?view=history">History</a>
+                <a href="?view=predictions">Predictions</a>
+            </div>
+
+            <div class="cycle-list">
+                {% for cycle in objects %}
+                    {% include "dashboard/logs/cycle_display.html" %}
+                {% endfor %}
+            </div>
+        </div>
+
+{% endblock content %}

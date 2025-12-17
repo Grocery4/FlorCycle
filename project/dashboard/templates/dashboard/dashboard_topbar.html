@@ -1,0 +1,11 @@
+{% load static %}
+<link rel="stylesheet" href={% static "dashboard/css/top_bar.css" %}>
+
+<div class="top-bar">
+    {% if request.user.user_type == 'PARTNER' %}
+        <a href="{% url "dashboard:partner_setup_page" %}">settings button</a>
+    {% else %}
+        <a href="{% url 'dashboard:settings_page'%}" class="settings">settings button</a>
+    {% endif %}
+    <a href="" class="notification">notification button</a>
+</div>

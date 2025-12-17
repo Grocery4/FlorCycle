@@ -1,5 +1,11 @@
 from datetime import date
+from enum import Enum
 import calendar
+
+
+class CalendarType(Enum):
+    STANDARD = 0
+    SELECTABLE = 1
 
 class CycleCalendar(calendar.HTMLCalendar):
     def __init__(self, highlights=None):
@@ -8,10 +14,12 @@ class CycleCalendar(calendar.HTMLCalendar):
         self._year = None
         self._month = None
 
-        self._date_to_class = {}
+        self._date_to_classes = {}
         for css_class, dates in self.highlights.items():
             for d in dates:
-                self._date_to_class[d] = css_class
+                if d not in self._date_to_classes:
+                    self._date_to_classes[d] = []
+                self._date_to_classes[d].append(css_class)
 
     def formatmonth(self, theyear, themonth, withyear=True):
         self._year = theyear
@@ -23,44 +31,72 @@ class CycleCalendar(calendar.HTMLCalendar):
             return '<td class="noday">&nbsp;</td>'
         
         date_str = f"{self._year:04d}-{self._month:02d}-{day:02d}"
-        css_class = self._date_to_class.get(date_str, "")
+        css_classes = self._date_to_classes.get(date_str, [])
         
-        if css_class:
-            return f'<td class="{css_class}">{day}</td>'
+        css_class_str = " ".join(css_classes)
+        
+        if css_class_str:
+            return f'<td class="{css_class_str}" data-date="{date_str}"><div class="day-content">{day}</div></td>'
         else:
-            return f'<td>{day}</td>'
-        
-def renderCalendar(year, month, menstruation_dates: dict=None, ovulation_dates: dict=None):
+            return f'<td data-date="{date_str}"><div class="day-content">{day}</div></td>'
+
+
+
+class SelectableCycleCalendar(CycleCalendar):
+
+    def formatday(self, day, weekday):
+        if day == 0:
+            return '<td class="noday">&nbsp;</td>'
+
+        date_str = f"{self._year:04d}-{self._month:02d}-{day:02d}"
+        current_date = date(self._year, self._month, day)
+        css_classes = self._date_to_classes.get(date_str, [])
+        css_class_str = " ".join(css_classes)
+
+        td_class = f' class="{css_class_str}"' if css_class_str else ""
+
+        checkbox_id = f"day_{date_str}"
+
+        is_future = current_date > date.today()
+        disabled_attr = ' disabled' if is_future else ''
+
+        return (
+            f'<td{td_class}>'
+            f'  <label class="day-label" for="{checkbox_id}">'
+            f'    <input type="checkbox" id="{checkbox_id}" '
+            f'           name="selected_days" value="{date_str}"{disabled_attr} />'
+            f'    <span class="day-number">{day}</span>'
+            f'  </label>'
+            f'</td>'
+        )
+
+def render_calendar(dt: date, menstruation_dates: dict=None, ovulation_dates: dict=None, log_dates: dict=None, calendar_type: CalendarType=CalendarType.STANDARD):
     highlights = {
         'highlight-menstruation' : menstruation_dates or {},
-        'highlight-ovulation' : ovulation_dates or {}
+        'highlight-ovulation' : ovulation_dates or {},
+        'has-log': log_dates or {}
     }
     
-    return CycleCalendar(highlights=highlights).formatmonth(year, month)
+    if calendar_type == CalendarType.STANDARD:
+        return CycleCalendar(highlights=highlights).formatmonth(dt.year, dt.month)
+    elif calendar_type == CalendarType.SELECTABLE:
+        return SelectableCycleCalendar(highlights=highlights).formatmonth(dt.year, dt.month)
 
-# accepts a list of (year, month)
-def renderMultipleCalendars(months: list[tuple[int, int]], menstruation_dates: dict=None, ovulation_dates: dict=None) -> list[str]:
+def render_multiple_calendars(months: list[date], menstruation_dates: dict=None, ovulation_dates: dict=None, log_dates: dict=None, calendar_type: CalendarType=CalendarType.STANDARD) -> list[str]:
     highlights = {
         'highlight-menstruation': menstruation_dates or {},
-        'highlight-ovulation': ovulation_dates or {}
+        'highlight-ovulation': ovulation_dates or {},
+        'has-log': log_dates or {}
     }
-    calendar = CycleCalendar(highlights=highlights)
+
+    if calendar_type == CalendarType.STANDARD:
+        calendar = CycleCalendar(highlights=highlights)
+    elif calendar_type == CalendarType.SELECTABLE:
+        calendar = SelectableCycleCalendar(highlights=highlights)
 
     html_calendars = []
-    for year, month in months:
-        cal = ''
-        cal += calendar.formatmonth(year, month)
-        cal += '\n'
+    for dt in months:
+        cal = calendar.formatmonth(dt.year, dt.month)
         html_calendars.append(cal)
 
     return html_calendars
-        
-
-
-# idea: pass a set of dates `menstruation_dates` and `ovulation_dates`
-# and highlight them.
-# to figure out which months to render: get the month of first prediction day and last prediction day
-if __name__ == '__main__':
-
-    html_calendar = renderMultipleCalendars(2024, [1,2,3,4], {'2024-02-12'})
-    print(html_calendar)

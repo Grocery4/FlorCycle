@@ -1,2 +1,11 @@
 # ignore __pycache__ directory
 __pycache__/
+
+# ignore db
+project/db.sqlite3
+
+# ignore migrations/ directory
+migrations/
+
+# ignore media/ directory
+media/

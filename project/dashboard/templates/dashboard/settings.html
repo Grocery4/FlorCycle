@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}<link rel="stylesheet" href={% static "dashboard/css/settings.css" %}>{% endblock extra_head %}
+{% block title %}Settings{% endblock title %}
+
+{% block content %}
+    <div class="settings-content-wrapper">
+        {% include "dashboard/subpage_topbar.html" %}
+        
+        <div class="settings-sections">
+            <div class="cycle-details">
+                <h3>Cycle Settings</h3>
+                <form method='post'>
+                    {% csrf_token %}
+                    <input type="hidden" name="cycle_details" value="1">
+                    {{ cycle_details_form.as_p }}
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+            
+            <div class="premium-form">
+                {% if not user.userprofile.is_premium %}
+                    <button>Get premium</button>
+                {% else %}
+                    You're premium!
+                {% endif %}
+            </div>
+
+            <div class="user-management">
+                <h3>Profile Settings</h3>
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="profile-pic-section">
+                    <h4>Profile Picture</h4>
+                    {% if user.userprofile.profile_picture %}
+                        <img src="{{ user.userprofile.profile_picture.url }}" alt="Current profile picture" style="max-width: 150px; border-radius: 50%;">
+                    {% else %}
+                        <p>No profile picture set.</p>
+                    {% endif %}
+                    <form method='post' enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_profile_pic">
+                        {{ profile_form.as_p }}
+                        <button type="submit">Update Picture</button>
+                    </form>
+                </div>
+
+                <div class="email-section">
+                    <h4>Account Information</h4>
+                    <form method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_user_info">
+                        {{ user_form.as_p }}
+                        <button type="submit">Update Email</button>
+                    </form>
+                </div>
+
+                <div class="password-section">
+                    <h4>Change Password</h4>
+                    <form method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="change_password">
+                        {{ password_form.as_p }}
+                        <button type="submit">Change Password</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="partner-management">
+                <h3>Partner Management</h3>
+                
+                {% if partner_link_success %}
+                    <p class="success-message">{{ partner_link_success }}</p>
+                {% endif %}
+                {% if partner_link_error %}
+                    <p class="error-message">{{ partner_link_error }}</p>
+                {% endif %}
+                {% if partner_unlink_success %}
+                    <p class="success-message">{{ partner_unlink_success }}</p>
+                {% endif %}
+                {% if partner_unlink_error %}
+                    <p class="error-message">{{ partner_unlink_error }}</p>
+                {% endif %}
+
+                <div class="link-partner-form">
+                    <h4>Link a Partner</h4>
+                    <form method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="link_partner">
+                        <input type="text" name="partner_code" placeholder="Enter partner code" maxlength="10" required>
+                        <button type="submit">Link Partner</button>
+                    </form>
+                </div>
+
+                {% if linked_partners %}
+                    <div class="linked-partners-list">
+                        <h4>Linked Partners</h4>
+                        <ul>
+                        {% for partner in linked_partners %}
+                            <li>
+                                {{ partner.user }}
+                                <form method='post' style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="unlink_single_partner">
+                                    <input type="hidden" name="partner_user_id" value="{{ partner.user.id }}">
+                                    <button type="submit" class="unlink-single-btn">Unlink</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                        <form method='post'>
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="unlink_partner">
+                            <button type="submit">Unlink All Partners</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,199 @@
+
+.calendar-page-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.calendar-wrapper {
+  display: flex; /* Side by side layout */
+  flex: 1;
+  overflow: hidden;
+  gap: 20px;
+}
+
+.calendar-list {
+  flex: 2; /* Takes more space */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-right: 10px;
+}
+
+/* Navigation Header */
+.calendar-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.nav-btn {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.nav-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.current-month-display {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+
+.daily-view-sidebar {
+  flex: 1; /* Takes less space */
+  background: #fff;
+  border-left: 1px solid #eee;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  /* Optional: Slide in animation or just static */
+  border-radius: 12px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Prevent sidebar itself from scrolling, rely on content */
+}
+
+.daily-view-content {
+    flex: 1;
+    overflow-y: auto; /* Enable scrolling for content */
+    display: flex;
+    flex-direction: column;
+    padding-right: 5px; /* Space for scrollbar */
+}
+
+/* Calendar Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+th {
+  padding: 10px;
+  background: #f8f9fa;
+  color: #666;
+  font-weight: 600;
+}
+
+td {
+  height: 80px; /* Taller cells for modern look */
+  vertical-align: top;
+  padding: 5px;
+  border: 1px solid #f0f0f0;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+
+td:hover {
+  background-color: #fcfcfc;
+}
+
+td.selected-date {
+  box-shadow: inset 0 0 0 2px var(--primary-color, #d55f5f);
+}
+
+.day-content {
+  font-weight: 500;
+  font-size: 0.9em;
+  color: #333;
+}
+
+/* Highlights */
+.highlight-menstruation {
+  background-color: rgba(255, 182, 193, 0.4); /* Light pink */
+}
+
+.highlight-ovulation {
+  background-color: rgba(173, 216, 230, 0.4); /* Light blue */
+}
+
+/* Overlap handling? CSS classes are joined by space. 
+   If both present, background defaults to one. Gradient would be better. */
+.highlight-menstruation.highlight-ovulation {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 182, 193, 0.4) 50%,
+    rgba(173, 216, 230, 0.4) 50%
+  );
+}
+
+.has-log::after {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 6px;
+  background-color: #d55f5f;
+  border-radius: 50%;
+  margin: 4px auto;
+}
+
+/* Daily View */
+.daily-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.indicator {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: white;
+  margin-right: 5px;
+}
+
+.indicator.period {
+  background-color: #e57373;
+}
+
+.indicator.ovulation {
+  background-color: #64b5f6;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.add-log-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  text-align: center;
+}

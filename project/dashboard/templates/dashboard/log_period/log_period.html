@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static "calendar_core/css/selectable_calendar.css" %}">
+    <link rel="stylesheet" href="{% static "dashboard/css/log_period.css" %}">
+{% endblock extra_head %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        window.selectedDates = {{ selected_dates | safe }}; 
+        window.referenceMonth = "{{ reference_month | date:'Y-m-d' }}";
+    </script>
+    <script type="text/javascript" src="{% static "dashboard/js/period_selector.js" %}"></script>
+    <script type="text/javascript" src="{% static "dashboard/js/month_navigator.js" %}"></script>
+{% endblock extra_js %}
+
+{% block title %}Add Period{% endblock title %}
+
+
+{% block content %}
+    <div class="log-period-container">
+                {% include "dashboard/subpage_topbar.html" %}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="button-section">
+            <button type="button" class="nav_btn" id="prev_btn"><</button>
+            <button type="button" class="nav_btn" id="next_btn">></button>
+        </div>
+
+        {% include "calendar_core/calendars.html" %}
+        <input type="hidden" name="reference_month" id="reference_month" value="{{ reference_month | date:'Y-m-d' }}">
+        <input type="hidden" name="mo_start" id="mo_start" value="{{ rendered_month_start |date:'Y-m-d' }}">
+        <input type="hidden" name="mo_end" id="mo_end" value="{{ rendered_month_end | date:'Y-m-d' }}">
+
+        <button type="submit">Save</button>
+    </form>
+{% endblock content %}

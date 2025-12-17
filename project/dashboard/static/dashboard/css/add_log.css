@@ -1,0 +1,184 @@
+@media (max-width: 768px) {
+    .add-entry-container {
+        padding: 10px;
+    }
+    
+    .sub-form {
+        padding: 12px;
+        margin: 12px 0;
+    }
+}
+
+.add-entry-container {
+    width: 100%;
+    margin: 0;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.sub-form {
+    border: 2px solid #000;
+    padding: 16px;
+    margin: 16px 0;
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+
+#id_symptoms, 
+#id_moods, 
+#id_medications {
+    border: 1px solid black;
+    padding: 10px;
+    max-height: 300px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+}
+
+/* Hide checkboxes */
+#id_symptoms input[type="checkbox"],
+#id_moods input[type="checkbox"],
+#id_medications input[type="checkbox"] {
+    display: none;
+}
+
+/* Style labels as clickable items */
+#id_symptoms label,
+#id_moods label,
+#id_medications label {
+    display: block;
+    padding: 8px 12px;
+    margin: 0;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    font-weight: normal;
+}
+
+/* Hover state */
+#id_symptoms label:hover,
+#id_moods label:hover,
+#id_medications label:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+/* Selected state - highlight when checkbox is checked */
+#id_symptoms label:has(input[type="checkbox"]:checked),
+#id_moods label:has(input[type="checkbox"]:checked),
+#id_medications label:has(input[type="checkbox"]:checked) {
+    background-color: #000;
+    color: white;
+    border-color: #000;
+}
+
+
+
+
+.sub-form h3 {
+    margin-top: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ccc;
+    top: 0;
+    background: white;
+    z-index: 1;
+}
+
+.sub-form label {
+    display: block;
+    margin: 8px 0 4px;
+    font-weight: bold;
+}
+
+.sub-form input,
+.sub-form select,
+.sub-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.sub-form input:focus,
+.sub-form select:focus,
+.sub-form textarea:focus {
+    outline: none;
+    border-color: #000;
+}
+
+button[type="submit"] {
+    background-color: #000;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 16px;
+    width: 100%;
+}
+
+button[type="submit"]:hover {
+    background-color: #333;
+}
+
+
+
+form {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-errors {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+}
+
+
+
+.field-with-reset {
+    position: relative;
+}
+
+.reset-btn {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.reset-btn:hover {
+    background-color: #5a6268;
+}
+
+.reset-btn:active {
+    background-color: #4e555b;
+}

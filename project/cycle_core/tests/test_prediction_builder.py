@@ -9,20 +9,20 @@ class TestPredictionBuilder(TestCase):
 
     def setUp(self):
         # Example baseline values
-        self.last_menstruation_date = datetime(2025, 1, 1).date()
+        self.base_menstruation_date = datetime(2025, 1, 1).date()
         self.avg_cycle_duration = 28
         self.avg_menstruation_duration = 5
 
         self.cd = CycleDetails(
-            last_menstruation_date=self.last_menstruation_date,
+            base_menstruation_date=self.base_menstruation_date,
             avg_cycle_duration=self.avg_cycle_duration,
             avg_menstruation_duration=self.avg_menstruation_duration
         )
 
     def test_predict_menstruation(self):
-        start, end = PredictionBuilder.predictMenstruation(self.cd.last_menstruation_date, self.cd.avg_cycle_duration, self.cd.avg_menstruation_duration)
+        start, end = PredictionBuilder.predictMenstruation(self.cd.base_menstruation_date, self.cd.avg_cycle_duration, self.cd.avg_menstruation_duration)
 
-        expected_start = (self.last_menstruation_date + timedelta(days=self.avg_cycle_duration))
+        expected_start = (self.base_menstruation_date + timedelta(days=self.avg_cycle_duration))
         expected_end = expected_start + timedelta(days=self.avg_menstruation_duration-1)
 
         self.assertEqual(start, expected_start)
@@ -39,9 +39,13 @@ class TestPredictionBuilder(TestCase):
         self.assertEqual(end, expected_end)
 
     def test_generate_prediction(self):
-        cwp = PredictionBuilder.generatePrediction(self.cd)
+        cwp = PredictionBuilder.generatePrediction(
+            self.cd.base_menstruation_date,
+            self.cd.avg_cycle_duration,
+            self.cd.avg_menstruation_duration,
+        )
         # Expected menstruation window
-        expected_menstruation_start = self.last_menstruation_date + timedelta(days=self.avg_cycle_duration)
+        expected_menstruation_start = self.base_menstruation_date + timedelta(days=self.avg_cycle_duration)
         expected_menstruation_end = expected_menstruation_start + timedelta(days=self.avg_menstruation_duration-1)
 
         # Expected ovulation window
@@ -58,10 +62,16 @@ class TestPredictionBuilder(TestCase):
         predictions = PredictionBuilder.generateMultiplePredictions(self.cd, 3)
 
         self.assertEqual(len(predictions), 3)
-        self.assertEqual(predictions[0].menstruation_start, self.cd.asCycleWindow().menstruation_start)
-        self.assertEqual(predictions[0].menstruation_end, self.cd.asCycleWindow().menstruation_end)
-        self.assertEqual(predictions[0].min_ovulation_window, self.cd.asCycleWindow().min_ovulation_window)
-        self.assertEqual(predictions[0].max_ovulation_window, self.cd.asCycleWindow().max_ovulation_window)
+        
+        expected_first_start = self.base_menstruation_date + timedelta(days=self.avg_cycle_duration)
+        expected_first_end = expected_first_start + timedelta(days=self.avg_menstruation_duration-1)
+        
+        self.assertEqual(predictions[0].menstruation_start, expected_first_start)
+        self.assertEqual(predictions[0].menstruation_end, expected_first_end)
+        
+        for i in range(1, len(predictions)):
+            expected_start = predictions[i-1].menstruation_start + timedelta(days=self.avg_cycle_duration)
+            self.assertEqual(predictions[i].menstruation_start, expected_start)
 
 if __name__ == "__main__":
     TestCase.main()

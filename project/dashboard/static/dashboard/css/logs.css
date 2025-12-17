@@ -1,0 +1,20 @@
+.stats-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.stat-item {
+    padding: 0 40px;
+    border: 1px solid black;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.button-group > a {
+    padding: 0 10px;
+}

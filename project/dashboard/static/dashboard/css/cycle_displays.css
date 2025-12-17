@@ -1,0 +1,33 @@
+.cycle-container {
+    border: 2px solid #000;
+    padding: 12px;
+    background: white;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.prediction-badge {
+    padding: 2px 8px;
+    border: 1px solid #000;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.cycle-data-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    margin: 6px 0;
+    border: 1px solid #000;
+    background: #f0f0f0;
+}
+
+.duration-badge {
+    padding: 2px 6px;
+    background: white;
+    border: 1px solid #666;
+    font-size: 12px;
+}

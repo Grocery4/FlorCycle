@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 
+{% comment %} FIXME - rename this template {% endcomment %}
+
 {% load static %}
 
 {% block title %}Guest mode{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'guest_mode/css/show_form.css' %}">
+    <link rel="stylesheet" href={% static "calendar_core/css/standard_calendar.css" %}>
 {% endblock extra_head %}
 
 {% block content %}

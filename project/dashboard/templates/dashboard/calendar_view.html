@@ -1,0 +1,99 @@
+{% extends "base.html" %} {% load static %} {% block extra_head %}
+<link rel="stylesheet" href="{% static 'dashboard/css/calendar_view.css' %}" />
+{% endblock extra_head %} {% block title %}Calendar{% endblock title %} 
+{% block content %}
+<div
+  class="calendar-page-container"
+  data-ajax-url="{% url 'dashboard:ajax_load_log' %}"
+  data-add-log-url="{% url 'dashboard:add_log' %}"
+  data-csrf-token="{{ csrf_token }}"
+>
+  {% include "dashboard/subpage_topbar.html" %}
+
+  <div class="calendar-wrapper">
+    <div class="calendar-list">
+      <div class="calendar-nav-header">
+        <a href="?date={{ prev_date }}" class="nav-btn">&laquo; Prev</a>
+        <span class="current-month-display">{{ current_date_display }}</span>
+        <a href="?date={{ next_date }}" class="nav-btn">Next &raquo;</a>
+      </div>
+      {% for calendar in calendars %}
+      <div class="month-container">{{ calendar|safe }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="daily-view-sidebar" id="daily-view-sidebar">
+      <div class="daily-view-header">
+        <h3 id="selected-date-display">Select a date</h3>
+      </div>
+
+      <div id="daily-view-content" class="daily-view-content hidden">
+        <div class="cycle-status-indicators">
+          <span id="period-indicator" class="indicator period hidden"
+            >Period</span
+          >
+          <span id="ovulation-indicator" class="indicator ovulation hidden"
+            >Ovulation</span
+          >
+        </div>
+
+        <div class="log-details">
+          <h4>Log Details</h4>
+          <div id="log-data">
+            <div class="log-item">
+              <p><strong>Notes:</strong> <span id="log-note"></span></p>
+            </div>
+            <div class="log-item">
+              <p><strong>Flow:</strong> <span id="log-flow"></span></p>
+            </div>
+            <div class="log-item">
+              <p><strong>Weight:</strong> <span id="log-weight"></span></p>
+            </div>
+            <div class="log-item">
+              <p><strong>Temp:</strong> <span id="log-temp"></span></p>
+            </div>
+            <div class="log-item">
+              <p>
+                <strong>Ovulation Test:</strong>
+                <span id="log-ovulation-test"></span>
+              </p>
+            </div>
+
+            <div class="log-group">
+              <h5>Symptoms</h5>
+              <ul id="log-symptoms"></ul>
+            </div>
+            <div class="log-group">
+              <h5>Moods</h5>
+              <ul id="log-moods"></ul>
+            </div>
+
+            <div class="log-group">
+              <h5>Intercourse</h5>
+              <p><strong>Quantity:</strong> <span id="log-quantity"></span></p>
+              <p>
+                <strong>Protected:</strong> <span id="log-protected"></span>
+              </p>
+              <p><strong>Orgasm:</strong> <span id="log-orgasm"></span></p>
+            </div>
+          </div>
+        </div>
+
+        <div id="no-log-data" class="no-log-data hidden">
+          <p>No log entry for this day.</p>
+        </div>
+
+        <a
+          href="{% url 'dashboard:add_log' %}"
+          class="add-log-btn"
+          id="add-log-btn"
+          >Edit Log</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'dashboard/js/calendar_view.js' %}"></script>
+
+{% endblock content %}

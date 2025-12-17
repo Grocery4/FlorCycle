@@ -1,11 +1,16 @@
 from django.db import models
 from django.utils.timezone import now
+from django.conf import settings
 
 from datetime import timedelta
 
 # Create your models here.
+
+MIN_LOG_FOR_STATS = 6
+
 class CycleDetails(models.Model):
-    #TODO - add a user class to have one CycleDetails seed per user.    
+    #TODO - test this mf
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     CYCLE_DURATION_CHOICES = [(i, f'{i} DAYS') for i in range(22, 45)]
     MENSTRUATION_DURATION_CHOICES = [(i, f'{i} DAY') if i == 1 else (i, f'{i} DAYS') for i in range(1, 11)]
@@ -15,7 +20,7 @@ class CycleDetails(models.Model):
     AVG_MAX_OVULATION_DAY = 16
 
 
-    last_menstruation_date = models.DateField(
+    base_menstruation_date = models.DateField(
         default=now
     )
 
@@ -39,30 +44,23 @@ class CycleDetails(models.Model):
     # a uniformed list of CycleWindows starting from the initial CycleWindow.
     def asCycleWindow(self):
         cw = CycleWindow(
-            menstruation_start=self.last_menstruation_date,
-            menstruation_end=self.last_menstruation_date + timedelta(days=self.avg_menstruation_duration-1),
-            min_ovulation_window=self.last_menstruation_date + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY),
-            max_ovulation_window=self.last_menstruation_date + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY)
+            menstruation_start=self.base_menstruation_date,
+            menstruation_end=self.base_menstruation_date + timedelta(days=self.avg_menstruation_duration-1),
+            min_ovulation_window=self.base_menstruation_date + timedelta(days=CycleDetails.AVG_MIN_OVULATION_DAY),
+            max_ovulation_window=self.base_menstruation_date + timedelta(days=CycleDetails.AVG_MAX_OVULATION_DAY),
+            is_prediction = False
+
         )
         
         return cw
     
-    #TODO - implement methods
-    # external function could pass last x=12 cycle/menstruation durations
-    # and make an average of those durations
-    # if total_entry_count % x == 0: take last x logs
-    def updateAverageCycleDuration(self):
-        pass
-
-    def updateAverageMenstruationDuration(self):
-        pass
-
     def __str__(self):
-        return f'last menstruation: {self.last_menstruation_date}\n average cycle duration:{self.avg_cycle_duration}\n average menstruation duration:{self.avg_menstruation_duration}'
+        return f'last menstruation: {self.base_menstruation_date}\n average cycle duration:{self.avg_cycle_duration}\n average menstruation duration:{self.avg_menstruation_duration}'
 
 
 
 class CycleWindow(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     menstruation_start = models.DateField(
         blank=False,
@@ -70,8 +68,8 @@ class CycleWindow(models.Model):
     )
 
     menstruation_end = models.DateField(
-        blank=False,
-        default=now
+        null=True,
+        blank=True,
     )
 
     min_ovulation_window = models.DateField(
@@ -81,6 +79,8 @@ class CycleWindow(models.Model):
     max_ovulation_window = models.DateField(
         blank=False,
     )
+
+    is_prediction = models.BooleanField(default=True)
 
     def getMenstruationDatesAsList(self):
         if self.menstruation_start is None or self.menstruation_end is None:
@@ -105,9 +105,42 @@ class CycleWindow(models.Model):
     def getOvulationDuration(self):
         return (self.max_ovulation_window - self.min_ovulation_window) + timedelta(days=1)
 
+    def getPhasesBreakdown(self):
+        # calculate probable ovulation date (midpoint of ovulation window)
+        ovulation_duration = self.getOvulationDuration()
+        probable_ovulation_date = self.min_ovulation_window + (ovulation_duration / 2) - timedelta(days=0.5)
+        
+        return {
+            'menstruation': {
+                'start': self.menstruation_start,
+                'end': self.menstruation_end,
+                'duration': (self.menstruation_end - self.menstruation_start).days + 1
+            },
+            'ovulation': {
+                'start': self.min_ovulation_window,
+                'end': self.max_ovulation_window,
+                'probable_date': probable_ovulation_date.date() if hasattr(probable_ovulation_date, 'date') else probable_ovulation_date,
+                'duration': ovulation_duration.days
+            }
+        }
 
     def __str__(self):
         return (
             f"Menstruation: from {self.menstruation_start} to {self.menstruation_end}, "
             f"Ovulation: from {self.min_ovulation_window} to {self.max_ovulation_window}"
         )
+    
+
+    
+# This class is used as a stats holder which will be dynamically updated by methods.
+# It's different from CycleDetails, which is a class used to generate the initial setup form
+# fillled by the user through UI.
+class CycleStats(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    avg_cycle_duration = models.IntegerField(default=28)
+    avg_menstruation_duration = models.IntegerField(default=5)
+    avg_ovulation_start_day = models.IntegerField(default=CycleDetails.AVG_MIN_OVULATION_DAY)
+    avg_ovulation_end_day = models.IntegerField(default=CycleDetails.AVG_MAX_OVULATION_DAY)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    log_count = models.PositiveIntegerField(default=0)

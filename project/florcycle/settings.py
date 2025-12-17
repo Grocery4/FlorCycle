@@ -39,8 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'guest_mode',
+    'dashboard',
     'cycle_core',
+    'log_core',
     'calendar_core',
+    'users.apps.UsersConfig',
     'forum',
 ]
 
@@ -127,3 +130,14 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom user model
+AUTH_USER_MODEL = 'users.CustomUser'
+
+# Media file location
+MEDIA_ROOT = 'project/media/'
+MEDIA_URL = '/media/'
+
+# Redirect to dashboard after login
+LOGIN_REDIRECT_URL = '/dashboard/redirect'
+LOGOUT_REDIRECT_URL = '/guest-mode'
