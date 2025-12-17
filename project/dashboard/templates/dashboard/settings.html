@@ -8,6 +8,14 @@
     <div class="settings-content-wrapper">
         {% include "dashboard/subpage_topbar.html" %}
         
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         <div class="settings-sections">
             <div class="cycle-details">
                 <h3>Cycle Settings</h3>
@@ -29,14 +37,6 @@
 
             <div class="user-management">
                 <h3>Profile Settings</h3>
-                {% if messages %}
-                    <ul class="messages">
-                        {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-
                 <div class="profile-pic-section">
                     <h4>Profile Picture</h4>
                     {% if user.userprofile.profile_picture %}
