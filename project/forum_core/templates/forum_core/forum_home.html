@@ -1,0 +1,77 @@
+{% extends 'base.html' %} {% load static %} {% block extra_head %}
+<link rel="stylesheet" href="{% static 'forum_core/css/forum_home.css' %}" />
+{% endblock extra_head %} {% block title %}Florcycle Forums | Homepage{% endblock %} 
+
+{% block content %}
+<div class="forum-container">
+  <div class="forum-header">
+    <h1>Community Forum</h1>
+    <p class="forum-subtitle">Connect, share, and learn from others.</p>
+  </div>
+
+  <!-- Search Section -->
+  <div class="forum-search-section">
+    <form method="GET" action="." class="search-form">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search threads by title..."
+        value="{{ request.GET.q }}"
+      />
+      <button type="submit" class="search-btn">Search</button>
+    </form>
+  </div>
+
+  <!-- Main Actions -->
+  <div class="forum-actions">
+    <a href="{% url 'forum_core:doctor_ranking' %}" class="action-btn"
+      >Doctor Ranking</a
+    >
+    <a href="{% url 'forum_core:home' %}?view=all" class="action-btn"
+      >All Threads</a
+    >
+    <!-- Add New Thread button could go here -->
+  </div>
+
+  <!-- Last Updated Threads -->
+  <div class="threads-section">
+    <h2>Last Updated Threads</h2>
+
+    {% if latest_threads %}
+    <div class="threads-list">
+      {% for thread in latest_threads %}
+      <div class="thread-card">
+        <div class="thread-info">
+          <h3 class="thread-title">
+            <a href="{% url 'forum_core:thread' thread.id %}"
+              >{{ thread.title }}</a
+            >
+          </h3>
+          <div class="thread-meta">
+            <span class="thread-author"
+              >by {{ thread.created_by.username }}</span
+            >
+            <span class="thread-date"
+              >Updated: {{ thread.updated_at|date:"M d, Y" }}</span
+            >
+            <span class="thread-participants"
+              >{{ thread.participants.count }} participants</span
+            >
+          </div>
+        </div>
+        <div class="thread-stats">
+          <span class="comment-count"
+            >{{ thread.comments.count }} comments</span
+          >
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <p>No threads found. Be the first to start a conversation!</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

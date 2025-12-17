@@ -1,0 +1,171 @@
+.forum-container {
+    max_width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    /* font-family inherited from base */
+}
+
+.forum-header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 20px;
+}
+
+.forum-header h1 {
+    font-size: 2.5rem;
+    color: #000;
+    margin-bottom: 10px;
+    font-weight: 800;
+}
+
+.forum-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* Search Section */
+.forum-search-section {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.search-form {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    gap: 10px;
+}
+
+.search-form input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 2px solid #000; /* Dashboard token */
+    font-size: 1rem;
+    outline: none;
+    background: white;
+}
+
+.search-form input:focus {
+    background: #f0f0f0;
+}
+
+.search-btn {
+    padding: 12px 30px;
+    background-color: #000; /* Dashboard token */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.2s;
+}
+
+.search-btn:hover {
+    background-color: #333;
+}
+
+/* Actions */
+.forum-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.action-btn {
+    text-decoration: none;
+    color: white;
+    background-color: #000; /* Dashboard token */
+    font-weight: 700;
+    padding: 10px 20px;
+    border: none;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #333;
+}
+
+/* Threads List */
+.threads-section h2 {
+    font-size: 1.5rem;
+    color: #000;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #000; /* Dashboard token */
+    padding-bottom: 10px;
+    font-weight: 700;
+}
+
+.threads-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.thread-card {
+    background: white;
+    border: 2px solid #000; /* Dashboard token */
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.thread-card:hover {
+    background: #f9f9f9;
+}
+
+.thread-info {
+    flex: 1;
+}
+
+.thread-title {
+    margin: 0 0 8px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.thread-title a {
+    text-decoration: none;
+    color: #000;
+}
+
+.thread-title a:hover {
+    text-decoration: underline;
+}
+
+.thread-meta {
+    font-size: 0.85rem;
+    color: #555;
+    display: flex;
+    gap: 15px;
+}
+
+.thread-meta span {
+    display: inline-flex;
+    align-items: center;
+}
+
+.thread-stats {
+    margin-left: 20px;
+    min-width: 80px;
+    text-align: right;
+}
+
+.comment-count {
+    background: #f0f0f0; /* Dashboard token */
+    border: 1px solid #000; /* Dashboard token */
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #000;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    border: 2px dashed #000; /* Dashboard token */
+    background: #fff;
+}
