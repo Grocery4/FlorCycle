@@ -98,3 +98,104 @@
     color: #666;
     font-size: 16px;
 }
+
+/* Analysis Section */
+.analysis-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    padding: 8px 16px;
+    border: 2px solid #ccc;
+    background: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.tab-btn.active, .tab-btn:hover {
+    border-color: #000;
+    background: #f0f0f0;
+}
+
+.chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.chip {
+    padding: 6px 12px;
+    border: 1px solid #000;
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.chip:hover, .chip.active {
+    background: #000;
+    color: white;
+}
+
+.analysis-result {
+    border: 2px solid #000;
+    padding: 15px;
+    background: #fff;
+    margin-top: 20px;
+}
+
+.result-chart-bar {
+    background: #000;
+    height: 20px;
+    margin-bottom: 5px;
+}
+
+/* Search Section */
+.search-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#log-search-input {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #000;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    background: #000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.search-results {
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+#search-results-list {
+    list-style: none;
+    padding: 0;
+}
+
+#search-results-list li, #analysis-dates-list li {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+}
+
+.hidden {
+    display: none;
+}
