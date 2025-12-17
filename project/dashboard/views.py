@@ -579,3 +579,129 @@ def ajax_load_stats(request):
         })
 
     return JsonResponse(response_data)
+
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def ajax_get_top_symptoms(request):
+    from django.db.models import Count
+    from log_core.models import SymptomLog
+    # 1. Top 5 Symptoms
+    # Group by symptom name and count.
+    top_symptoms_qs = SymptomLog.objects.filter(log__user=request.user)\
+        .values('symptom__name')\
+        .annotate(count=Count('id'))\
+        .order_by('-count')[:5]
+        
+    results = []
+    
+    for item in top_symptoms_qs:
+        name = item['symptom__name']
+        count = item['count']
+        
+
+
+        results.append({
+            'name': name,
+            'count': count
+        })
+        
+    return JsonResponse({'top_symptoms': results})
+
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def ajax_get_available_items(request):
+    from log_core.models import Symptom, Mood, Medication
+
+    # Get only used items (optimisation) or all? 
+    # Let's get all for now, or filter by what the user has actually used if preferred.
+    # To keep it simple and discoverable, let's return all available types.
+    # Or better: distinct existing logs to show what *can* be analyzed.
+    
+    symptoms = Symptom.objects.all().values_list('name', flat=True)
+    moods = Mood.objects.all().values_list('name', flat=True)
+    medications = Medication.objects.all().values_list('name', flat=True)
+
+    return JsonResponse({
+        'symptoms': list(symptoms),
+        'moods': list(moods),
+        'medications': list(medications)
+    })
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+@require_POST
+def ajax_analyze_item(request):
+    data = json.loads(request.body)
+    item_type = data.get('item_type') # 'symptom', 'mood', 'medication'
+    item_names = data.get('item_names', []) # List of names
+
+    # Fallback for single item (backward compatibility if needed, but we'll update JS)
+    if 'item_name' in data and not item_names:
+        item_names = [data.get('item_name')]
+
+    logs = DailyLog.objects.filter(user=request.user)
+    
+    if not item_names:
+        return JsonResponse({'total': 0, 'day_distribution': {}, 'occurrences': []})
+
+    if item_type == 'symptom':
+        logs = logs.filter(symptoms_field__name__in=item_names)
+    elif item_type == 'mood':
+        logs = logs.filter(moods_field__name__in=item_names)
+    elif item_type == 'medication':
+        logs = logs.filter(medications_field__name__in=item_names)
+    else:
+        return JsonResponse({'error': 'Invalid item type'}, status=400)
+    
+    # Distinct because one log might match multiple selected items
+    logs = logs.distinct()
+    
+    total = logs.count()
+    occurrences = []
+    day_distribution = {}
+
+    for log in logs.select_related('cycle_window').order_by('-date'):
+        occurrences.append(log.date.strftime('%Y-%m-%d'))
+        
+        cycle_day = None
+        if log.cycle_window:
+            # Calculate day index: Log Date - Menstruation Start + 1
+            # Assuming menstruation_start is reliable
+            delta = log.date - log.cycle_window.menstruation_start
+            cycle_day = delta.days + 1
+        
+        if cycle_day:
+            day_distribution[cycle_day] = day_distribution.get(cycle_day, 0) + 1
+
+    return JsonResponse({
+        'total': total,
+        'day_distribution': day_distribution,
+        'occurrences': occurrences
+    })
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+@require_POST
+def ajax_search_logs(request):
+    from django.db.models import Q
+    data = json.loads(request.body)
+    query = data.get('query')
+
+    if not query:
+        return JsonResponse({'results': []})
+
+    logs = DailyLog.objects.filter(
+        user=request.user, 
+        note__icontains=query
+    ).order_by('-date')
+
+    results = []
+    for log in logs:
+        results.append({
+            'date': log.date.strftime('%Y-%m-%d'),
+            'note': log.note
+        })
+
+    return JsonResponse({'results': results})

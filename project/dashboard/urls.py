@@ -19,5 +19,9 @@ urlpatterns = [
     path('calendar/', views.calendar_view, name='calendar_view'),
     path('ajax/load-log/', views.ajax_load_log, name='ajax_load_log'),
     path('ajax/navigate-calendar/', views.ajax_navigate_calendar, name='ajax_navigate_calendar'),
-    path('ajax/load-stats', views.ajax_load_stats, name='ajax_load_stats')
+    path('ajax/load-stats', views.ajax_load_stats, name='ajax_load_stats'),
+    path('ajax/get-top-symptoms/', views.ajax_get_top_symptoms, name='ajax_get_top_symptoms'),
+    path('ajax/get-available-items/', views.ajax_get_available_items, name='ajax_get_available_items'),
+    path('ajax/analyze-item/', views.ajax_analyze_item, name='ajax_analyze_item'),
+    path('ajax/search-logs/', views.ajax_search_logs, name='ajax_search_logs'),
 ]
