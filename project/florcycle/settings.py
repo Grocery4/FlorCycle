@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'dashboard',
     'cycle_core',
     'log_core',
+    'forum_core',
     'calendar_core',
     'users.apps.UsersConfig',
-    'forum',
 ]
 
 MIDDLEWARE = [
