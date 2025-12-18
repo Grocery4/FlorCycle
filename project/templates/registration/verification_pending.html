@@ -1,0 +1,63 @@
+{% extends "base.html" %} 
+{% block title %}Verification Pending{% endblock %} 
+{% block content %}
+<div class="forum-container">
+  <div class="card pending-card">
+    <h1>Account Verification Pending</h1>
+    <div class="status-icon">⏳</div>
+    <p class="pending-msg">
+      Thank you for joining Florcycle's medical community. Your medical
+      credentials are currently being reviewed by our administration team.
+    </p>
+    <p class="pending-instruction">
+      This process typically takes 24-48 hours. You will receive an email once
+      your account has been verified and you can access the forum.
+    </p>
+    <div class="actions">
+      <a href="{% url 'dashboard:homepage' %}" class="btn btn-secondary"
+        >Back to Dashboard</a
+      >
+    </div>
+  </div>
+</div>
+
+<style>
+  .pending-card {
+    max-width: 600px;
+    margin: 4rem auto;
+    text-align: center;
+    background: white;
+    border: 2px solid #000;
+    padding: 3rem;
+  }
+  .status-icon {
+    font-size: 4rem;
+    margin: 1.5rem 0;
+  }
+  .pending-msg {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .pending-instruction {
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: 2px solid #000;
+    transition: all 0.2s;
+  }
+  .btn-secondary {
+    background: white;
+    color: #000;
+  }
+  .btn-secondary:hover {
+    background: #f0f0f0;
+  }
+</style>
+{% endblock %}
