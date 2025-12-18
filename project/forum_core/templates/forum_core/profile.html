@@ -1,6 +1,5 @@
-{% extends "base.html" %} 
-{% block title %}{{ profile_user.username }}'s Profile{% endblock %} 
-{% block content %}
+{% extends "base.html" %} {% block title %}{{ profile_user.username }}'s
+Profile{% endblock %} {% block content %}
 <div class="forum-container profile-page">
   <div class="profile-header card">
     <div class="profile-info">
@@ -24,10 +23,9 @@
       {% if profile_user.user_type == 'DOCTOR' %}
       <div class="stat-item">
         <span class="stat-value"
-          >{% if avg_rating %}
-            {{ avg_rating|stringformat:".1f" }}
-           {% else %}N/A
-           {% endif %}</span>
+          >{% if avg_rating %} {{ avg_rating|stringformat:".1f" }} {% else %}N/A
+          {% endif %}</span
+        >
         <span class="stat-label">Rating</span>
       </div>
       {% endif %}
@@ -51,7 +49,27 @@
       </div>
     </div>
 
-    {% if profile_user.user_type == 'DOCTOR' %}
+    {% if rating_form %}
+    <div class="rate-section card">
+      <h2>Rate this Doctor</h2>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="rating-form-grid">
+          <div class="form-group">
+            <label for="{{ rating_form.rating.id_for_label }}">Score</label>
+            {{ rating_form.rating }}
+          </div>
+          <div class="form-group">
+            <label for="{{ rating_form.comment.id_for_label }}">Feedback</label>
+            {{ rating_form.comment }}
+          </div>
+        </div>
+        <button type="submit" name="submit_rating" class="btn btn-primary">
+          Submit Rating
+        </button>
+      </form>
+    </div>
+    {% endif %} {% if profile_user.user_type == 'DOCTOR' %}
     <div class="ratings-section card">
       <h2>Doctor Ratings</h2>
       <div class="rating-list">
@@ -177,6 +195,44 @@
   .empty-msg {
     color: #888;
     font-style: italic;
+  }
+
+  /* Form Styles */
+  .rating-form-grid {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .form-group label {
+    display: block;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .form-input,
+  .rate-section textarea,
+  .rate-section select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #000;
+    font-family: inherit;
+    background: white;
+    box-sizing: border-box;
+  }
+  .btn-primary {
+    background: #000;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    font-weight: 800;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover {
+    background: #333;
   }
 </style>
 {% endblock %}
