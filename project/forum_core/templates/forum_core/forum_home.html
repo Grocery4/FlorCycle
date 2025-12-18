@@ -1,8 +1,7 @@
 {% extends 'base.html' %} {% load static %} {% block extra_head %}
 <link rel="stylesheet" href="{% static 'forum_core/css/forum_home.css' %}" />
-{% endblock extra_head %} {% block title %}Florcycle Forums | Homepage{% endblock %} 
-
-{% block content %}
+{% endblock extra_head %} {% block title %}Florcycle Forums | Homepage{%
+endblock %} {% block content %}
 <div class="forum-container">
   <div class="forum-header">
     <h1>Community Forum</h1>
@@ -51,7 +50,12 @@
           </h3>
           <div class="thread-meta">
             <span class="thread-author"
-              >by {{ thread.created_by.username }}</span
+              >by
+              <a
+                href="{% url 'forum_core:user_profile' thread.created_by.username %}"
+                class="author-link"
+                >{{ thread.created_by.username }}</a
+              ></span
             >
             <span class="thread-date"
               >Updated: {{ thread.updated_at|date:"M d, Y" }}</span
@@ -76,4 +80,15 @@
     {% endif %}
   </div>
 </div>
+
+<style>
+  .author-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .author-link:hover {
+    text-decoration: underline;
+  }
+</style>
 {% endblock %}
