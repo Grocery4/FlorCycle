@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Avg, Q
 from dashboard.services import user_type_required
-from users.models import CustomUser
+from users.models import CustomUser, DoctorProfile
 from .models import Thread, Comment, DoctorRating
 from .forms import ThreadForm, EditThreadForm, CommentForm, DoctorRatingForm
 
@@ -50,7 +50,13 @@ def thread(request, thread_id):
 
 @user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
 def doctor_ranking(request):
-    return render(request, 'forum_core/doctor_ranking.html')
+    from django.db import models
+    doctors = DoctorProfile.objects.filter(is_verified=True).annotate(
+        avg_rating=Avg('ratings__rating'),
+        rating_count=models.Count('ratings')
+    ).order_by('-avg_rating')
+    
+    return render(request, 'forum_core/doctor_ranking.html', {'doctors': doctors})
 
 
 @user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')

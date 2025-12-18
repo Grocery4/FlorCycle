@@ -1,7 +1,129 @@
-{% extends 'base.html' %} {% block title %}Doctor Ranking{% endblock %} 
+{% extends "base.html" %} {% block title %}Doctor Rankings{% endblock %} 
 {% block content %}
-<div style="padding: 20px; text-align: center">
-  <h1>Doctor Ranking</h1>
-  <p>Coming soon...</p>
+<div class="forum-container">
+  <div class="forum-header">
+    <a href="{% url 'forum_core:home' %}" class="back-link">← Back to Forums</a>
+    <h1>Medical Experts Ranking</h1>
+    <p class="forum-subtitle">Our top-rated verified medical professionals</p>
+  </div>
+
+  <div class="ranking-list">
+    {% for doctor in doctors %}
+    <div class="ranking-card {% if forloop.first %}top-rank{% endif %}">
+      <div class="rank-number">#{{ forloop.counter }}</div>
+      <div class="doctor-details">
+        <h3>
+          <a href="{% url 'forum_core:user_profile' doctor.user.username %}">
+            Dr. {{ doctor.user.username }}
+          </a>
+        </h3>
+        <span class="verification-badge">✓ Verified Specialist</span>
+      </div>
+      <div class="doctor-scores">
+        <div class="score-item">
+          <span class="score-value">
+            {% if doctor.avg_rating %}
+              {{ doctor.avg_rating|stringformat:".1f" }}
+            {% else %}
+              N/A
+            {% endif %}
+          </span>
+          <span class="score-label">Avg Rating</span>
+        </div>
+        <div class="score-item">
+          <span class="score-value">{{ doctor.rating_count }}</span>
+          <span class="score-label">Reviews</span>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="card empty-state">
+      <p>
+        No rated doctors yet. Be the first to provide feedback on a doctor's
+        profile!
+      </p>
+    </div>
+    {% endfor %}
+  </div>
 </div>
+
+<style>
+  .ranking-list {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .ranking-card {
+    background: white;
+    border: 2px solid #000;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+  }
+  .ranking-card:hover {
+    transform: translateX(10px);
+  }
+  .top-rank {
+    border-width: 4px;
+    background: #f8f9fa;
+  }
+  .rank-number {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #000;
+    margin-right: 2rem;
+    min-width: 60px;
+  }
+  .doctor-details {
+    flex: 1;
+  }
+  .doctor-details h3 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  .doctor-details h3 a {
+    color: #000;
+    text-decoration: none;
+  }
+  .doctor-details h3 a:hover {
+    text-decoration: underline;
+  }
+  .verification-badge {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #28a745;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-top: 0.5rem;
+  }
+  .doctor-scores {
+    display: flex;
+    gap: 2rem;
+    text-align: center;
+  }
+  .score-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+  .score-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #666;
+  }
+  .back-link {
+    color: #000;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    border: 2px dashed #000;
+  }
+</style>
 {% endblock %}
