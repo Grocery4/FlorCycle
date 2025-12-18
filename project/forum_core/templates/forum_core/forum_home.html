@@ -27,19 +27,21 @@
     <a href="{% url 'forum_core:doctor_ranking' %}" class="action-btn"
       >Doctor Ranking</a
     >
+    <a href="{% url 'forum_core:create_thread' %}" class="action-btn create-btn"
+      >Create Thread</a
+    >
     <a href="{% url 'forum_core:home' %}?view=all" class="action-btn"
       >All Threads</a
     >
-    <!-- Add New Thread button could go here -->
   </div>
 
   <!-- Last Updated Threads -->
   <div class="threads-section">
     <h2>Last Updated Threads</h2>
 
-    {% if latest_threads %}
+    {% if threads %}
     <div class="threads-list">
-      {% for thread in latest_threads %}
+      {% for thread in threads %}
       <div class="thread-card">
         <div class="thread-info">
           <h3 class="thread-title">
