@@ -11,18 +11,22 @@ from datetime import timedelta, datetime, date
 from dateutil import relativedelta
 
 
-def user_type_required(allowed_types, redirect_url='login'):
+from django.contrib.auth.views import redirect_to_login
+
+#TODO - might move to utils module
+def user_type_required(allowed_types, redirect_url='login', denied_redirect_url='guest_mode:show_form'):
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
             if not request.user.is_authenticated:
-                return redirect(redirect_url)
+                return redirect_to_login(request.get_full_path(), login_url=redirect_url)
             if request.user.user_type not in allowed_types:
-                return redirect('guest_mode:show_form')
+                return redirect(denied_redirect_url)
             return view_func(request, *args, **kwargs)
         return _wrapped_view
     return decorator
 
+#TODO - might move to utils module
 def configured_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
