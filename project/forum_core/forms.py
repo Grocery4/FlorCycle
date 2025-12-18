@@ -10,6 +10,14 @@ class ThreadForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'class': 'form-input', 'placeholder': 'What is on your mind?', 'rows': 5}),
         }
 
+class EditThreadForm(forms.ModelForm):
+    class Meta:
+        model = Thread
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-input', 'placeholder': 'What is on your mind?', 'rows': 5}),
+        }
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
