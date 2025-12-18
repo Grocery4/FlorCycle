@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Avg, Q
 from dashboard.services import user_type_required
-from .models import Thread, Comment
+from users.models import CustomUser
+from .models import Thread, Comment, DoctorRating
 from .forms import ThreadForm, EditThreadForm, CommentForm
 
 # Create your views here.
@@ -106,3 +108,31 @@ def delete_comment(request, comment_id):
         comment.delete()
         return redirect('forum_core:thread', thread_id=thread_id)
     return render(request, 'forum_core/delete_confirm.html', {'obj': comment, 'type': 'comment'})
+
+
+@user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
+def user_profile(request, username):
+    profile_user = get_object_or_404(CustomUser, username=username)
+    
+    # Calculate comment count
+    comment_count = Comment.objects.filter(created_by=profile_user).count()
+    
+    # Get participated threads (threads created by user OR where they commented)
+    participated_threads = Thread.objects.filter(
+        Q(created_by=profile_user) | Q(comments__created_by=profile_user)
+    ).distinct().order_by('-created_at')
+
+    # Doctor specific logic
+    avg_rating = None
+    ratings = []
+    if profile_user.user_type == 'DOCTOR':
+        avg_rating = DoctorRating.objects.filter(doctor__user=profile_user).aggregate(Avg('rating'))['rating__avg']
+        ratings = DoctorRating.objects.filter(doctor__user=profile_user).order_by('-created_at')
+
+    return render(request, 'forum_core/profile.html', {
+        'profile_user': profile_user,
+        'comment_count': comment_count,
+        'threads': participated_threads,
+        'avg_rating': avg_rating,
+        'ratings': ratings
+    })
