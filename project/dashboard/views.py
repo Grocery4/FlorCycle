@@ -32,6 +32,8 @@ def redirect_handler(request):
         return redirect('dashboard:homepage')
     elif request.user.user_type == 'PARTNER':
         return redirect('dashboard:partner_setup_page')
+    elif request.user.user_type in ['DOCTOR', 'MODERATOR']:
+        return redirect('forum_core:home')
 
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required
