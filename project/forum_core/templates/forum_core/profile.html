@@ -1,6 +1,11 @@
 {% extends "base.html" %} {% block title %}{{ profile_user.username }}'s
 Profile{% endblock %} {% block content %}
 <div class="forum-container profile-page">
+  <div class="forum-nav">
+    <a href="{% url 'dashboard:homepage' %}" class="back-dashboard"
+      >← Back to Dashboard</a
+    >
+  </div>
   <div class="profile-header card">
     <div class="profile-info">
       <h1>{{ profile_user.username }}</h1>
@@ -233,6 +238,20 @@ Profile{% endblock %} {% block content %}
   }
   .btn-primary:hover {
     background: #333;
+  }
+  .forum-nav {
+    margin-bottom: 2rem;
+  }
+  .back-dashboard {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .back-dashboard:hover {
+    text-decoration: underline;
   }
 </style>
 {% endblock %}

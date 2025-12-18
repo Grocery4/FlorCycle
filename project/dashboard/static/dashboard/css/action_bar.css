@@ -8,8 +8,15 @@
     border: 1px solid black;
 }
 
-.action-bar > div {
+.action-bar > a {
     padding: 8px 12px;
     text-align: center;
     cursor: pointer;
+    text-decoration: none;
+    color: black;
+    border: 1px solid transparent;
+}
+
+.action-bar > a:hover {
+    border-color: black;
 }

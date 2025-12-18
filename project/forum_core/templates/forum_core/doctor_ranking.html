@@ -1,6 +1,11 @@
-{% extends "base.html" %} {% block title %}Doctor Rankings{% endblock %} 
-{% block content %}
+{% extends "base.html" %} {% block title %}Doctor Rankings{% endblock %} {%
+block content %}
 <div class="forum-container">
+  <div class="forum-nav">
+    <a href="{% url 'dashboard:homepage' %}" class="back-dashboard"
+      >← Back to Dashboard</a
+    >
+  </div>
   <div class="forum-header">
     <a href="{% url 'forum_core:home' %}" class="back-link">← Back to Forums</a>
     <h1>Medical Experts Ranking</h1>
@@ -22,11 +27,8 @@
       <div class="doctor-scores">
         <div class="score-item">
           <span class="score-value">
-            {% if doctor.avg_rating %}
-              {{ doctor.avg_rating|stringformat:".1f" }}
-            {% else %}
-              N/A
-            {% endif %}
+            {% if doctor.avg_rating %} {{ doctor.avg_rating|stringformat:".1f"
+            }} {% else %} N/A {% endif %}
           </span>
           <span class="score-label">Avg Rating</span>
         </div>
@@ -124,6 +126,20 @@
     text-align: center;
     padding: 3rem;
     border: 2px dashed #000;
+  }
+  .forum-nav {
+    margin-bottom: 2rem;
+  }
+  .back-dashboard {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .back-dashboard:hover {
+    text-decoration: underline;
   }
 </style>
 {% endblock %}
