@@ -3,7 +3,7 @@ from django.db.models import Avg, Q
 from dashboard.services import user_type_required
 from users.models import CustomUser
 from .models import Thread, Comment, DoctorRating
-from .forms import ThreadForm, EditThreadForm, CommentForm
+from .forms import ThreadForm, EditThreadForm, CommentForm, DoctorRatingForm
 
 # Create your views here.
 @user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
@@ -125,14 +125,31 @@ def user_profile(request, username):
     # Doctor specific logic
     avg_rating = None
     ratings = []
+    rating_form = None
     if profile_user.user_type == 'DOCTOR':
-        avg_rating = DoctorRating.objects.filter(doctor__user=profile_user).aggregate(Avg('rating'))['rating__avg']
-        ratings = DoctorRating.objects.filter(doctor__user=profile_user).order_by('-created_at')
+        doctor_profile = getattr(profile_user, 'doctorprofile', None)
+        if doctor_profile:
+            avg_rating = DoctorRating.objects.filter(doctor=doctor_profile).aggregate(Avg('rating'))['rating__avg']
+            ratings = DoctorRating.objects.filter(doctor=doctor_profile).order_by('-created_at')
+
+            # Rating logic: only other users can rate
+            if request.user != profile_user:
+                if request.method == 'POST' and 'submit_rating' in request.POST:
+                    rating_form = DoctorRatingForm(request.POST)
+                    if rating_form.is_valid():
+                        r = rating_form.save(commit=False)
+                        r.author = request.user
+                        r.doctor = doctor_profile
+                        r.save()
+                        return redirect('forum_core:user_profile', username=username)
+                else:
+                    rating_form = DoctorRatingForm()
 
     return render(request, 'forum_core/profile.html', {
         'profile_user': profile_user,
         'comment_count': comment_count,
         'threads': participated_threads,
         'avg_rating': avg_rating,
-        'ratings': ratings
+        'ratings': ratings,
+        'rating_form': rating_form
     })
