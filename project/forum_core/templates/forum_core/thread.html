@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block title %}{{ thread.title }}{% endblock %} 
+{% extends "base.html" %} 
+{% block title %}{{ thread.title }}{% endblock %} 
 {% block content %}
 <div class="forum-container">
   <div class="thread-header">
@@ -9,6 +10,29 @@
         >Posted by {{ thread.created_by.username }}</span
       >
       <span class="thread-date">{{ thread.created_at|date:"M d, Y H:i" }}</span>
+      {% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %}
+      <div class="thread-actions">
+        <a
+          href="{% url 'forum_core:edit_thread' thread.id %}"
+          class="action-link edit-link"
+          >Edit</a
+        >
+        <form
+          action="{% url 'forum_core:delete_thread' thread.id %}"
+          method="POST"
+          style="display: inline"
+        >
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="action-link delete-link"
+            onclick="return confirm('Are you sure?')"
+          >
+            Delete
+          </button>
+        </form>
+      </div>
+      {% endif %}
     </div>
   </div>
 
@@ -26,6 +50,29 @@
           <span class="comment-date"
             >{{ comment.created_at|date:"M d, Y H:i" }}</span
           >
+          {% if request.user == comment.created_by or request.user.user_type == 'MODERATOR' %}
+          <div class="comment-actions">
+            <a
+              href="{% url 'forum_core:edit_comment' comment.id %}"
+              class="action-link edit-link"
+              >Edit</a
+            >
+            <form
+              action="{% url 'forum_core:delete_comment' comment.id %}"
+              method="POST"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="action-link delete-link"
+                onclick="return confirm('Are you sure?')"
+              >
+                Delete
+              </button>
+            </form>
+          </div>
+          {% endif %}
         </div>
         <div class="comment-body">{{ comment.content|linebreaks }}</div>
       </div>
@@ -112,6 +159,28 @@
   }
   .btn-primary:hover {
     background: #333;
+  }
+  .action-link {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 1rem;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+  }
+  .edit-link {
+    color: #000;
+  }
+  .delete-link {
+    color: #ff0000;
+  }
+  .thread-actions,
+  .comment-actions {
+    display: inline-block;
+    vertical-align: middle;
   }
 </style>
 {% endblock %}
