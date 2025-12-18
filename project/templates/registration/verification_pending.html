@@ -14,8 +14,8 @@
       your account has been verified and you can access the forum.
     </p>
     <div class="actions">
-      <a href="{% url 'dashboard:homepage' %}" class="btn btn-secondary"
-        >Back to Dashboard</a
+      <a href="{% url 'forum_core:home' %}" class="btn btn-primary"
+        >Try Again</a
       >
     </div>
   </div>
@@ -51,6 +51,13 @@
     text-transform: uppercase;
     border: 2px solid #000;
     transition: all 0.2s;
+  }
+  .btn-primary {
+    background: #000;
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: #333;
   }
   .btn-secondary {
     background: white;
