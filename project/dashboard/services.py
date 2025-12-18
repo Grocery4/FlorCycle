@@ -22,6 +22,13 @@ def user_type_required(allowed_types, redirect_url='login', denied_redirect_url=
                 return redirect_to_login(request.get_full_path(), login_url=redirect_url)
             if request.user.user_type not in allowed_types:
                 return redirect(denied_redirect_url)
+            
+            # Additional check for Doctors - they must be verified
+            if request.user.user_type == 'DOCTOR':
+                doctor_profile = getattr(request.user, 'doctorprofile', None)
+                if not doctor_profile or not doctor_profile.is_verified:
+                    return redirect('users:verification_pending')
+
             return view_func(request, *args, **kwargs)
         return _wrapped_view
     return decorator
