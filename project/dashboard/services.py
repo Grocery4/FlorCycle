@@ -23,6 +23,11 @@ def user_type_required(allowed_types, redirect_url='login', denied_redirect_url=
             if request.user.user_type not in allowed_types:
                 return redirect(denied_redirect_url)
             
+            if request.user.is_banned:
+                from django.contrib.auth import logout
+                logout(request)
+                return redirect('users:banned')
+            
             # Additional check for Doctors - they must be verified
             if request.user.user_type == 'DOCTOR':
                 doctor_profile = getattr(request.user, 'doctorprofile', None)
