@@ -25,6 +25,7 @@ class CustomUser(AbstractUser):
         choices=USER_TYPE_CHOICES,
         default='STANDARD'
     )
+    is_banned = models.BooleanField(default=False)
 
 #TODO - test this mf class
 class UserProfile(models.Model):
@@ -114,14 +115,13 @@ class UserProfile(models.Model):
 
 class ModeratorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    can_suspend_users = models.BooleanField()
-    can_edit_posts = models.BooleanField()
-    is_verified = models.BooleanField(default=False)
+    can_suspend_users = models.BooleanField(default=True)
+    can_edit_posts = models.BooleanField(default=True)
+    is_verified = models.BooleanField(default=True)
 
-    
     def save(self, *args, **kwargs):
         if self.user:
-            if self.is_verified == True:
+            if self.is_verified:
                 self.user.is_staff = True
             else:
                 self.user.is_staff = False
