@@ -2,20 +2,24 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <title>{% block title %}Florcycle{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block extra_head %}{% endblock %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-</head>
+  </head>
 
-<body>
-    {% include 'navbar.html' %}
-
-    {% block content %}{% endblock %}
-
+  <body>
+    {% include 'navbar.html' %} 
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %} 
+    {% block content %}{% endblock %} 
     {% block extra_js %}{% endblock %}
-</body>
-
+  </body>
 </html>
