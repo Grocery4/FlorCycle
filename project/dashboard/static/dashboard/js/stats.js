@@ -161,21 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('analysis-item-name').textContent = names.join(', ');
             document.getElementById('analysis-total-count').textContent = data.total;
             
-            // Cycle Day Distribution
-            const distList = document.getElementById('day-distribution-list');
-            distList.innerHTML = '';
-            // Convert to array and sort by day
-            const sortedDays = Object.keys(data.day_distribution).map(Number).sort((a,b) => a-b);
-            
-            sortedDays.forEach(day => {
-                const count = data.day_distribution[day];
-                const row = document.createElement('div');
-                row.style.marginBottom = '5px';
-                // Simple textual bar or representation
-                row.textContent = `Day ${day}: ${count}`;
-                distList.appendChild(row);
-            });
-
             // Occurrences
             const datesList = document.getElementById('analysis-dates-list');
             datesList.innerHTML = '';

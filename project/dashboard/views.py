@@ -651,7 +651,7 @@ def ajax_analyze_item(request):
     logs = DailyLog.objects.filter(user=request.user)
     
     if not item_names:
-        return JsonResponse({'total': 0, 'day_distribution': {}, 'occurrences': []})
+        return JsonResponse({'total': 0, 'occurrences': []})
 
     if item_type == 'symptom':
         logs = logs.filter(symptoms_field__name__in=item_names)
@@ -666,25 +666,10 @@ def ajax_analyze_item(request):
     logs = logs.distinct()
     
     total = logs.count()
-    occurrences = []
-    day_distribution = {}
-
-    for log in logs.select_related('cycle_window').order_by('-date'):
-        occurrences.append(log.date.strftime('%Y-%m-%d'))
-        
-        cycle_day = None
-        if log.cycle_window:
-            # Calculate day index: Log Date - Menstruation Start + 1
-            # Assuming menstruation_start is reliable
-            delta = log.date - log.cycle_window.menstruation_start
-            cycle_day = delta.days + 1
-        
-        if cycle_day:
-            day_distribution[cycle_day] = day_distribution.get(cycle_day, 0) + 1
+    occurrences = [log.date.strftime('%Y-%m-%d') for log in logs.order_by('-date')]
 
     return JsonResponse({
         'total': total,
-        'day_distribution': day_distribution,
         'occurrences': occurrences
     })
 
