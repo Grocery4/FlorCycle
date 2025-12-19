@@ -38,7 +38,7 @@ class CustomUserAdmin(UserAdmin):
     
     fieldsets = (
         (None, {"fields": ("username", "email", "password")}),
-        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        ("Permissions", {"fields": ("user_type", "is_banned", "is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
 
@@ -63,3 +63,8 @@ class CustomUserAdmin(UserAdmin):
             inlines = [PartnerProfileInline(self.model, self.admin_site)]
 
         return inlines
+
+admin.site.register(ModeratorProfile)
+admin.site.register(UserProfile)
+admin.site.register(DoctorProfile)
+admin.site.register(PartnerProfile)
