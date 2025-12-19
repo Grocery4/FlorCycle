@@ -1,0 +1,105 @@
+{% extends "base.html" %} {% block title %}Account Suspended | Florcycle{% endblock %}
+{% block content %}
+<div class="banned-container">
+  <div class="banned-card">
+    <div class="banned-icon">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+      </svg>
+    </div>
+    <h1>ACCESS DENIED</h1>
+    <div class="banned-divider"></div>
+    <p class="banned-message">
+      Your account has been <strong>permanently suspended</strong> for violating
+      our community guidelines.
+    </p>
+    <div class="banned-details">
+      <p>
+        If you believe this was a mistake, contact our support team.
+      </p>
+    </div>
+    <div class="banned-actions">
+      <a href="{% url 'login' %}" class="btn-return">Return to Login</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .banned-container {
+    min-height: calc(100vh - 100px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fdfdfd;
+    padding: 2rem;
+  }
+  .banned-card {
+    max-width: 500px;
+    width: 100%;
+    background: #fff;
+    border: 4px solid #000;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 15px 15px 0px 0px rgba(0, 0, 0, 1);
+  }
+  .banned-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 2rem;
+    color: #ff0000;
+  }
+  .banned-card h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 1.5rem;
+    color: #000;
+  }
+  .banned-divider {
+    height: 4px;
+    background: #000;
+    width: 60px;
+    margin: 0 auto 1.5rem;
+  }
+  .banned-message {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 2rem;
+  }
+  .banned-details {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f8f8f8;
+    border: 2px solid #000;
+  }
+  .banned-details a {
+    color: #000;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+  .btn-return {
+    display: inline-block;
+    background: #000;
+    color: #fff;
+    padding: 0.75rem 2rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 0.1s;
+  }
+  .btn-return:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 3px 3px 0px 0px rgba(255, 0, 0, 1);
+  }
+</style>
+{% endblock %}

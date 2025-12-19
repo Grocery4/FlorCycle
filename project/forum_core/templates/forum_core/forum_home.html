@@ -1,0 +1,132 @@
+{% extends 'base.html' %} {% load static %} {% block extra_head %}
+<link rel="stylesheet" href="{% static 'forum_core/css/forum_home.css' %}" />
+{% endblock extra_head %} {% block title %}Florcycle Forums | Homepage{% endblock %} 
+{% block content %}
+<div class="forum-container">
+  <div class="forum-nav">
+    {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
+    <a href="{% url 'dashboard:homepage' %}" class="back-dashboard"
+      >← Back to Dashboard</a
+    >
+    {% endif %}
+  </div>
+  <div class="forum-header">
+    <h1>Community Forum</h1>
+    <p class="forum-subtitle">Connect, share, and learn from others.</p>
+  </div>
+
+  <!-- Search Section -->
+  <div class="forum-search-section">
+    <form method="GET" action="." class="search-form">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search threads by title..."
+        value="{{ request.GET.q }}"
+      />
+      <button type="submit" class="search-btn">Search</button>
+    </form>
+  </div>
+
+  <!-- Main Actions -->
+  <div class="forum-actions">
+    <a
+      href="{% url 'forum_core:user_profile' request.user.username %}"
+      class="action-btn profile-btn"
+      >My Profile</a
+    >
+    <a href="{% url 'forum_core:doctor_ranking' %}" class="action-btn"
+      >Doctor Ranking</a
+    >
+    <a href="{% url 'forum_core:create_thread' %}" class="action-btn create-btn"
+      >Create Thread</a
+    >
+    <a href="{% url 'forum_core:home' %}?view=all" class="action-btn"
+      >All Threads</a
+    >
+    {% if request.user.user_type == 'MODERATOR' %}
+    <a
+      href="{% url 'forum_core:moderator_dashboard' %}"
+      class="action-btn mod-btn"
+      >Moderator Dashboard</a
+    >
+    {% endif %}
+  </div>
+
+  <!-- Last Updated Threads -->
+  <div class="threads-section">
+    <h2>Last Updated Threads</h2>
+
+    {% if threads %}
+    <div class="threads-list">
+      {% for thread in threads %}
+      <div class="thread-card">
+        <div class="thread-info">
+          <h3 class="thread-title">
+            <a href="{% url 'forum_core:thread' thread.id %}"
+              >{{ thread.title }}</a
+            >
+          </h3>
+          <div class="thread-meta">
+            <span class="thread-author"
+              >by
+              <a
+                href="{% url 'forum_core:user_profile' thread.created_by.username %}"
+                class="author-link"
+                >{{ thread.created_by.username }}</a
+              ></span
+            >
+            <span class="thread-date"
+              >Updated: {{ thread.updated_at|date:"M d, Y" }}</span
+            >
+            <span class="thread-participants"
+              >{{ thread.participants.count }} participants</span
+            >
+          </div>
+        </div>
+        <div class="thread-stats">
+          <span class="comment-count"
+            >{{ thread.comments.count }} comments</span
+          >
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <p>No threads found. Be the first to start a conversation!</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .author-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .author-link:hover {
+    text-decoration: underline;
+  }
+  .forum-nav {
+    margin-bottom: 2rem;
+  }
+  .back-dashboard {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .back-dashboard:hover {
+    text-decoration: underline;
+  }
+  .mod-btn {
+    background: #ffcc00 !important;
+    color: #000 !important;
+    border: 2px solid #000 !important;
+  }
+</style>
+{% endblock %}

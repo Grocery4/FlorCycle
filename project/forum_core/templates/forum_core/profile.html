@@ -1,0 +1,259 @@
+{% extends "base.html" %} {% block title %}{{ profile_user.username }}'s
+Profile{% endblock %} {% block content %}
+<div class="forum-container profile-page">
+  <div class="forum-nav">
+    {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
+    <a href="{% url 'dashboard:homepage' %}" class="back-dashboard"
+      >← Back to Dashboard</a
+    >
+    {% endif %}
+  </div>
+  <div class="profile-header card">
+    <div class="profile-info">
+      <h1>{{ profile_user.username }}</h1>
+      <span class="user-badge {{ profile_user.user_type|lower }}"
+        >{{ profile_user.user_type }}</span
+      >
+      <p class="join-date">
+        Member since {{ profile_user.date_joined|date:"M Y" }}
+      </p>
+    </div>
+    <div class="profile-stats">
+      <div class="stat-item">
+        <span class="stat-value">{{ comment_count }}</span>
+        <span class="stat-label">Comments</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{ threads.count }}</span>
+        <span class="stat-label">Threads</span>
+      </div>
+      {% if profile_user.user_type == 'DOCTOR' %}
+      <div class="stat-item">
+        <span class="stat-value"
+          >{% if avg_rating %} {{ avg_rating|stringformat:".1f" }} {% else %}N/A
+          {% endif %}</span
+        >
+        <span class="stat-label">Rating</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="profile-content">
+    <div class="participated-section card">
+      <h2>Recent Activity</h2>
+      <div class="thread-list">
+        {% for thread in threads|slice:":10" %}
+        <div class="thread-item">
+          <a href="{% url 'forum_core:thread' thread.id %}" class="thread-title"
+            >{{ thread.title }}</a
+          >
+          <span class="thread-meta">{{ thread.created_at|date:"M d, Y" }}</span>
+        </div>
+        {% empty %}
+        <p class="empty-msg">No recent activity.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if rating_form %}
+    <div class="rate-section card">
+      <h2>Rate this Doctor</h2>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="rating-form-grid">
+          <div class="form-group">
+            <label for="{{ rating_form.rating.id_for_label }}">Score</label>
+            {{ rating_form.rating }}
+          </div>
+          <div class="form-group">
+            <label for="{{ rating_form.comment.id_for_label }}">Feedback</label>
+            {{ rating_form.comment }}
+          </div>
+        </div>
+        <button type="submit" name="submit_rating" class="btn btn-primary">
+          Submit Rating
+        </button>
+      </form>
+    </div>
+    {% endif %} {% if profile_user.user_type == 'DOCTOR' %}
+    <div class="ratings-section card">
+      <h2>Doctor Ratings</h2>
+      <div class="rating-list">
+        {% for r in ratings %}
+        <div class="rating-card">
+          <div class="rating-header">
+            <span class="rating-stars">{{ r.rating }}/5</span>
+            <span class="rating-date">{{ r.created_at|date:"M d, Y" }}</span>
+          </div>
+          <p class="rating-comment">{{ r.comment }}</p>
+          <span class="rating-author">— {{ r.author.username }}</span>
+        </div>
+        {% empty %}
+        <p class="empty-msg">No ratings yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .profile-page {
+    max-width: 1000px;
+    margin: 2rem auto;
+  }
+  .card {
+    background: white;
+    border: 2px solid #000;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  .profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .user-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: 2px solid #000;
+    margin-top: 0.5rem;
+  }
+  .premium {
+    background: #000;
+    color: white;
+  }
+  .doctor {
+    background: #e0f0ff;
+    color: #004085;
+  }
+  .moderator {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .profile-stats {
+    display: flex;
+    gap: 2rem;
+  }
+  .stat-item {
+    text-align: center;
+  }
+  .stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #666;
+  }
+
+  .thread-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+  }
+  .thread-item:last-child {
+    border-bottom: none;
+  }
+  .thread-title {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .thread-title:hover {
+    text-decoration: underline;
+  }
+  .thread-meta {
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .rating-card {
+    padding: 1rem;
+    border: 1px solid #eee;
+    margin-bottom: 1rem;
+  }
+  .rating-stars {
+    font-weight: 800;
+    font-size: 1.1rem;
+  }
+  .rating-date {
+    color: #888;
+    font-size: 0.8rem;
+    margin-left: 1rem;
+  }
+  .rating-comment {
+    margin: 0.5rem 0;
+    font-style: italic;
+  }
+  .rating-author {
+    font-size: 0.8rem;
+    color: #666;
+  }
+  .empty-msg {
+    color: #888;
+    font-style: italic;
+  }
+
+  /* Form Styles */
+  .rating-form-grid {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .form-group label {
+    display: block;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .form-input,
+  .rate-section textarea,
+  .rate-section select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #000;
+    font-family: inherit;
+    background: white;
+    box-sizing: border-box;
+  }
+  .btn-primary {
+    background: #000;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    font-weight: 800;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover {
+    background: #333;
+  }
+  .forum-nav {
+    margin-bottom: 2rem;
+  }
+  .back-dashboard {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .back-dashboard:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}

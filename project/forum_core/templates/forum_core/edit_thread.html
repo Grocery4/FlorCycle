@@ -1,0 +1,85 @@
+{% extends "base.html" %} {% block title %}Edit Thread{% endblock %} 
+{% block content %}
+<div class="forum-container">
+  <div class="forum-header">
+    <h1>Edit Thread</h1>
+  </div>
+
+  <div class="form-container">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Title</label>
+        <div class="static-field">{{ thread.title }}</div>
+      </div>
+      <div class="form-group">
+        <label for="{{ form.content.id_for_label }}">Content</label>
+        {{ form.content }}
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a
+          href="{% url 'forum_core:thread' thread.id %}"
+          class="btn btn-secondary"
+          >Cancel</a
+        >
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border: 2px solid #000;
+  }
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  .form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #000;
+    background: white;
+    color: black;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  .static-field {
+    padding: 0.75rem;
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+    color: #666;
+  }
+  .btn {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 800;
+    transition: all 0.2s;
+    border: 2px solid #000;
+  }
+  .btn-primary {
+    background: #000;
+    color: white;
+  }
+  .btn-secondary {
+    background: white;
+    color: #000;
+    margin-left: 1rem;
+  }
+  .btn:hover {
+    background: #333;
+    color: white;
+  }
+</style>
+{% endblock %}

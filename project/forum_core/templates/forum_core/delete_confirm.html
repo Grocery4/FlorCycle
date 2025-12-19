@@ -1,0 +1,77 @@
+{% extends "base.html" %} {% block title %}Confirm Delete{% endblock %} {% block
+content %}
+<div class="forum-container">
+  <div class="form-container">
+    <h1>Confirm Deletion</h1>
+    <p>Are you sure you want to delete this {{ type }}?</p>
+
+    <div class="delete-preview">
+      {% if type == 'thread' %}
+      <strong>{{ obj.title }}</strong>
+      {% else %}
+      <p>{{ obj.content|truncatewords:20 }}</p>
+      {% endif %}
+    </div>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-delete">Yes, Delete</button>
+        {% if type == 'thread' %}
+        <a href="{% url 'forum_core:thread' obj.id %}" class="btn btn-secondary"
+          >Cancel</a
+        >
+        {% else %}
+        <a
+          href="{% url 'forum_core:thread' obj.thread.id %}"
+          class="btn btn-secondary"
+          >Cancel</a
+        >
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .form-container {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 3rem;
+    background: white;
+    border: 2px solid #000;
+    text-align: center;
+  }
+  .delete-preview {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    font-style: italic;
+  }
+  .btn {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 800;
+    transition: all 0.2s;
+    border: 2px solid #000;
+  }
+  .btn-delete {
+    background: #ff0000;
+    color: white;
+  }
+  .btn-delete:hover {
+    background: #cc0000;
+  }
+  .btn-secondary {
+    background: white;
+    color: #000;
+    margin-left: 1rem;
+  }
+  .btn-secondary:hover {
+    background: #f0f0f0;
+  }
+</style>
+{% endblock %}

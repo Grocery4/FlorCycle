@@ -28,10 +28,17 @@ from django.contrib import messages
 # Create your views here.
 @login_required(login_url='login')
 def redirect_handler(request):
+    if request.user.is_banned:
+        from django.contrib.auth import logout
+        logout(request)
+        return redirect('users:banned')
+        
     if request.user.user_type == 'STANDARD' or request.user.user_type == 'PREMIUM':
         return redirect('dashboard:homepage')
     elif request.user.user_type == 'PARTNER':
         return redirect('dashboard:partner_setup_page')
+    elif request.user.user_type in ['DOCTOR', 'MODERATOR']:
+        return redirect('forum_core:home')
 
 @user_type_required(['STANDARD', 'PREMIUM'])
 @configured_required

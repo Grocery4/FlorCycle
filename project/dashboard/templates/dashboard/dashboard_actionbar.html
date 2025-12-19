@@ -10,4 +10,7 @@
     {% endif %}
     <a href="{% url 'dashboard:calendar_view' %}" class="calendar">calendar button</a>
     <a href="{% url "dashboard:stats" %}" class="stats">stats</a>
+    {% if request.user.user_type == 'PREMIUM' %}
+        <a href="{% url 'forum_core:home' %}" class="premium">forums</a>
+    {% endif %}
 </div>

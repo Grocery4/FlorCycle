@@ -49,3 +49,9 @@ def partner_form(request):
             return redirect('login')
          
     return render(request, 'registration/signup.html', ctx)
+
+def verification_pending(request):
+    return render(request, 'registration/verification_pending.html')
+
+def banned_page(request):
+    return render(request, 'registration/banned.html')
