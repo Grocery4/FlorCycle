@@ -14,4 +14,9 @@ urlpatterns = [
     path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
     path('profile/<str:username>/', views.user_profile, name='user_profile'),
     path('doctors/', views.doctor_ranking, name='doctor_ranking'),
+    path('comment/<int:comment_id>/report/', views.report_comment, name='report_comment'),
+    path('moderator/dashboard/', views.moderator_dashboard, name='moderator_dashboard'),
+    path('moderator/report/<int:report_id>/resolve/', views.resolve_report, name='resolve_report'),
+    path('moderator/user/<int:user_id>/ban/', views.ban_user, name='ban_user'),
+    path('moderator/user/<int:user_id>/unban/', views.unban_user, name='unban_user'),
 ]

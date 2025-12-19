@@ -62,8 +62,8 @@
             >{{ comment.created_at|date:"M d, Y H:i" }}</span
           >
 
-          {% if request.user == comment.created_by or request.user.user_type == 'MODERATOR' %}
           <div class="comment-actions">
+            {% if request.user == comment.created_by or request.user.user_type == 'MODERATOR' %}
             <a
               href="{% url 'forum_core:edit_comment' comment.id %}"
               class="action-link edit-link"
@@ -83,8 +83,13 @@
                 Delete
               </button>
             </form>
+            {% endif %}
+            <a
+              href="{% url 'forum_core:report_comment' comment.id %}"
+              class="action-link report-link"
+              >Report</a
+            >
           </div>
-          {% endif %}
         </div>
         <div class="comment-body">{{ comment.content|linebreaks }}</div>
       </div>

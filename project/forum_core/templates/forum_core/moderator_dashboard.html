@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+{% block title %}Moderator Dashboard{% endblock %} 
+{% block content %}
+<div class="mod-dashboard-container">
+  <header class="dashboard-header">
+    <h1>Moderator Dashboard</h1>
+    <div class="stats-overview">
+      <div class="stat-card">
+        <span class="stat-value">{{ reports.count }}</span>
+        <span class="stat-label">Pending Reports</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ banned_users.count }}</span>
+        <span class="stat-label">Banned Users</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-grid">
+    <!-- Pending Reports Column -->
+    <section class="dashboard-section reports-section">
+      <h2>Pending Reports</h2>
+      {% if reports %}
+      <div class="reports-list">
+        {% for report in reports %}
+        <div class="report-card">
+          <div class="report-meta">
+            <span class="report-reason badge-{{ report.reason|lower }}"
+              >{{ report.get_reason_display }}</span
+            >
+            <span class="report-date"
+              >{{ report.created_at|date:"M d, H:i" }}</span
+            >
+          </div>
+          <div class="report-comment-preview">
+            <strong
+              >Comment by {{ report.comment.created_by.username }}:</strong
+            >
+            <p>"{{ report.comment.content|truncatewords:20 }}"</p>
+          </div>
+          <div class="report-description">
+            <strong>Reported by {{ report.reported_by.username }}:</strong>
+            <p>{{ report.description|default:"No description provided." }}</p>
+          </div>
+          <div class="report-actions">
+            <a
+              href="{% url 'forum_core:thread' report.comment.thread.id %}"
+              class="btn-small btn-outline"
+              >View Context</a
+            >
+            <form
+              action="{% url 'forum_core:resolve_report' report.id %}"
+              method="POST"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                name="action"
+                value="resolve"
+                class="btn-small btn-success"
+              >
+                Resolve
+              </button>
+              <button
+                type="submit"
+                name="action"
+                value="dismiss"
+                class="btn-small btn-secondary"
+              >
+                Dismiss
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <p>No pending reports. Great job!</p>
+      </div>
+      {% endif %}
+    </section>
+
+    <!-- User Management Column -->
+    <section class="dashboard-section users-section">
+      <div class="section-header">
+        <h2>User Management</h2>
+        <form method="GET" class="search-form">
+          <input
+            type="text"
+            name="q"
+            placeholder="Search users..."
+            value="{{ request.GET.q }}"
+          />
+          <button type="submit" class="btn-small">Search</button>
+        </form>
+      </div>
+
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in all_users %}
+          <tr>
+            <td>{{ user.username }}</td>
+            <td><span class="user-type-tag">{{ user.user_type }}</span></td>
+            <td>
+              {% if user.is_banned %}
+              <span class="status-banned">Banned</span>
+              {% else %}
+              <span class="status-active">Active</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if user.is_banned %}
+              <form
+                action="{% url 'forum_core:unban_user' user.id %}"
+                method="POST"
+              >
+                {% csrf_token %}
+                <button type="submit" class="btn-link">Unban</button>
+              </form>
+              {% else %}
+              <form
+                action="{% url 'forum_core:ban_user' user.id %}"
+                method="POST"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="btn-link btn-danger"
+                  onclick="return confirm('Ban this user?')"
+                >
+                  Ban
+                </button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="empty-table">No users found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </div>
+</div>
+
+<style>
+  .mod-dashboard-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    border-bottom: 3px solid #000;
+    padding-bottom: 1.5rem;
+  }
+  .stats-overview {
+    display: flex;
+    gap: 2rem;
+  }
+  .stat-card {
+    text-align: center;
+    background: #000;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+  }
+  .stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  .dashboard-section h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    border-left: 5px solid #000;
+    padding-left: 1rem;
+  }
+  .reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .report-card {
+    background: white;
+    border: 2px solid #000;
+    padding: 1.5rem;
+    box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 1);
+  }
+  .report-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .report-reason {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid #000;
+  }
+  .badge-spam {
+    background: #e0e0e0;
+  }
+  .badge-harassment {
+    background: #ffcccc;
+  }
+  .badge-inappropriate {
+    background: #fff3cd;
+  }
+
+  .report-comment-preview,
+  .report-description {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+  .report-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .btn-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid #000;
+    background: #000;
+    color: white;
+  }
+  .btn-outline {
+    background: white;
+    color: #000;
+    text-decoration: none;
+  }
+  .btn-success {
+    background: #28a745;
+    color: white;
+    border-color: #28a745;
+  }
+  .btn-danger {
+    color: #dc3545;
+  }
+  .btn-secondary {
+    background: #6c757d;
+    color: white;
+    border-color: #6c757d;
+  }
+
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 2px solid #000;
+  }
+  .user-table th,
+  .user-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  .user-table th {
+    background: #f8f9fa;
+    font-weight: 800;
+    border-bottom: 2px solid #000;
+  }
+  .status-active {
+    color: #28a745;
+    font-weight: 700;
+  }
+  .status-banned {
+    color: #dc3545;
+    font-weight: 700;
+  }
+  .user-type-tag {
+    font-size: 0.8rem;
+    background: #eee;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .search-form {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .search-form input {
+    padding: 0.4rem;
+    border: 2px solid #000;
+  }
+  .btn-link {
+    background: none;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 992px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}

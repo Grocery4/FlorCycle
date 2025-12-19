@@ -42,6 +42,13 @@
     <a href="{% url 'forum_core:home' %}?view=all" class="action-btn"
       >All Threads</a
     >
+    {% if request.user.user_type == 'MODERATOR' %}
+    <a
+      href="{% url 'forum_core:moderator_dashboard' %}"
+      class="action-btn mod-btn"
+      >Moderator Dashboard</a
+    >
+    {% endif %}
   </div>
 
   <!-- Last Updated Threads -->
@@ -113,6 +120,11 @@
   }
   .back-dashboard:hover {
     text-decoration: underline;
+  }
+  .mod-btn {
+    background: #ffcc00 !important;
+    color: #000 !important;
+    border: 2px solid #000 !important;
   }
 </style>
 {% endblock %}

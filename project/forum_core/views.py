@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Avg, Q
+from django.contrib import messages
 from dashboard.services import user_type_required
 from users.models import CustomUser, DoctorProfile
-from .models import Thread, Comment, DoctorRating
-from .forms import ThreadForm, EditThreadForm, CommentForm, DoctorRatingForm
+from .models import Thread, Comment, DoctorRating, CommentReport
+from .forms import ThreadForm, EditThreadForm, CommentForm, DoctorRatingForm, CommentReportForm
 
 # Create your views here.
 @user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
@@ -159,3 +160,69 @@ def user_profile(request, username):
         'ratings': ratings,
         'rating_form': rating_form
     })
+
+@user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
+def report_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.method == 'POST':
+        form = CommentReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.comment = comment
+            report.reported_by = request.user
+            report.save()
+            messages.success(request, 'Report submitted successfully. Thank you for keeping our community safe.')
+            return redirect('forum_core:thread', thread_id=comment.thread.id)
+    else:
+        form = CommentReportForm()
+    return render(request, 'forum_core/report_comment.html', {'form': form, 'comment': comment})
+
+@user_type_required(['MODERATOR'])
+def moderator_dashboard(request):
+    reports = CommentReport.objects.filter(status='PENDING').order_by('-created_at')
+    banned_users = CustomUser.objects.filter(is_banned=True)
+    all_users = CustomUser.objects.all().exclude(user_type='MODERATOR').order_by('username')
+    
+    # Simple search for users
+    query = request.GET.get('q')
+    if query:
+        all_users = all_users.filter(Q(username__icontains=query) | Q(email__icontains=query))
+
+    return render(request, 'forum_core/moderator_dashboard.html', {
+        'reports': reports,
+        'banned_users': banned_users,
+        'all_users': all_users[:20], # limit to 20 for performance in dashboard
+    })
+
+@user_type_required(['MODERATOR'])
+def resolve_report(request, report_id):
+    report = get_object_or_404(CommentReport, id=report_id)
+    action = request.POST.get('action')
+    if action == 'resolve':
+        report.status = 'RESOLVED'
+        report.save()
+        messages.success(request, 'Report marked as resolved.')
+    elif action == 'dismiss':
+        report.status = 'DISMISSED'
+        report.save()
+        messages.success(request, 'Report dismissed.')
+    return redirect('forum_core:moderator_dashboard')
+
+@user_type_required(['MODERATOR'])
+def ban_user(request, user_id):
+    target_user = get_object_or_404(CustomUser, id=user_id)
+    if target_user.user_type != 'MODERATOR':
+        target_user.is_banned = True
+        target_user.save()
+        messages.warning(request, f'User {target_user.username} has been banned.')
+    else:
+        messages.error(request, 'You cannot ban another moderator.')
+    return redirect('forum_core:moderator_dashboard')
+
+@user_type_required(['MODERATOR'])
+def unban_user(request, user_id):
+    target_user = get_object_or_404(CustomUser, id=user_id)
+    target_user.is_banned = False
+    target_user.save()
+    messages.success(request, f'User {target_user.username} has been unbanned.')
+    return redirect('forum_core:moderator_dashboard')
