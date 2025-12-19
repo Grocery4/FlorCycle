@@ -36,3 +36,27 @@ class DoctorRating(models.Model):
     
     rating = models.IntegerField()
     comment = models.TextField()
+
+class CommentReport(models.Model):
+    REPORT_REASON_CHOICES = [
+        ('SPAM', 'Spam'),
+        ('HARASSMENT', 'Harassment'),
+        ('INAPPROPRIATE', 'Inappropriate Content'),
+        ('OTHER', 'Other'),
+    ]
+
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('RESOLVED', 'Resolved'),
+        ('DISMISSED', 'Dismissed'),
+    ]
+
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='reports')
+    reported_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports_made')
+    reason = models.CharField(max_length=20, choices=REPORT_REASON_CHOICES)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+
+    def __str__(self):
+        return f"Report on {self.comment.id} by {self.reported_by.username}"
