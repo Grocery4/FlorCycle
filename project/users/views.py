@@ -52,3 +52,6 @@ def partner_form(request):
 
 def verification_pending(request):
     return render(request, 'registration/verification_pending.html')
+
+def banned_page(request):
+    return render(request, 'registration/banned.html')
