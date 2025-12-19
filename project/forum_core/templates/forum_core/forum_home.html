@@ -4,9 +4,11 @@
 {% block content %}
 <div class="forum-container">
   <div class="forum-nav">
+    {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
     <a href="{% url 'dashboard:homepage' %}" class="back-dashboard"
       >← Back to Dashboard</a
     >
+    {% endif %}
   </div>
   <div class="forum-header">
     <h1>Community Forum</h1>

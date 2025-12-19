@@ -2,9 +2,11 @@
 Profile{% endblock %} {% block content %}
 <div class="forum-container profile-page">
   <div class="forum-nav">
+    {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
     <a href="{% url 'dashboard:homepage' %}" class="back-dashboard"
       >← Back to Dashboard</a
     >
+    {% endif %}
   </div>
   <div class="profile-header card">
     <div class="profile-info">

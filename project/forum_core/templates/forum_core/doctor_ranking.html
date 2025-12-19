@@ -1,10 +1,12 @@
-{% extends "base.html" %} {% block title %}Doctor Rankings{% endblock %} {%
-block content %}
+{% extends "base.html" %} {% block title %}Doctor Rankings{% endblock %} 
+{% block content %}
 <div class="forum-container">
   <div class="forum-nav">
+    {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
     <a href="{% url 'dashboard:homepage' %}" class="back-dashboard"
       >← Back to Dashboard</a
     >
+    {% endif %}
   </div>
   <div class="forum-header">
     <a href="{% url 'forum_core:home' %}" class="back-link">← Back to Forums</a>
@@ -27,8 +29,10 @@ block content %}
       <div class="doctor-scores">
         <div class="score-item">
           <span class="score-value">
-            {% if doctor.avg_rating %} {{ doctor.avg_rating|stringformat:".1f"
-            }} {% else %} N/A {% endif %}
+            {% if doctor.avg_rating %} {{ doctor.avg_rating|stringformat:".1f" }} 
+            {% else %} 
+              N/A 
+            {% endif %}
           </span>
           <span class="score-label">Avg Rating</span>
         </div>
