@@ -1,5 +1,5 @@
 from django import forms
-from .models import Thread, Comment, DoctorRating, CommentReport
+from .models import Thread, Comment, DoctorRating, CommentReport, ThreadReport
 
 class ThreadForm(forms.ModelForm):
     class Meta:
@@ -38,6 +38,15 @@ class DoctorRatingForm(forms.ModelForm):
 class CommentReportForm(forms.ModelForm):
     class Meta:
         model = CommentReport
+        fields = ['reason', 'description']
+        widgets = {
+            'reason': forms.Select(attrs={'class': 'form-input'}),
+            'description': forms.Textarea(attrs={'class': 'form-input', 'placeholder': 'Optional: Provide more details...', 'rows': 3}),
+        }
+
+class ThreadReportForm(forms.ModelForm):
+    class Meta:
+        model = ThreadReport
         fields = ['reason', 'description']
         widgets = {
             'reason': forms.Select(attrs={'class': 'form-input'}),

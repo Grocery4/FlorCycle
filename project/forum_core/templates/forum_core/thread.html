@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% block title %}{{ thread.title }}{% endblock %} 
+{% extends "base.html" %} 
+
+{% block title %}{{ thread.title }}{% endblock %} 
 {% block content %}
 <div class="forum-container">
   <div class="thread-header">
@@ -15,8 +17,8 @@
       </span>
       <span class="thread-date">{{ thread.created_at|date:"M d, Y H:i" }}</span>
 
-      {% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %}
       <div class="thread-actions">
+        {% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %}
         <a
           href="{% url 'forum_core:edit_thread' thread.id %}"
           class="action-link edit-link"
@@ -36,8 +38,13 @@
             Delete
           </button>
         </form>
+        {% endif %}
+        <a
+          href="{% url 'forum_core:report_thread' thread.id %}"
+          class="action-link report-link"
+          >Report Thread</a
+        >
       </div>
-      {% endif %}
     </div>
   </div>
 

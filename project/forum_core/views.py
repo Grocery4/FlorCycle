@@ -3,8 +3,8 @@ from django.db.models import Avg, Q
 from django.contrib import messages
 from dashboard.services import user_type_required
 from users.models import CustomUser, DoctorProfile
-from .models import Thread, Comment, DoctorRating, CommentReport
-from .forms import ThreadForm, EditThreadForm, CommentForm, DoctorRatingForm, CommentReportForm
+from .models import Thread, Comment, DoctorRating, CommentReport, ThreadReport
+from .forms import ThreadForm, EditThreadForm, CommentForm, DoctorRatingForm, CommentReportForm, ThreadReportForm
 
 # Create your views here.
 @user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
@@ -176,10 +176,26 @@ def report_comment(request, comment_id):
     else:
         form = CommentReportForm()
     return render(request, 'forum_core/report_comment.html', {'form': form, 'comment': comment})
+@user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
+def report_thread(request, thread_id):
+    thread_obj = get_object_or_404(Thread, id=thread_id)
+    if request.method == 'POST':
+        form = ThreadReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.thread = thread_obj
+            report.reported_by = request.user
+            report.save()
+            messages.success(request, 'Thread reported successfully.')
+            return redirect('forum_core:thread', thread_id=thread_obj.id)
+    else:
+        form = ThreadReportForm()
+    return render(request, 'forum_core/report_thread.html', {'form': form, 'thread': thread_obj})
 
 @user_type_required(['MODERATOR'])
 def moderator_dashboard(request):
     reports = CommentReport.objects.filter(status='PENDING').order_by('-created_at')
+    thread_reports = ThreadReport.objects.filter(status='PENDING').order_by('-created_at')
     banned_users = CustomUser.objects.filter(is_banned=True)
     all_users = CustomUser.objects.all().exclude(user_type='MODERATOR').order_by('username')
     
@@ -190,6 +206,7 @@ def moderator_dashboard(request):
 
     return render(request, 'forum_core/moderator_dashboard.html', {
         'reports': reports,
+        'thread_reports': thread_reports,
         'banned_users': banned_users,
         'all_users': all_users[:20], # limit to 20 for performance in dashboard
     })
@@ -206,6 +223,20 @@ def resolve_report(request, report_id):
         report.status = 'DISMISSED'
         report.save()
         messages.success(request, 'Report dismissed.')
+    return redirect('forum_core:moderator_dashboard')
+
+@user_type_required(['MODERATOR'])
+def resolve_thread_report(request, report_id):
+    report = get_object_or_404(ThreadReport, id=report_id)
+    action = request.POST.get('action')
+    if action == 'resolve':
+        report.status = 'RESOLVED'
+        report.save()
+        messages.success(request, 'Thread report resolved.')
+    elif action == 'dismiss':
+        report.status = 'DISMISSED'
+        report.save()
+        messages.success(request, 'Thread report dismissed.')
     return redirect('forum_core:moderator_dashboard')
 
 @user_type_required(['MODERATOR'])
