@@ -31,6 +31,10 @@ def thread(request, thread_id):
     comments = thread.comments.all().order_by('created_at')
     
     if request.method == 'POST':
+        if thread.is_solved:
+            messages.error(request, "This thread is solved and no longer accepting new comments.")
+            return redirect('forum_core:thread', thread_id=thread.id)
+            
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -66,6 +70,10 @@ def edit_thread(request, thread_id):
     if request.user != thread.created_by and request.user.user_type != 'MODERATOR':
         return redirect('forum_core:thread', thread_id=thread.id)
 
+    if thread.is_solved:
+        messages.error(request, "Solved threads cannot be modified.")
+        return redirect('forum_core:thread', thread_id=thread.id)
+
     if request.method == 'POST':
         form = EditThreadForm(request.POST, instance=thread)
         if form.is_valid():
@@ -94,6 +102,10 @@ def edit_comment(request, comment_id):
     if request.user != comment.created_by and request.user.user_type != 'MODERATOR':
         return redirect('forum_core:thread', thread_id=comment.thread.id)
 
+    if comment.thread.is_solved:
+        messages.error(request, "Comments on solved threads cannot be modified.")
+        return redirect('forum_core:thread', thread_id=comment.thread.id)
+
     if request.method == 'POST':
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
@@ -109,6 +121,10 @@ def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     thread_id = comment.thread.id
     if request.user != comment.created_by and request.user.user_type != 'MODERATOR':
+        return redirect('forum_core:thread', thread_id=thread_id)
+
+    if comment.thread.is_solved:
+        messages.error(request, "Comments on solved threads cannot be deleted.")
         return redirect('forum_core:thread', thread_id=thread_id)
 
     if request.method == 'POST':
@@ -257,3 +273,19 @@ def unban_user(request, user_id):
     target_user.save()
     messages.success(request, f'User {target_user.username} has been unbanned.')
     return redirect('forum_core:moderator_dashboard')
+
+@user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
+def solve_thread(request, thread_id, comment_id):
+    thread_obj = get_object_or_404(Thread, id=thread_id)
+    comment_obj = get_object_or_404(Comment, id=comment_id)
+    
+    # Only thread owner or moderator can mark as solved
+    if request.user == thread_obj.created_by or request.user.user_type == 'MODERATOR':
+        thread_obj.is_solved = True
+        thread_obj.solved_by_comment = comment_obj
+        thread_obj.save()
+        messages.success(request, 'Thread marked as solved!')
+    else:
+        messages.error(request, 'You do not have permission to mark this thread as solved.')
+        
+    return redirect('forum_core:thread', thread_id=thread_obj.id)

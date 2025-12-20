@@ -1,5 +1,5 @@
 .forum-container {
-    max_width: 800px;
+    max-width: 800px;
     margin: 40px auto;
     padding: 20px;
     /* font-family inherited from base */
@@ -133,6 +133,17 @@
 
 .thread-title a:hover {
     text-decoration: underline;
+}
+
+.solved-badge {
+    background: #008000;
+    color: white;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    border-radius: 4px;
+    margin-left: 10px;
+    vertical-align: middle;
 }
 
 .thread-meta {

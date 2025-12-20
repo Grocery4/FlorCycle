@@ -16,6 +16,8 @@ class Thread(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='joined_threads', blank=True)
+    is_solved = models.BooleanField(default=False)
+    solved_by_comment = models.ForeignKey('Comment', on_delete=models.SET_NULL, null=True, blank=True, related_name='solution_to_thread')
 
     def __str__(self):
         return self.title

@@ -1,6 +1,4 @@
-{% extends "base.html" %} 
-
-{% block title %}{{ thread.title }}{% endblock %} 
+{% extends "base.html" %} {% block title %}{{ thread.title }}{% endblock %} 
 {% block content %}
 <div class="forum-container">
   <div class="thread-header">
@@ -18,12 +16,14 @@
       <span class="thread-date">{{ thread.created_at|date:"M d, Y H:i" }}</span>
 
       <div class="thread-actions">
-        {% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %}
-        <a
-          href="{% url 'forum_core:edit_thread' thread.id %}"
-          class="action-link edit-link"
-          >Edit</a
-        >
+        {% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %} 
+			{% if not thread.is_solved %}
+			<a
+			href="{% url 'forum_core:edit_thread' thread.id %}"
+			class="action-link edit-link"
+			>Edit</a
+			>
+			{% endif %}
         <form
           action="{% url 'forum_core:delete_thread' thread.id %}"
           method="POST"
@@ -70,27 +70,46 @@
           >
 
           <div class="comment-actions">
-            {% if request.user == comment.created_by or request.user.user_type == 'MODERATOR' %}
-            <a
-              href="{% url 'forum_core:edit_comment' comment.id %}"
-              class="action-link edit-link"
-              >Edit</a
-            >
-            <form
-              action="{% url 'forum_core:delete_comment' comment.id %}"
-              method="POST"
-              style="display: inline"
-            >
-              {% csrf_token %}
-              <button
-                type="submit"
-                class="action-link delete-link"
-                onclick="return confirm('Are you sure?')"
-              >
-                Delete
-              </button>
-            </form>
-            {% endif %}
+            {% if thread.solved_by_comment == comment %}
+            <span class="solution-badge">✓ SOLUTION</span>
+            {% elif not thread.is_solved %} 
+				{% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %}
+					<form
+					action="{% url 'forum_core:solve_thread' thread.id comment.id %}"
+					method="POST"
+					style="display: inline"
+					>
+					{% csrf_token %}
+					<button type="submit" class="action-link solve-link">
+						Mark as Solution
+					</button>
+					</form>
+				{% endif %} 
+			{% endif %} 
+			{% if request.user == comment.created_by or request.user.user_type == 'MODERATOR' %} 
+				{% if not thread.is_solved %}
+					<a
+					href="{% url 'forum_core:edit_comment' comment.id %}"
+					class="action-link edit-link"
+					>Edit</a
+					>
+					<form
+					action="{% url 'forum_core:delete_comment' comment.id %}"
+					method="POST"
+					style="display: inline"
+					>
+					{% csrf_token %}
+					<button
+						type="submit"
+						class="action-link delete-link"
+						onclick="return confirm('Are you sure?')"
+					>
+						Delete
+					</button>
+					</form>
+            	{% endif %} 
+			{% endif %}
+
             <a
               href="{% url 'forum_core:report_comment' comment.id %}"
               class="action-link report-link"
@@ -109,12 +128,21 @@
   </div>
 
   <div class="comment-form-section">
+    {% if not thread.is_solved %}
     <h3>Add a Comment</h3>
     <form method="POST">
       {% csrf_token %}
       <div class="form-group">{{ form.content }}</div>
       <button type="submit" class="btn btn-primary">Post Comment</button>
     </form>
+    {% else %}
+    <div class="thread-solved-notice">
+      <p>
+        ✓ This thread has been solved. It is no longer accepting new comments or
+        modifications.
+      </p>
+    </div>
+    {% endif %}
   </div>
 </div>
 
@@ -216,6 +244,26 @@
   .comment-actions {
     display: inline-block;
     vertical-align: middle;
+  }
+  .solution-badge {
+    background: #008000;
+    color: white;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    border-radius: 4px;
+    margin-right: 1rem;
+  }
+  .solve-link {
+    color: #0000ff;
+  }
+  .thread-solved-notice {
+    background: #f0fff0;
+    border: 2px solid #008000;
+    padding: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    color: #008000;
   }
 </style>
 {% endblock %}
