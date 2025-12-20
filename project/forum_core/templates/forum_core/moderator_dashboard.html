@@ -1,4 +1,5 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
+
 {% block title %}Moderator Dashboard{% endblock %} 
 {% block content %}
 <div class="mod-dashboard-container">
@@ -6,8 +7,10 @@
     <h1>Moderator Dashboard</h1>
     <div class="stats-overview">
       <div class="stat-card">
-        <span class="stat-value">{{ reports.count }}</span>
-        <span class="stat-label">Pending Reports</span>
+        <span class="stat-value"
+          >{{ reports.count|add:thread_reports.count }}</span
+        >
+        <span class="stat-label">Total Reports</span>
       </div>
       <div class="stat-card">
         <span class="stat-value">{{ banned_users.count }}</span>
@@ -19,67 +22,127 @@
   <div class="dashboard-grid">
     <!-- Pending Reports Column -->
     <section class="dashboard-section reports-section">
-      <h2>Pending Reports</h2>
-      {% if reports %}
-      <div class="reports-list">
-        {% for report in reports %}
-        <div class="report-card">
-          <div class="report-meta">
-            <span class="report-reason badge-{{ report.reason|lower }}"
-              >{{ report.get_reason_display }}</span
-            >
-            <span class="report-date"
-              >{{ report.created_at|date:"M d, H:i" }}</span
-            >
-          </div>
-          <div class="report-comment-preview">
-            <strong
-              >Comment by {{ report.comment.created_by.username }}:</strong
-            >
-            <p>"{{ report.comment.content|truncatewords:20 }}"</p>
-          </div>
-          <div class="report-description">
-            <strong>Reported by {{ report.reported_by.username }}:</strong>
-            <p>{{ report.description|default:"No description provided." }}</p>
-          </div>
-          <div class="report-actions">
-            <a
-              href="{% url 'forum_core:thread' report.comment.thread.id %}"
-              class="btn-small btn-outline"
-              >View Context</a
-            >
-            <form
-              action="{% url 'forum_core:resolve_report' report.id %}"
-              method="POST"
-              style="display: inline"
-            >
-              {% csrf_token %}
-              <button
-                type="submit"
-                name="action"
-                value="resolve"
-                class="btn-small btn-success"
+      <div class="report-group">
+        <h2>Reported Comments</h2>
+        {% if reports %}
+        <div class="reports-list">
+          {% for report in reports %}
+          <div class="report-card">
+            <div class="report-meta">
+              <span class="report-reason badge-{{ report.reason|lower }}"
+                >{{ report.get_reason_display }}</span
               >
-                Resolve
-              </button>
-              <button
-                type="submit"
-                name="action"
-                value="dismiss"
-                class="btn-small btn-secondary"
+              <span class="report-date"
+                >{{ report.created_at|date:"M d, H:i" }}</span
               >
-                Dismiss
-              </button>
-            </form>
+            </div>
+            <div class="report-comment-preview">
+              <strong
+                >Comment by {{ report.comment.created_by.username }}:</strong
+              >
+              <p>"{{ report.comment.content|truncatewords:20 }}"</p>
+            </div>
+            <div class="report-description">
+              <strong>Details:</strong>
+              <p>{{ report.description|default:"No description provided." }}</p>
+            </div>
+            <div class="report-actions">
+              <a
+                href="{% url 'forum_core:thread' report.comment.thread.id %}"
+                class="btn-small btn-outline"
+                >View Context</a
+              >
+              <form
+                action="{% url 'forum_core:resolve_report' report.id %}"
+                method="POST"
+                style="display: inline"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  name="action"
+                  value="resolve"
+                  class="btn-small btn-success"
+                >
+                  Resolve
+                </button>
+                <button
+                  type="submit"
+                  name="action"
+                  value="dismiss"
+                  class="btn-small btn-secondary"
+                >
+                  Dismiss
+                </button>
+              </form>
+            </div>
           </div>
+          {% endfor %}
         </div>
-        {% endfor %}
+        {% else %}
+        <p class="empty-msg">No reported comments.</p>
+        {% endif %}
       </div>
-      {% else %}
-      <div class="empty-state">
-        <p>No pending reports. Great job!</p>
+
+      <div class="report-group" style="margin-top: 3rem">
+        <h2>Reported Threads</h2>
+        {% if thread_reports %}
+        <div class="reports-list">
+          {% for report in thread_reports %}
+          <div class="report-card">
+            <div class="report-meta">
+              <span class="report-reason badge-{{ report.reason|lower }}"
+                >{{ report.get_reason_display }}</span
+              >
+              <span class="report-date"
+                >{{ report.created_at|date:"M d, H:i" }}</span
+              >
+            </div>
+            <div class="report-comment-preview">
+              <strong>Thread: {{ report.thread.title }}</strong>
+              <p>by {{ report.thread.created_by.username }}</p>
+            </div>
+            <div class="report-description">
+              <strong>Details:</strong>
+              <p>{{ report.description|default:"No description provided." }}</p>
+            </div>
+            <div class="report-actions">
+              <a
+                href="{% url 'forum_core:thread' report.thread.id %}"
+                class="btn-small btn-outline"
+                >View Thread</a
+              >
+              <form
+                action="{% url 'forum_core:resolve_thread_report' report.id %}"
+                method="POST"
+                style="display: inline"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  name="action"
+                  value="resolve"
+                  class="btn-small btn-success"
+                >
+                  Resolve
+                </button>
+                <button
+                  type="submit"
+                  name="action"
+                  value="dismiss"
+                  class="btn-small btn-secondary"
+                >
+                  Dismiss
+                </button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-msg">No reported threads.</p>
+        {% endif %}
       </div>
-      {% endif %}
     </section>
 
     <!-- User Management Column -->
