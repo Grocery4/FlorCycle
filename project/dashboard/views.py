@@ -18,8 +18,8 @@ from calendar_core.services import render_multiple_calendars, CalendarType
 
 from users.models import PartnerProfile
 from users.models import PartnerProfile, UserProfile
-from users.services import link_partner, unlink_partner
-from users.forms import UserUpdateForm, ProfileUpdateForm
+from users.services import link_partner, unlink_partner, activatePremiumSubscription, deactivatePremiumSubscription
+from users.forms import UserUpdateForm, ProfileUpdateForm, PremiumUpgradeForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
@@ -277,11 +277,33 @@ def settings(request):
                         ctx['partner_unlink_error'] = 'Partner profile not found.'
             except Exception as e:
                 ctx['partner_unlink_error'] = f'Error unlinking partner: {str(e)}'
+        
+        elif action == 'upgrade_premium':
+            premium_form = PremiumUpgradeForm(request.POST, instance=request.user.userprofile)
+            if premium_form.is_valid():
+                plan = premium_form.cleaned_data['subscription_plan']
+                activatePremiumSubscription(request.user, plan)
+                messages.success(request, f'Welcome to Premium! You now have access to the forum.')
+                return redirect('dashboard:settings_page')
+            else:
+                messages.error(request, 'Error processing payment. Please check your card details.')
+        
+        elif action == 'cancel_premium':
+            deactivatePremiumSubscription(request.user)
+            messages.info(request, 'Your premium subscription has been canceled.')
+            return redirect('dashboard:settings_page')
     
-    ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, mode='settings', instance=request.user.cycledetails)
-    ctx['user_form'] = UserUpdateForm(instance=request.user)
-    ctx['profile_form'] = ProfileUpdateForm(instance=request.user.userprofile)
-    ctx['password_form'] = PasswordChangeForm(request.user)
+    # Initialize forms
+    if 'cycle_details_form' not in ctx:
+        ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, mode='settings', instance=request.user.cycledetails)
+    if 'user_form' not in ctx:
+        ctx['user_form'] = UserUpdateForm(instance=request.user)
+    if 'profile_form' not in ctx:
+        ctx['profile_form'] = ProfileUpdateForm(instance=request.user.userprofile)
+    if 'password_form' not in ctx:
+        ctx['password_form'] = PasswordChangeForm(request.user)
+    if 'premium_form' not in ctx:
+        ctx['premium_form'] = PremiumUpgradeForm(instance=request.user.userprofile)
     
     try:
         ctx['linked_partners'] = PartnerProfile.objects.filter(linked_user=request.user)

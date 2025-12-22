@@ -10,19 +10,37 @@ def doctorCvUploadPath(instance, filename):
     # Save inside MEDIA_ROOT/doctors/cv/
     return os.path.join("doctors", "cv", filename)
 
-def activatePremiumSubscription(user):
+def activatePremiumSubscription(user, plan):
     from .models import UserProfile
+    from datetime import date, timedelta
     
     premium = UserProfile.objects.get(user=user)
     premium.is_premium = True
     premium.subscription_status = "ACTIVE"
+    premium.subscription_plan = plan
+    premium.start_date = date.today()
+    
+    if plan == 'MONTHLY':
+        premium.end_date = date.today() + timedelta(days=30)
+    elif plan == 'YEARLY':
+        premium.end_date = date.today() + timedelta(days=365)
+    
     premium.payment_info = {
         "provider": "mockpay",
-        "subscription_id": f"sub_{user.id}",
-        "amount": "9.99",
+        "subscription_id": f"sub_{user.id}_{secrets.token_hex(4)}",
+        "amount": "9.99" if plan == 'MONTHLY' else "99.99",
         "currency": "EUR"
     }
 
+    premium.save()
+
+def deactivatePremiumSubscription(user):
+    from .models import UserProfile
+    
+    premium = UserProfile.objects.get(user=user)
+    premium.is_premium = False
+    premium.subscription_status = "CANCELED"
+    # payment info and other fields are cleared in the model's save() method
     premium.save()
 
 def userProfilePicturePath(instance, filename):

@@ -68,11 +68,22 @@ class PartnerSignupForm(UserCreationForm):
             PartnerProfile.objects.create(user=user)
         return user
 
-class PremiumDataForm(UserCreationForm):
-    pass
-    #TODO - maybe PaymentDataForm is a better name
-    #TODO - would it be better to create a separate object with 1:1 rel
-    #TODO - with UserProfile?
+class PremiumUpgradeForm(forms.ModelForm):
+    card_number = forms.CharField(max_length=16, label="Card Number", widget=forms.TextInput(attrs={'placeholder': '1234 5678 1234 5678'}))
+    expiry_date = forms.CharField(max_length=5, label="Expiry Date", widget=forms.TextInput(attrs={'placeholder': 'MM/YY'}))
+    cvv = forms.CharField(max_length=3, label="CVV", widget=forms.PasswordInput(attrs={'placeholder': '123'}))
+
+    class Meta:
+        model = UserProfile
+        fields = ['subscription_plan']
+        widgets = {
+            'subscription_plan': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['subscription_plan'].required = True
+        self.fields['subscription_plan'].choices = [choice for choice in UserProfile.PLAN_CHOICES if choice[0] != 'TRIAL']
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
