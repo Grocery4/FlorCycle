@@ -1,0 +1,96 @@
+{% extends "base.html" %} {% block title %}Notifications{% endblock %}
+{% block content %}
+<div
+  class="notifications-container"
+  style="max-width: 800px; margin: 2rem auto; padding: 1rem"
+>
+  <div style="margin-bottom: 1rem">
+    <a
+      href="javascript:history.back()"
+      style="color: #007bff; text-decoration: none; font-size: 0.9rem"
+      >← Back</a
+    >
+  </div>
+  <h2>Your Notifications</h2>
+
+  {% if notifications %}
+  <div style="margin-bottom: 1rem">
+    <a
+      href="{% url 'notifications:mark_all_as_read' %}"
+      class="btn"
+      style="
+        background: #eee;
+        padding: 0.5rem;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #333;
+      "
+      >Mark all as read</a
+    >
+  </div>
+
+  <ul style="list-style: none; padding: 0">
+    {% for notification in notifications %}
+    <li
+      style="padding: 1rem; border: 1px solid #eee; margin-bottom: 0.5rem; border-radius: 8px; {% if not notification.is_read %}background: #f0f7ff; border-left: 4px solid #007bff;{% endif %}"
+    >
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        "
+      >
+        <div>
+          <span style="font-size: 0.8rem; color: #666"
+            >{{ notification.get_notification_type_display }} •
+            {{notification.created_at|timesince }} ago
+          </span>
+          <h3 style="margin: 0.5rem 0">{{ notification.title }}</h3>
+          <p style="margin: 0">{{ notification.message }}</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center">
+          {% if not notification.is_read %}
+          <a
+            href="{% url 'notifications:mark_as_read' notification.id %}"
+            style="font-size: 0.8rem; color: #007bff; white-space: nowrap"
+            >Mark as read</a
+          >
+          {% elif notification.link %}
+          <a
+            href="{{ notification.link }}"
+            style="font-size: 0.8rem; color: #007bff; white-space: nowrap"
+            >View</a
+          >
+          {% endif %}
+          <form
+            method="post"
+            action="{% url 'notifications:delete_notification' notification.id %}"
+            style="margin: 0"
+          >
+            {% csrf_token %}
+            <button
+              type="submit"
+              style="
+                background: transparent;
+                border: none;
+                color: #dc3545;
+                cursor: pointer;
+                font-size: 0.8rem;
+                padding: 0;
+              "
+              onclick="return confirm('Delete this notification?')"
+            >
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No notifications yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
