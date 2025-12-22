@@ -66,6 +66,9 @@
             <a href="{% url 'forum_core:thread' thread.id %}"
               >{{ thread.title }}</a
             >
+            {% if thread.is_solved %}
+              <span class="solved-badge">✓ SOLVED</span>
+            {% endif %}
           </h3>
           <div class="thread-meta">
             <span class="thread-author"

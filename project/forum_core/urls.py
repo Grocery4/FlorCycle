@@ -21,4 +21,5 @@ urlpatterns = [
     path('moderator/thread-report/<int:report_id>/resolve/', views.resolve_thread_report, name='resolve_thread_report'),
     path('moderator/user/<int:user_id>/ban/', views.ban_user, name='ban_user'),
     path('moderator/user/<int:user_id>/unban/', views.unban_user, name='unban_user'),
+    path('thread/<int:thread_id>/solve/<int:comment_id>/', views.solve_thread, name='solve_thread'),
 ]
