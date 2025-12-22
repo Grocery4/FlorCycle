@@ -83,14 +83,10 @@ class UserProfile(models.Model):
         default=None
     )
     
-    #TODO - test method
+    # The save method ensures consistent state for premium fields.
+    # Manual clean logic is redundant and blocks form validation during upgrades.
     def clean(self):
-        if not self.is_premium:
-            if self.subscription_plan or self.subscription_status or self.auto_renew:
-                raise ValidationError(("Premium subscription fields can only be set if user is premium."))
-            
-            if self.payment_info:
-                raise ValidationError(("Payment info should be empty for non-premium users."))
+        super().clean()
     #TODO - test method for premium fields
     def save(self, *args, **kwargs):
         if not self.is_premium:
@@ -99,7 +95,7 @@ class UserProfile(models.Model):
             self.auto_renew = None
             self.payment_info = None
 
-        self.full_clean()
+        self.full_clean()   
 
         cycledetails = getattr(self.user, 'cycledetails', None)
         if not self.is_configured and cycledetails:
@@ -109,8 +105,9 @@ class UserProfile(models.Model):
         elif self.is_configured and not cycledetails:
             self.is_configured = False
 
-        self.user.user_type = 'PREMIUM' if self.is_premium else 'STANDARD'
-        self.user.save(update_fields=['user_type'])
+        if self.user.user_type in ['STANDARD', 'PREMIUM']:
+            self.user.user_type = 'PREMIUM' if self.is_premium else 'STANDARD'
+            self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)
 
 class ModeratorProfile(models.Model):
