@@ -1,12 +1,21 @@
-<nav>
-    {% if not request.user.is_authenticated %}
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'users:standard_signup' %}">Register</a>
-    {% else %}
-        <form method="POST" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-        </form>
-
-    {% endif %}
+<nav style="display: flex; justify-content: space-between; align-items: center">
+  <div>
+  {% if not request.user.is_authenticated %}
+  <a href="{% url 'login' %}">Login</a>
+  <a href="{% url 'users:standard_signup' %}">Register</a>
+  {% endif %}
+  {% if request.user.is_authenticated %}
+  <div style="display: flex; align-items: center; gap: 1rem">
+    <a
+      href="{% url 'notifications:notification_list' %}"
+      class="notification-bell"
+    >
+      🔔 <span id="notification-count">{{ unread_notifications_count }}</span>
+    </a>
+    <form method="POST" action="{% url 'logout' %}" style="margin: 0">
+      {% csrf_token %}
+      <button type="submit">Logout</button>
+    </form>
+  </div>
+  {% endif %}
 </nav>

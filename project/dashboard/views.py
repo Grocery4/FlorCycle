@@ -23,6 +23,7 @@ from users.forms import UserUpdateForm, ProfileUpdateForm, PremiumUpgradeForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
+from notifications.services import check_dangerous_symptoms, check_upcoming_predictions
 
 
 # Create your views here.
@@ -121,6 +122,9 @@ def homepage(request):
     ctx = {}
     ctx['next_prediction'] = fetch_closest_prediction(request.user)
     ctx['timeline_data'] = calculate_timeline_data(request.user)
+
+    # Check for upcoming period/ovulation notifications
+    check_upcoming_predictions(request.user)
 
     return render(request, 'dashboard/dashboard.html', ctx)
 
@@ -437,7 +441,12 @@ def add_log(request):
             daily_log.save()
 
             if 'symptoms' in dl_form.cleaned_data:
-                daily_log.symptoms_field.set(dl_form.cleaned_data['symptoms'])
+                symptoms = dl_form.cleaned_data['symptoms']
+                daily_log.symptoms_field.set(symptoms)
+                # Check for dangerous symptoms and heavy bleeding
+                symptom_names = [s.name for s in symptoms]
+                flow_level = dl_form.cleaned_data.get('flow')
+                check_dangerous_symptoms(request.user, symptom_names, flow_level)
             if 'moods' in dl_form.cleaned_data:
                 daily_log.moods_field.set(dl_form.cleaned_data['moods'])
             if 'medications' in dl_form.cleaned_data:

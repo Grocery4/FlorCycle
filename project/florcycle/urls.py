@@ -27,4 +27,5 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path('dashboard/', include('dashboard.urls')),
     path('forums/', include('forum_core.urls')),
+    path('notifications/', include('notifications.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

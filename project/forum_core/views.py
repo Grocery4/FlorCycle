@@ -5,6 +5,7 @@ from dashboard.services import user_type_required
 from users.models import CustomUser, DoctorProfile
 from .models import Thread, Comment, DoctorRating, CommentReport, ThreadReport
 from .forms import ThreadForm, EditThreadForm, CommentForm, DoctorRatingForm, CommentReportForm, ThreadReportForm
+from notifications.services import create_notification
 
 # Create your views here.
 @user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
@@ -284,6 +285,17 @@ def solve_thread(request, thread_id, comment_id):
         thread_obj.is_solved = True
         thread_obj.solved_by_comment = comment_obj
         thread_obj.save()
+        
+        # Notify the comment author that their answer was marked as the solution
+        if comment_obj.created_by != request.user:
+            create_notification(
+                user=comment_obj.created_by,
+                title="Your answer was marked as the solution!",
+                message=f"Your comment on '{thread_obj.title}' was marked as the solution.",
+                notification_type='FORUM',
+                link=f"/forums/thread/{thread_obj.id}/"
+            )
+        
         messages.success(request, 'Thread marked as solved!')
     else:
         messages.error(request, 'You do not have permission to mark this thread as solved.')
