@@ -83,12 +83,14 @@
           <p>No log entry for this day.</p>
         </div>
 
+        {% if not is_partner %}
         <a
           href="{% url 'dashboard:add_log' %}"
           class="add-log-btn"
           id="add-log-btn"
           >Edit Log</a
         >
+        {% endif %}
       </div>
     </div>
   </div>
