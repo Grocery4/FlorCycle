@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'forum_core',
     'calendar_core',
     'users.apps.UsersConfig',
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'notifications.context_processors.notification_context',
             ],
         },
     },
