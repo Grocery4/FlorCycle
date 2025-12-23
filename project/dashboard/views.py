@@ -27,6 +27,15 @@ from notifications.services import check_dangerous_symptoms, check_upcoming_pred
 
 
 # Create your views here.
+
+def _get_dashboard_user(request):
+    if request.user.user_type == 'PARTNER':
+        try:
+            return request.user.partnerprofile.linked_user
+        except:
+            return None
+    return request.user
+
 @login_required(login_url='login')
 def redirect_handler(request):
     if request.user.is_banned:
@@ -37,14 +46,22 @@ def redirect_handler(request):
     if request.user.user_type == 'STANDARD' or request.user.user_type == 'PREMIUM':
         return redirect('dashboard:homepage')
     elif request.user.user_type == 'PARTNER':
+        if hasattr(request.user, 'partnerprofile') and request.user.partnerprofile.linked_user:
+             return redirect('dashboard:homepage_readonly')
         return redirect('dashboard:partner_setup_page')
     elif request.user.user_type in ['DOCTOR', 'MODERATOR']:
         return redirect('forum_core:home')
 
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 def calendar_view(request):
     ctx = {}
+    
+    user = _get_dashboard_user(request)
+    if not user:
+        return redirect('dashboard:partner_setup_page')
+
+    ctx['is_partner'] = request.user.user_type == 'PARTNER'
     
     # request GET parameter to render a specific date
     date_param = request.GET.get('date')
@@ -70,7 +87,7 @@ def calendar_view(request):
     
     # get CycleWindows in month range
     cycle_windows = CycleWindow.objects.filter(
-        user=request.user,
+        user=user,
         menstruation_start__lte=visible_end,
         max_ovulation_window__gte=visible_start 
     )
@@ -87,7 +104,7 @@ def calendar_view(request):
 
     # get DailyLogs in month range
     logs = DailyLog.objects.filter(
-        user=request.user,
+        user=user,
         date__gte=visible_start,
         date__lte=visible_end
     )
@@ -316,12 +333,15 @@ def settings(request):
     
     return render(request, 'dashboard/settings.html', ctx)
 
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 def cycle_logs(request):
     ctx = {}
 
-    user = request.user
+    user = _get_dashboard_user(request)
+    if not user:
+        return redirect('dashboard:partner_setup_page')
+
     cs = getattr(user, 'cyclestats', None)
     
     if cs:
@@ -382,10 +402,14 @@ def add_period(request):
     return render(request, 'dashboard/log_period/log_period.html', ctx)
 
 
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 @require_POST
 def ajax_navigate_calendar(request):
+    user = _get_dashboard_user(request)
+    if not user:
+        return JsonResponse({'error': 'No linked user'}, status=403)
+
     data = json.loads(request.body)
 
     reference_month = datetime.strptime(data.get('reference_month'), '%Y-%m-%d')
@@ -396,7 +420,7 @@ def ajax_navigate_calendar(request):
     elif button_type == 'prev_btn':
         new_reference_month = reference_month.replace(day=1) + relativedelta.relativedelta(months=-1)
 
-    calendar_data = render_selectable_calendars(request.user, new_reference_month.date())
+    calendar_data = render_selectable_calendars(user, new_reference_month.date())
 
     response_data = {
         'reference_month': new_reference_month.strftime('%Y-%m-%d'),
@@ -490,17 +514,22 @@ def add_log(request):
         
     return render(request, 'dashboard/add_log/add_log.html', ctx)
 
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 @require_POST
 def ajax_load_log(request):
+    
+    user = _get_dashboard_user(request)
+    if not user:
+        return JsonResponse({'error': 'No linked user'}, status=403)
+
     data = json.loads(request.body)
     date = data.get("date")
     if not date:
         print(date)
 
     try:
-        log = DailyLog.objects.get(user=request.user, date=date)
+        log = DailyLog.objects.get(user=user, date=date)
         exists = True
     except DailyLog.DoesNotExist:
         log = None
@@ -510,7 +539,7 @@ def ajax_load_log(request):
     
     # check for cycle status (Period/Ovulation) even if log doesn't exist
     cycle_windows = CycleWindow.objects.filter(
-        user=request.user,
+        user=user,
         menstruation_start__lte=date,
         max_ovulation_window__gte=date
     )
@@ -572,13 +601,17 @@ def ajax_load_log(request):
 
 #TODO - might turn into a CBV
 #TODO - add form to choose month_range
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 def stats(request):
     ctx = {}
 
-    activity_metrics = get_intercourse_activity_metrics(user=request.user)
-    frequency_metrics = get_intercourse_frequency_metrics(user=request.user)
+    user = _get_dashboard_user(request)
+    if not user:
+        return redirect('dashboard:partner_setup_page')
+
+    activity_metrics = get_intercourse_activity_metrics(user=user)
+    frequency_metrics = get_intercourse_frequency_metrics(user=user)
 
     ctx['intercourse_count'] = activity_metrics['intercourse_count']
     ctx['orgasm_percentage'] = activity_metrics['orgasm_percentage']
@@ -590,17 +623,21 @@ def stats(request):
 
     return render(request, 'dashboard/stats/stats.html', ctx)
 
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 @require_POST
 def ajax_load_stats(request):
+    user = _get_dashboard_user(request)
+    if not user:
+         return JsonResponse({'error': 'No linked user'}, status=403)
+
     data = json.loads(request.body)
     month_range= int(data.get('month_range', 1))
     type=str(data.get('type'))
 
     response_data = {}
     if type == 'activity_dropdown':
-        activity_metrics = get_intercourse_activity_metrics(user=request.user, month_range=month_range)
+        activity_metrics = get_intercourse_activity_metrics(user=user, month_range=month_range)
         response_data.update({
             'intercourse_count': activity_metrics['intercourse_count'],
             'orgasm_percentage': activity_metrics['orgasm_percentage'],
@@ -619,14 +656,18 @@ def ajax_load_stats(request):
     return JsonResponse(response_data)
 
 
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 def ajax_get_top_symptoms(request):
+    user = _get_dashboard_user(request)
+    if not user:
+        return JsonResponse({'error': 'No linked user'}, status=403)
+
     from django.db.models import Count
     from log_core.models import SymptomLog
     # 1. Top 5 Symptoms
     # Group by symptom name and count.
-    top_symptoms_qs = SymptomLog.objects.filter(log__user=request.user)\
+    top_symptoms_qs = SymptomLog.objects.filter(log__user=user)\
         .values('symptom__name')\
         .annotate(count=Count('id'))\
         .order_by('-count')[:5]
@@ -647,7 +688,7 @@ def ajax_get_top_symptoms(request):
     return JsonResponse({'top_symptoms': results})
 
 
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 def ajax_get_available_items(request):
     from log_core.models import Symptom, Mood, Medication
@@ -667,10 +708,14 @@ def ajax_get_available_items(request):
         'medications': list(medications)
     })
 
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 @require_POST
 def ajax_analyze_item(request):
+    user = _get_dashboard_user(request)
+    if not user:
+        return JsonResponse({'error': 'No linked user'}, status=403)
+        
     data = json.loads(request.body)
     item_type = data.get('item_type') # 'symptom', 'mood', 'medication'
     item_names = data.get('item_names', []) # List of names
@@ -679,7 +724,7 @@ def ajax_analyze_item(request):
     if 'item_name' in data and not item_names:
         item_names = [data.get('item_name')]
 
-    logs = DailyLog.objects.filter(user=request.user)
+    logs = DailyLog.objects.filter(user=user)
     
     if not item_names:
         return JsonResponse({'total': 0, 'occurrences': []})
@@ -704,10 +749,14 @@ def ajax_analyze_item(request):
         'occurrences': occurrences
     })
 
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 @require_POST
 def ajax_search_logs(request):
+    user = _get_dashboard_user(request)
+    if not user:
+        return JsonResponse({'error': 'No linked user'}, status=403)
+
     from django.db.models import Q
     data = json.loads(request.body)
     query = data.get('query')
@@ -716,7 +765,7 @@ def ajax_search_logs(request):
         return JsonResponse({'results': []})
 
     logs = DailyLog.objects.filter(
-        user=request.user, 
+        user=user, 
         note__icontains=query
     ).order_by('-date')
 
