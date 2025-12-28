@@ -1,18 +1,14 @@
-{% load static %}
+{% load static i18n %} <link rel="stylesheet" href={% static
+"dashboard/css/next_prediction.css" %}> {% if next_prediction %}
+<div class="prediction-wrapper">
+  <div class="prediction-item menstruation">
+    <b>{{ next_prediction.menstruation_start }}</b>
+    <p>{% trans "Next menstruation" %}</p>
+  </div>
 
-<link rel="stylesheet" href={% static "dashboard/css/next_prediction.css" %}>
-
-
-{% if next_prediction %}
-    <div class="prediction-wrapper">
-        <div class="prediction-item menstruation">
-            <b>{{ next_prediction.menstruation_start }}</b>
-            <p>Next menstruation</p>
-        </div>
-        
-        <div class="prediction-item ovulation">
-            <b>{{ next_prediction.min_ovulation_window }}</b>
-            <p>Next ovulation</p>
-        </div>
-    </div>
+  <div class="prediction-item ovulation">
+    <b>{{ next_prediction.min_ovulation_window }}</b>
+    <p>{% trans "Next ovulation" %}</p>
+  </div>
+</div>
 {% endif %}

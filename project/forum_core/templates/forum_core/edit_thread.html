@@ -1,27 +1,29 @@
-{% extends "base.html" %} {% block title %}Edit Thread{% endblock %} 
+{% extends "base.html" %} 
+{% load i18n %}
+{% block title %}{% trans "Edit Thread" %}{% endblock %} 
 {% block content %}
 <div class="forum-container">
   <div class="forum-header">
-    <h1>Edit Thread</h1>
+    <h1>{% trans "Edit Thread" %}</h1>
   </div>
 
   <div class="form-container">
     <form method="POST">
       {% csrf_token %}
       <div class="form-group">
-        <label>Title</label>
+        <label>{% trans "Title" %}</label>
         <div class="static-field">{{ thread.title }}</div>
       </div>
       <div class="form-group">
-        <label for="{{ form.content.id_for_label }}">Content</label>
+        <label for="{{ form.content.id_for_label }}">{% trans "Content" %}</label>
         {{ form.content }}
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="submit" class="btn btn-primary">{% trans "Save Changes" %}</button>
         <a
           href="{% url 'forum_core:thread' thread.id %}"
           class="btn btn-secondary"
-          >Cancel</a
+          >{% trans "Cancel" %}</a
         >
       </div>
     </form>

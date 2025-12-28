@@ -1,21 +1,25 @@
 {% extends "base.html" %} 
-{% block title %}Verification Pending{% endblock %} 
+{% load i18n %} 
+{% block title %}{% trans "Verification Pending" %}{% endblock %} 
+
 {% block content %}
 <div class="forum-container">
   <div class="card pending-card">
-    <h1>Account Verification Pending</h1>
+    <h1>{% trans "Account Verification Pending" %}</h1>
     <div class="status-icon">⏳</div>
     <p class="pending-msg">
-      Thank you for joining Florcycle's medical community. Your medical
-      credentials are currently being reviewed by our administration team.
+      {% blocktrans %}Thank you for joining Florcycle's medical community. Your
+      medical credentials are currently being reviewed by our administration
+      team.{% endblocktrans %}
     </p>
     <p class="pending-instruction">
-      This process typically takes 24-48 hours. You will receive an email once
-      your account has been verified and you can access the forum.
+      {% blocktrans %}This process typically takes 24-48 hours. You will receive
+      an email once your account has been verified and you can access the
+      forum.{% endblocktrans %}
     </p>
     <div class="actions">
       <a href="{% url 'forum_core:home' %}" class="btn btn-primary"
-        >Try Again</a
+        >{% trans "Try Again" %}</a
       >
     </div>
   </div>

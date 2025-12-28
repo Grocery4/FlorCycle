@@ -1,18 +1,18 @@
-{% extends 'base.html' %} {% load static %} {% block extra_head %}
+{% extends 'base.html' %} {% load static %} {% load i18n %} {% block extra_head %}
 <link rel="stylesheet" href="{% static 'forum_core/css/forum_home.css' %}" />
-{% endblock extra_head %} {% block title %}Florcycle Forums | Homepage{% endblock %} 
+{% endblock extra_head %} {% block title %}{% trans "Florcycle Forums | Homepage" %}{% endblock %} 
 {% block content %}
 <div class="forum-container">
   <div class="forum-nav">
     {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
     <a href="{% url 'dashboard:homepage' %}" class="back-dashboard"
-      >← Back to Dashboard</a
+      >← {% trans "Back to Dashboard" %}</a
     >
     {% endif %}
   </div>
   <div class="forum-header">
-    <h1>Community Forum</h1>
-    <p class="forum-subtitle">Connect, share, and learn from others.</p>
+    <h1>{% trans "Community Forum" %}</h1>
+    <p class="forum-subtitle">{% trans "Connect, share, and learn from others." %}</p>
   </div>
 
   <!-- Search Section -->
@@ -21,10 +21,10 @@
       <input
         type="text"
         name="q"
-        placeholder="Search threads by title..."
+        placeholder="{% trans 'Search threads by title...' %}"
         value="{{ request.GET.q }}"
       />
-      <button type="submit" class="search-btn">Search</button>
+      <button type="submit" class="search-btn">{% trans "Search" %}</button>
     </form>
   </div>
 
@@ -33,29 +33,29 @@
     <a
       href="{% url 'forum_core:user_profile' request.user.username %}"
       class="action-btn profile-btn"
-      >My Profile</a
+      >{% trans "My Profile" %}</a
     >
     <a href="{% url 'forum_core:doctor_ranking' %}" class="action-btn"
-      >Doctor Ranking</a
+      >{% trans "Doctor Ranking" %}</a
     >
     <a href="{% url 'forum_core:create_thread' %}" class="action-btn create-btn"
-      >Create Thread</a
+      >{% trans "Create Thread" %}</a
     >
     <a href="{% url 'forum_core:home' %}?view=all" class="action-btn"
-      >All Threads</a
+      >{% trans "All Threads" %}</a
     >
     {% if request.user.user_type == 'MODERATOR' %}
     <a
       href="{% url 'forum_core:moderator_dashboard' %}"
       class="action-btn mod-btn"
-      >Moderator Dashboard</a
+      >{% trans "Moderator Dashboard" %}</a
     >
     {% endif %}
   </div>
 
   <!-- Last Updated Threads -->
   <div class="threads-section">
-    <h2>Last Updated Threads</h2>
+    <h2>{% trans "Last Updated Threads" %}</h2>
 
     {% if threads %}
     <div class="threads-list">
@@ -67,12 +67,12 @@
               >{{ thread.title }}</a
             >
             {% if thread.is_solved %}
-              <span class="solved-badge">✓ SOLVED</span>
+              <span class="solved-badge">✓ {% trans "SOLVED" %}</span>
             {% endif %}
           </h3>
           <div class="thread-meta">
             <span class="thread-author"
-              >by
+              >{% trans "by" %}
               <a
                 href="{% url 'forum_core:user_profile' thread.created_by.username %}"
                 class="author-link"
@@ -80,16 +80,16 @@
               ></span
             >
             <span class="thread-date"
-              >Updated: {{ thread.updated_at|date:"M d, Y" }}</span
+              >{% trans "Updated:" %} {{ thread.updated_at|date:"M d, Y" }}</span
             >
             <span class="thread-participants"
-              >{{ thread.participants.count }} participants</span
+              >{% blocktrans with count=thread.participants.count %}{{ count }} participants{% endblocktrans %}</span
             >
           </div>
         </div>
         <div class="thread-stats">
           <span class="comment-count"
-            >{{ thread.comments.count }} comments</span
+            >{% blocktrans with count=thread.comments.count %}{{ count }} comments{% endblocktrans %}</span
           >
         </div>
       </div>
@@ -97,7 +97,7 @@
     </div>
     {% else %}
     <div class="empty-state">
-      <p>No threads found. Be the first to start a conversation!</p>
+      <p>{% trans "No threads found. Be the first to start a conversation!" %}</p>
     </div>
     {% endif %}
   </div>

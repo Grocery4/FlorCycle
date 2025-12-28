@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% block title %}Notifications{% endblock %}
+{% extends "base.html" %} 
+{% load i18n %}
+{% block title %}{% trans "Notifications" %}{% endblock %}
 {% block content %}
 <div
   class="notifications-container"
@@ -8,10 +10,10 @@
     <a
       href="javascript:history.back()"
       style="color: #007bff; text-decoration: none; font-size: 0.9rem"
-      >← Back</a
+      >← {% trans "Back" %}</a
     >
   </div>
-  <h2>Your Notifications</h2>
+  <h2>{% trans "Your Notifications" %}</h2>
 
   {% if notifications %}
   <div style="margin-bottom: 1rem">
@@ -25,7 +27,7 @@
         text-decoration: none;
         color: #333;
       "
-      >Mark all as read</a
+      >{% trans "Mark all as read" %}</a
     >
   </div>
 
@@ -44,7 +46,7 @@
         <div>
           <span style="font-size: 0.8rem; color: #666"
             >{{ notification.get_notification_type_display }} •
-            {{notification.created_at|timesince }} ago
+            {% blocktrans with time=notification.created_at|timesince %}{{ time }} ago{% endblocktrans %}
           </span>
           <h3 style="margin: 0.5rem 0">{{ notification.title }}</h3>
           <p style="margin: 0">{{ notification.message }}</p>
@@ -54,13 +56,13 @@
           <a
             href="{% url 'notifications:mark_as_read' notification.id %}"
             style="font-size: 0.8rem; color: #007bff; white-space: nowrap"
-            >Mark as read</a
+            >{% trans "Mark as read" %}</a
           >
           {% elif notification.link %}
           <a
             href="{{ notification.link }}"
             style="font-size: 0.8rem; color: #007bff; white-space: nowrap"
-            >View</a
+            >{% trans "View" %}</a
           >
           {% endif %}
           <form
@@ -79,9 +81,9 @@
                 font-size: 0.8rem;
                 padding: 0;
               "
-              onclick="return confirm('Delete this notification?')"
+              onclick="return confirm('{% trans "Delete this notification?" %}')"
             >
-              Delete
+              {% trans "Delete" %}
             </button>
           </form>
         </div>
@@ -90,7 +92,7 @@
     {% endfor %}
   </ul>
   {% else %}
-  <p>No notifications yet.</p>
+  <p>{% trans "No notifications yet." %}</p>
   {% endif %}
 </div>
 {% endblock %}

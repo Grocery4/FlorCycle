@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static "calendar_core/css/selectable_calendar.css" %}">
@@ -15,12 +16,12 @@
     <script type="text/javascript" src="{% static "dashboard/js/month_navigator.js" %}"></script>
 {% endblock extra_js %}
 
-{% block title %}Add Period{% endblock title %}
+{% block title %}{% trans "Add Period" %}{% endblock title %}
 
 
 {% block content %}
     <div class="log-period-container">
-                {% include "dashboard/subpage_topbar.html" %}
+        {% include "dashboard/subpage_topbar.html" %}
     </div>
 
     <form method="post">
@@ -36,6 +37,6 @@
         <input type="hidden" name="mo_start" id="mo_start" value="{{ rendered_month_start |date:'Y-m-d' }}">
         <input type="hidden" name="mo_end" id="mo_end" value="{{ rendered_month_end | date:'Y-m-d' }}">
 
-        <button type="submit">Save</button>
+        <button type="submit">{% trans "Save" %}</button>
     </form>
 {% endblock content %}

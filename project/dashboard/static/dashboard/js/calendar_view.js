@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const ajaxLoadLogUrl = container.dataset.ajaxUrl;
   const addLogUrl = container.dataset.addLogUrl;
   const csrfToken = container.dataset.csrfToken;
+  const languageCode = container.dataset.languageCode;
 
   const dateCells = document.querySelectorAll("td[data-date]");
   const sidebar = document.getElementById("daily-view-sidebar");
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
       this.classList.add("selected-date");
 
       selectedDateDisplay.textContent = new Date(date).toLocaleDateString(
-        undefined,
+        languageCode,
         { weekday: "long", year: "numeric", month: "long", day: "numeric" }
       );
 
@@ -76,17 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
             noLogData.classList.add("hidden");
 
             logNote.textContent = data.note || "-";
-            // Map flow int to string if needed, or backend sends display value?
-            // Backend sends int currently. Let's just show it or map it simply.
-            const flowMap = {
-              0: "Spotting",
-              1: "Light",
-              2: "Medium",
-              3: "Heavy",
-            };
-            logFlow.textContent =
-              data.flow !== null ? flowMap[data.flow] || data.flow : "-";
-
+            logFlow.textContent = data.flow_display || "-";
             logWeight.textContent = data.weight || "-";
             logTemperature.textContent = data.temperature || "-";
             logOvulationTest.textContent = data.ovulation_test || "-";
@@ -109,10 +100,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // Intercourse
             logQuantity.textContent =
               data.quantity !== null ? data.quantity : "-";
-            logProtected.textContent =
-              data.protected !== null ? (data.protected ? "Yes" : "No") : "-";
-            logOrgasm.textContent =
-              data.orgasm !== null ? (data.orgasm ? "Yes" : "No") : "-";
+            logProtected.textContent = data.protected_display || "-";
+            logOrgasm.textContent = data.orgasm_display || "-";
           } else {
             logData.classList.add("hidden");
             noLogData.classList.remove("hidden");

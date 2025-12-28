@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from django.core.validators import FileExtensionValidator
 from .models import CustomUser, UserProfile, ModeratorProfile, DoctorProfile, PartnerProfile
 
@@ -37,7 +38,7 @@ class DoctorSignupForm(UserCreationForm):
     def clean_license_number(self):
         license_number = self.cleaned_data.get("license_number")
         if DoctorProfile.objects.filter(license_number=license_number).exists():
-            raise forms.ValidationError("This license number is already registered.")
+            raise forms.ValidationError(_("This license number is already registered."))
         return license_number
 
 
@@ -69,9 +70,9 @@ class PartnerSignupForm(UserCreationForm):
         return user
 
 class PremiumUpgradeForm(forms.ModelForm):
-    card_number = forms.CharField(max_length=16, label="Card Number", widget=forms.TextInput(attrs={'placeholder': '1234 5678 1234 5678'}))
-    expiry_date = forms.CharField(max_length=5, label="Expiry Date", widget=forms.TextInput(attrs={'placeholder': 'MM/YY'}))
-    cvv = forms.CharField(max_length=3, label="CVV", widget=forms.PasswordInput(attrs={'placeholder': '123'}))
+    card_number = forms.CharField(max_length=16, label=_("Card Number"), widget=forms.TextInput(attrs={'placeholder': '1234 5678 1234 5678'}))
+    expiry_date = forms.CharField(max_length=5, label=_("Expiry Date"), widget=forms.TextInput(attrs={'placeholder': 'MM/YY'}))
+    cvv = forms.CharField(max_length=3, label=_("CVV"), widget=forms.PasswordInput(attrs={'placeholder': '123'}))
 
     class Meta:
         model = UserProfile

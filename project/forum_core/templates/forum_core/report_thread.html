@@ -1,17 +1,18 @@
 {% extends "base.html" %} 
+{% load i18n %}
 
-{% block title %}Report Thread | {{ thread.title }}
+{% block title %}{% trans "Report Thread" %} | {{ thread.title }}
 {% endblock %} {% block content %}
 <div class="forum-container">
   <div class="report-header">
     <a href="{% url 'forum_core:thread' thread.id %}" class="back-link"
-      >← Back to Thread</a
+      >← {% trans "Back to Thread" %}</a
     >
-    <h1>Report Thread: {{ thread.title }}</h1>
+    <h1>{% trans "Report Thread" %}: {{ thread.title }}</h1>
   </div>
 
   <div class="target-thread-preview">
-    <h3>Reporting this thread:</h3>
+    <h3>{% trans "Reporting this thread:" %}</h3>
     <div class="thread-preview-card">
       <div class="thread-meta">
         <span class="thread-author">{{ thread.created_by.username }}</span>
@@ -27,19 +28,19 @@
     <form method="POST">
       {% csrf_token %}
       <div class="form-group">
-        <label for="id_reason">Why are you reporting this thread?</label>
+        <label for="id_reason">{% trans "Why are you reporting this thread?" %}</label>
         {{ form.reason }}
       </div>
       <div class="form-group">
-        <label for="id_description">Additional details (optional)</label>
+        <label for="id_description">{% trans "Additional details (optional)" %}</label>
         {{ form.description }}
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Submit Report</button>
+        <button type="submit" class="btn btn-primary">{% trans "Submit Report" %}</button>
         <a
           href="{% url 'forum_core:thread' thread.id %}"
           class="btn btn-secondary"
-          >Cancel</a
+          >{% trans "Cancel" %}</a
         >
       </div>
     </form>

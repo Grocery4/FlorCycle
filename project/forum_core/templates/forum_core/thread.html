@@ -1,12 +1,14 @@
-{% extends "base.html" %} {% block title %}{{ thread.title }}{% endblock %} 
+{% extends "base.html" %} 
+{% load i18n %}
+{% block title %}{{ thread.title }}{% endblock %} 
 {% block content %}
 <div class="forum-container">
   <div class="thread-header">
-    <a href="{% url 'forum_core:home' %}" class="back-link">← Back to Forums</a>
+    <a href="{% url 'forum_core:home' %}" class="back-link">← {% trans "Back to Forums" %}</a>
     <h1>{{ thread.title }}</h1>
     <div class="thread-meta">
       <span class="thread-author">
-        Posted by
+        {% trans "Posted by" %}
         <a
           href="{% url 'forum_core:user_profile' thread.created_by.username %}"
           class="profile-link"
@@ -21,7 +23,7 @@
 			<a
 			href="{% url 'forum_core:edit_thread' thread.id %}"
 			class="action-link edit-link"
-			>Edit</a
+			>{% trans "Edit" %}</a
 			>
 			{% endif %}
         <form
@@ -33,16 +35,16 @@
           <button
             type="submit"
             class="action-link delete-link"
-            onclick="return confirm('Are you sure?')"
+            onclick="return confirm('{% trans "Are you sure?" %}')"
           >
-            Delete
+            {% trans "Delete" %}
           </button>
         </form>
         {% endif %}
         <a
           href="{% url 'forum_core:report_thread' thread.id %}"
           class="action-link report-link"
-          >Report Thread</a
+          >{% trans "Report Thread" %}</a
         >
       </div>
     </div>
@@ -53,7 +55,7 @@
   </div>
 
   <div class="comments-section">
-    <h3>{{ comments.count }} Comments</h3>
+    <h3>{{ comments.count }} {% trans "Comments" %}</h3>
     <div class="comments-list">
       {% for comment in comments %}
       <div class="comment-card">
@@ -71,7 +73,7 @@
 
           <div class="comment-actions">
             {% if thread.solved_by_comment == comment %}
-            <span class="solution-badge">✓ SOLUTION</span>
+            <span class="solution-badge">✓ {% trans "SOLUTION" %}</span>
             {% elif not thread.is_solved %} 
 				{% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %}
 					<form
@@ -81,7 +83,7 @@
 					>
 					{% csrf_token %}
 					<button type="submit" class="action-link solve-link">
-						Mark as Solution
+						{% trans "Mark as Solution" %}
 					</button>
 					</form>
 				{% endif %} 
@@ -91,7 +93,7 @@
 					<a
 					href="{% url 'forum_core:edit_comment' comment.id %}"
 					class="action-link edit-link"
-					>Edit</a
+					>{% trans "Edit" %}</a
 					>
 					<form
 					action="{% url 'forum_core:delete_comment' comment.id %}"
@@ -102,9 +104,9 @@
 					<button
 						type="submit"
 						class="action-link delete-link"
-						onclick="return confirm('Are you sure?')"
+						onclick="return confirm('{% trans "Are you sure?" %}')"
 					>
-						Delete
+						{% trans "Delete" %}
 					</button>
 					</form>
             	{% endif %} 
@@ -113,7 +115,7 @@
             <a
               href="{% url 'forum_core:report_comment' comment.id %}"
               class="action-link report-link"
-              >Report</a
+              >{% trans "Report" %}</a
             >
           </div>
         </div>
@@ -121,7 +123,7 @@
       </div>
       {% empty %}
       <div class="empty-comments">
-        <p>No comments yet. Be the first to reply!</p>
+        <p>{% trans "No comments yet. Be the first to reply!" %}</p>
       </div>
       {% endfor %}
     </div>
@@ -129,17 +131,16 @@
 
   <div class="comment-form-section">
     {% if not thread.is_solved %}
-    <h3>Add a Comment</h3>
+    <h3>{% trans "Add a Comment" %}</h3>
     <form method="POST">
       {% csrf_token %}
       <div class="form-group">{{ form.content }}</div>
-      <button type="submit" class="btn btn-primary">Post Comment</button>
+      <button type="submit" class="btn btn-primary">{% trans "Post Comment" %}</button>
     </form>
     {% else %}
     <div class="thread-solved-notice">
       <p>
-        ✓ This thread has been solved. It is no longer accepting new comments or
-        modifications.
+        {% trans "✓ This thread has been solved. It is no longer accepting new comments or modifications." %}
       </p>
     </div>
     {% endif %}

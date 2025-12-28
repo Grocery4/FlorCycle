@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.timezone import now
 from django.conf import settings
+from django.utils.text import format_lazy
+from django.utils.translation import gettext_lazy as _
 
 from datetime import timedelta
 
@@ -12,8 +14,8 @@ class CycleDetails(models.Model):
     #TODO - test this mf
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
-    CYCLE_DURATION_CHOICES = [(i, f'{i} DAYS') for i in range(22, 45)]
-    MENSTRUATION_DURATION_CHOICES = [(i, f'{i} DAY') if i == 1 else (i, f'{i} DAYS') for i in range(1, 11)]
+    CYCLE_DURATION_CHOICES = [(i, format_lazy(_('{count} DAYS'), count=i)) for i in range(22, 45)]
+    MENSTRUATION_DURATION_CHOICES = [(i, format_lazy(_('{count} DAY'), count=i)) if i == 1 else (i, format_lazy(_('{count} DAYS'), count=i)) for i in range(1, 11)]
 
     #Values based on reference website.
     AVG_MIN_OVULATION_DAY = 12
@@ -21,12 +23,14 @@ class CycleDetails(models.Model):
 
 
     base_menstruation_date = models.DateField(
-        default=now
+        default=now,
+        verbose_name=_("Base menstruation date")
     )
 
     avg_cycle_duration = models.IntegerField(
         choices=CYCLE_DURATION_CHOICES,
         default=28,
+        verbose_name=_("Average cycle duration"),
         blank=False,
         null=False,
     )
@@ -34,6 +38,7 @@ class CycleDetails(models.Model):
     avg_menstruation_duration = models.IntegerField(
         choices=MENSTRUATION_DURATION_CHOICES,
         default=5,
+        verbose_name=_("Average menstruation duration"),
         blank=False,
         null=False,
     )

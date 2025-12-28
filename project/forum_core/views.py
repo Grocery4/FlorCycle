@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Avg, Q
 from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
+
 from dashboard.services import user_type_required
 from users.models import CustomUser, DoctorProfile
 from .models import Thread, Comment, DoctorRating, CommentReport, ThreadReport
@@ -33,7 +35,7 @@ def thread(request, thread_id):
     
     if request.method == 'POST':
         if thread.is_solved:
-            messages.error(request, "This thread is solved and no longer accepting new comments.")
+            messages.error(request, _("This thread is solved and no longer accepting new comments."))
             return redirect('forum_core:thread', thread_id=thread.id)
             
         form = CommentForm(request.POST)
@@ -72,7 +74,7 @@ def edit_thread(request, thread_id):
         return redirect('forum_core:thread', thread_id=thread.id)
 
     if thread.is_solved:
-        messages.error(request, "Solved threads cannot be modified.")
+        messages.error(request, _("Solved threads cannot be modified."))
         return redirect('forum_core:thread', thread_id=thread.id)
 
     if request.method == 'POST':
@@ -104,7 +106,7 @@ def edit_comment(request, comment_id):
         return redirect('forum_core:thread', thread_id=comment.thread.id)
 
     if comment.thread.is_solved:
-        messages.error(request, "Comments on solved threads cannot be modified.")
+        messages.error(request, _("Comments on solved threads cannot be modified."))
         return redirect('forum_core:thread', thread_id=comment.thread.id)
 
     if request.method == 'POST':
@@ -125,7 +127,7 @@ def delete_comment(request, comment_id):
         return redirect('forum_core:thread', thread_id=thread_id)
 
     if comment.thread.is_solved:
-        messages.error(request, "Comments on solved threads cannot be deleted.")
+        messages.error(request, _("Comments on solved threads cannot be deleted."))
         return redirect('forum_core:thread', thread_id=thread_id)
 
     if request.method == 'POST':
@@ -188,7 +190,7 @@ def report_comment(request, comment_id):
             report.comment = comment
             report.reported_by = request.user
             report.save()
-            messages.success(request, 'Report submitted successfully. Thank you for keeping our community safe.')
+            messages.success(request, _('Report submitted successfully. Thank you for keeping our community safe.'))
             return redirect('forum_core:thread', thread_id=comment.thread.id)
     else:
         form = CommentReportForm()
@@ -203,7 +205,7 @@ def report_thread(request, thread_id):
             report.thread = thread_obj
             report.reported_by = request.user
             report.save()
-            messages.success(request, 'Thread reported successfully.')
+            messages.success(request, _('Thread reported successfully.'))
             return redirect('forum_core:thread', thread_id=thread_obj.id)
     else:
         form = ThreadReportForm()
@@ -235,11 +237,11 @@ def resolve_report(request, report_id):
     if action == 'resolve':
         report.status = 'RESOLVED'
         report.save()
-        messages.success(request, 'Report marked as resolved.')
+        messages.success(request, _('Report marked as resolved.'))
     elif action == 'dismiss':
         report.status = 'DISMISSED'
         report.save()
-        messages.success(request, 'Report dismissed.')
+        messages.success(request, _('Report dismissed.'))
     return redirect('forum_core:moderator_dashboard')
 
 @user_type_required(['MODERATOR'])
@@ -249,11 +251,11 @@ def resolve_thread_report(request, report_id):
     if action == 'resolve':
         report.status = 'RESOLVED'
         report.save()
-        messages.success(request, 'Thread report resolved.')
+        messages.success(request, _('Thread report resolved.'))
     elif action == 'dismiss':
         report.status = 'DISMISSED'
         report.save()
-        messages.success(request, 'Thread report dismissed.')
+        messages.success(request, _('Thread report dismissed.'))
     return redirect('forum_core:moderator_dashboard')
 
 @user_type_required(['MODERATOR'])
@@ -262,9 +264,9 @@ def ban_user(request, user_id):
     if target_user.user_type != 'MODERATOR':
         target_user.is_banned = True
         target_user.save()
-        messages.warning(request, f'User {target_user.username} has been banned.')
+        messages.warning(request, _('User {username} has been banned.').format(username=target_user.username))
     else:
-        messages.error(request, 'You cannot ban another moderator.')
+        messages.error(request, _('You cannot ban another moderator.'))
     return redirect('forum_core:moderator_dashboard')
 
 @user_type_required(['MODERATOR'])
@@ -272,7 +274,7 @@ def unban_user(request, user_id):
     target_user = get_object_or_404(CustomUser, id=user_id)
     target_user.is_banned = False
     target_user.save()
-    messages.success(request, f'User {target_user.username} has been unbanned.')
+    messages.success(request, _('User {username} has been unbanned.').format(username=target_user.username))
     return redirect('forum_core:moderator_dashboard')
 
 @user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
@@ -296,8 +298,8 @@ def solve_thread(request, thread_id, comment_id):
                 link=f"/forums/thread/{thread_obj.id}/"
             )
         
-        messages.success(request, 'Thread marked as solved!')
+        messages.success(request, _('Thread marked as solved!'))
     else:
-        messages.error(request, 'You do not have permission to mark this thread as solved.')
+        messages.error(request, _('You do not have permission to mark this thread as solved.'))
         
     return redirect('forum_core:thread', thread_id=thread_obj.id)

@@ -3,6 +3,7 @@
 {% comment %} FIXME - rename this template {% endcomment %}
 
 {% load static %}
+{% load i18n %}
 
 {% block title %}Guest mode{% endblock title %}
 
@@ -17,7 +18,7 @@
         <form method="post">
             {% csrf_token %}
             {{form.as_p}}
-            <button type="submit">Send</button>
+            <button type="submit">{% trans "Send"%}</button>
         </form>
 
         {% if predictions %}

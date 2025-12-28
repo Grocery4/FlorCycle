@@ -1,25 +1,32 @@
-{% load static %}
+{% load static i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>{% block title %}Florcycle{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% block extra_head %}{% endblock %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
   </head>
 
-  <body>
-    {% include 'navbar.html' %} 
-    {% if messages %}
-        <div class="messages-container">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
-    {% endif %} 
-    {% block content %}{% endblock %} 
+  <body
+    style="display: flex; flex-direction: column; min-height: 100vh; margin: 0"
+  >
+    {% include 'navbar.html' %} {% if messages %}
+    <div class="messages-container" style="flex-shrink: 0">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <main
+      style="flex: 1; display: flex; flex-direction: column; overflow: hidden"
+    >
+      {% block content %}{% endblock %}
+    </main>
+
     {% block extra_js %}{% endblock %}
   </body>
 </html>

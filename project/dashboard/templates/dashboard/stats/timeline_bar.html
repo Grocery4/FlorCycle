@@ -1,64 +1,72 @@
-{% if timeline_data.has_cycle %}
+{% if timeline_data.has_cycle %} 
+{% load i18n %}
+
 <div class="timeline-container">
-    <div class="timeline-header">
-        <h3>Current Cycle</h3>
-        <p class="cycle-dates">{{ timeline_data.cycle_start|date:"M d" }} — {{ timeline_data.cycle_end|date:"M d, Y" }}</p>
+  <div class="timeline-header">
+    <h3>{% trans "Current Cycle" %}</h3>
+    <p class="cycle-dates">
+      {{ timeline_data.cycle_start|date:"M d" }} — {{ timeline_data.cycle_end|date:"M d, Y" }}
+    </p>
+  </div>
+
+  <div class="timeline-bar-wrapper">
+    <div class="timeline-bar">
+      <!-- Menstruation phase -->
+      <div
+        class="phase menstruation-phase"
+        style="left: {{ timeline_data.menstruation.start_percent }}%; width: {{ timeline_data.menstruation.width_percent|floatformat:1 }}%;"
+      ></div>
+
+      <!-- Ovulation phase -->
+      <div
+        class="phase ovulation-phase"
+        style="left: {{ timeline_data.ovulation.start_percent }}%; width: {{ timeline_data.ovulation.width_percent|floatformat:1 }}%;"
+      ></div>
+
+      <!-- Current day marker (only if within cycle) -->
+      {% if timeline_data.show_markers and timeline_data.current_day_percent is not None %}
+      <div
+        class="marker current-day-marker"
+        style="left: {{ timeline_data.current_day_percent }}%;"
+        title="{% trans 'Today' %}"
+      ></div>
+      {% endif %}
+
+      <!-- Probable ovulation day marker (only if within cycle) -->
+      {% if timeline_data.show_markers %}
+        <div
+          class="marker probable-ovulation-marker"
+          style="left: {{ timeline_data.ovulation.probable_percent }}%;"
+          title="{% trans 'Probable ovulation day' %}"
+        ></div>
+      {% endif %}
     </div>
-    
-    <div class="timeline-bar-wrapper">
-        <div class="timeline-bar">
-            <!-- Menstruation phase -->
-            <div class="phase menstruation-phase" 
-                 style="left: {{ timeline_data.menstruation.start_percent }}%; width: {{ timeline_data.menstruation.width_percent|floatformat:1 }}%;">
-            </div>
-            
-            <!-- Ovulation phase -->
-            <div class="phase ovulation-phase" 
-                 style="left: {{ timeline_data.ovulation.start_percent }}%; width: {{ timeline_data.ovulation.width_percent|floatformat:1 }}%;">
-            </div>
-            
-            <!-- Current day marker (only if within cycle) -->
-            {% if timeline_data.show_markers and timeline_data.current_day_percent is not None %}
-            <div class="marker current-day-marker" 
-                 style="left: {{ timeline_data.current_day_percent }}%;"
-                 title="Today">
-            </div>
-            {% endif %}
-            
-            <!-- Probable ovulation day marker (only if within cycle) -->
-            {% if timeline_data.show_markers %}
-            <div class="marker probable-ovulation-marker" 
-                 style="left: {{ timeline_data.ovulation.probable_percent }}%;"
-                 title="Probable ovulation day">
-            </div>
-            {% endif %}
-        </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="timeline-legend">
+    <div class="legend-item">
+      <span class="legend-color menstruation"></span>
+      <span class="legend-label">{% trans "Menstruation" %} ({{ timeline_data.menstruation.duration }} days)</span>
     </div>
-    
-    <!-- Legend -->
-    <div class="timeline-legend">
-        <div class="legend-item">
-            <span class="legend-color menstruation"></span>
-            <span class="legend-label">Menstruation ({{ timeline_data.menstruation.duration }} days)</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-color ovulation"></span>
-            <span class="legend-label">Ovulation Window ({{ timeline_data.ovulation.duration }} days)</span>
-        </div>
-        {% if timeline_data.show_markers %}
-        <div class="legend-item">
-            <span class="legend-marker current-day"></span>
-            <span class="legend-label">Today</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-marker probable-ovulation"></span>
-            <span class="legend-label">Probable ovulation</span>
-        </div>
-        {% endif %}
+    <div class="legend-item">
+      <span class="legend-color ovulation"></span>
+      <span class="legend-label">{% trans "Ovulation Window" %} ({{ timeline_data.ovulation.duration }} days)</span>
     </div>
+    {% if timeline_data.show_markers %}
+    <div class="legend-item">
+      <span class="legend-marker current-day"></span>
+      <span class="legend-label">{% trans "Today" %}</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-marker probable-ovulation"></span>
+      <span class="legend-label">{% trans "Probable ovulation" %}</span>
+    </div>
+    {% endif %}
+  </div>
 </div>
 {% else %}
-<div class="timeline-container no-cycle">
-    <p>No cycle data available. Log your menstruation to see the timeline.</p>
-</div>
+  <div class="timeline-container no-cycle">
+    <p>{% trans "No cycle data available. Log your menstruation to see the timeline." %}</p>
+  </div>
 {% endif %}

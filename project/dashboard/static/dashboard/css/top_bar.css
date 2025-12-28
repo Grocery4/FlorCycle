@@ -1,9 +1,8 @@
 .top-bar {
     display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border: 1px solid black;
-    margin: 10px 0;
+    justify-content: flex-end; /* Align settings to the right */
+    padding: 5px 10px;
+    margin: 0 0 5px 0;
 }
 
 .top-bar > div {

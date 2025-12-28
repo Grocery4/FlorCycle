@@ -1,4 +1,10 @@
-{% for cw in cw_list %}
-    <p>Menstruation: {{cw.menstruation_start}} to {{cw.menstruation_end}}</p>
-    <p>Ovulation: {{cw.min_ovulation_window}} to {{cw.max_ovulation_window}}</p>
+{% load i18n %} {% for cw in cw_list %}
+<p>
+  {% trans "Menstruation:" %} {{cw.menstruation_start}} {% trans "to" %}
+  {{cw.menstruation_end}}
+</p>
+<p>
+  {% trans "Ovulation:" %} {{cw.min_ovulation_window}} {% trans "to" %}
+  {{cw.max_ovulation_window}}
+</p>
 {% endfor %}

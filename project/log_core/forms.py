@@ -1,22 +1,25 @@
 from django import forms
 from .models import DailyLog, SymptomLog, MoodLog, IntercourseLog, MedicationLog, Symptom, Mood, Medication
-
+from django.utils.translation import gettext_lazy as _
 
 class DailyLogForm(forms.ModelForm):
     symptoms = forms.ModelMultipleChoiceField(
         queryset=Symptom.objects.all(),
         widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=False,
+        label=_("Symptoms")
     )
     moods = forms.ModelMultipleChoiceField(
         queryset=Mood.objects.all(),
         widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=False,
+        label=_("Moods")
     )
     medications = forms.ModelMultipleChoiceField(
         queryset=Medication.objects.all(),
         widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=False,
+        label=_("Medications")
     )
 
     class Meta:

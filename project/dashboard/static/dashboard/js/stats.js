@@ -59,6 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultsContainer = document.getElementById('search-results-container');
     const resultsList = document.getElementById('search-results-list');
 
+    const noResultsText = container.dataset.noResultsText || 'No matches found';
+    
     searchBtn.addEventListener('click', () => {
         const query = searchInput.value;
         if (!query) return;
@@ -73,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             resultsList.innerHTML = '';
             resultsContainer.classList.remove('hidden');
             if (data.results.length === 0) {
-                resultsList.innerHTML = '<li>No matches found</li>';
+                resultsList.innerHTML = `<li>${noResultsText}</li>`;
             } else {
                 data.results.forEach(log => {
                     const li = document.createElement('li');
@@ -101,16 +103,16 @@ document.addEventListener('DOMContentLoaded', function() {
         chipsContainer.innerHTML = '';
         const items = allItems[type + 's'] || []; // key is plural 'symptoms', type is singular 'symptom'
 
-        items.forEach(name => {
+        items.forEach(item => {
             const chip = document.createElement('div');
             chip.className = 'chip';
-            if (selectedItems.has(name)) chip.classList.add('active');
+            if (selectedItems.has(item.id)) chip.classList.add('active');
             
-            chip.textContent = name;
+            chip.textContent = item.name;
             chip.addEventListener('click', () => {
-                toggleSelection(type, name);
+                toggleSelection(type, item.id);
                 // Update visual state
-                if (selectedItems.has(name)) chip.classList.add('active');
+                if (selectedItems.has(item.id)) chip.classList.add('active');
                 else chip.classList.remove('active');
             });
             chipsContainer.appendChild(chip);
@@ -131,34 +133,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    function toggleSelection(type, name) {
-        if (selectedItems.has(name)) {
-            selectedItems.delete(name);
+    function toggleSelection(type, id) {
+        if (selectedItems.has(id)) {
+            selectedItems.delete(id);
         } else {
-            selectedItems.add(name);
+            selectedItems.add(id);
         }
         analyzeItems(type);
     }
 
     // 3. Analyze Items (Multi)
     function analyzeItems(type) {
-        const names = Array.from(selectedItems);
+        const ids = Array.from(selectedItems);
         const resultPanel = document.getElementById('analysis-result-panel');
         
-        if (names.length === 0) {
+        if (ids.length === 0) {
             resultPanel.classList.add('hidden');
             return;
         }
 
+        // Find translated names for display
+        const displayNames = allItems[type + 's']
+            .filter(item => selectedItems.has(item.id))
+            .map(item => item.name);
+
         fetch(analyzeUrl, {
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrfToken},
-            body: JSON.stringify({item_type: type, item_names: names})
+            body: JSON.stringify({item_type: type, item_names: ids})
         })
         .then(res => res.json())
         .then(data => {
             resultPanel.classList.remove('hidden');
-            document.getElementById('analysis-item-name').textContent = names.join(', ');
+            document.getElementById('analysis-item-name').textContent = displayNames.join(', ');
             document.getElementById('analysis-total-count').textContent = data.total;
             
             // Occurrences

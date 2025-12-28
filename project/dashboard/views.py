@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.utils.translation import gettext_lazy as _
+
 
 from datetime import datetime, date, timedelta
 from dateutil import relativedelta
@@ -128,7 +130,6 @@ def calendar_view(request):
     
     ctx['prev_date'] = prev_date.strftime('%Y-%m-%d')
     ctx['next_date'] = next_date.strftime('%Y-%m-%d')
-    ctx['current_date_display'] = reference_date.strftime('%B %Y')
 
     return render(request, 'dashboard/calendar_view.html', ctx)
 
@@ -161,14 +162,14 @@ def partner_setup(request):
             if action == 'unlink':
                 result = unlink_partner(request.user)
                 if result:
-                    ctx['unlink_success'] = 'Successfully unlinked from partner.'
+                    ctx['unlink_success'] = _('Successfully unlinked from partner.')
                     ctx['linked_user'] = None
                     partner_profile.refresh_from_db()
                 else:
-                    ctx['unlink_error'] = 'Error unlinking from partner.'
+                    ctx['unlink_error'] = _('Error unlinking from partner.')
         
     except:
-        ctx['error'] = 'Partner profile not found'
+        ctx['error'] = _('Partner profile not found')
     
     return render(request, 'dashboard/partner/partner_setup.html', ctx)
 
@@ -180,7 +181,7 @@ def homepage_readonly(request):
         linked_user = partner_profile.linked_user
         
         if not linked_user:
-            ctx['error'] = 'No linked profile. Please link to a main user in partner setup.'
+            ctx['error'] = _('No linked profile. Please link to a main user in partner setup.')
             return render(request, 'dashboard/dashboard_readonly.html', ctx)
         
         ctx['next_prediction'] = fetch_closest_prediction(linked_user)
@@ -237,52 +238,52 @@ def settings(request):
             cycle_details_form = CycleDetailsForm(request.POST, mode='settings', user=request.user, instance=instance)
             if cycle_details_form.is_valid():
                 cycle_details_form.save()
-                messages.success(request, 'Cycle details updated successfully.')
+                messages.success(request, _('Cycle details updated successfully.'))
         
         elif action == 'update_user_info':
             user_form = UserUpdateForm(request.POST, instance=request.user)
             if user_form.is_valid():
                 user_form.save()
-                messages.success(request, 'Email updated successfully.')
+                messages.success(request, _('Email updated successfully.'))
             else:
-                 messages.error(request, 'Error updating email.')
+                 messages.error(request, _('Error updating email.'))
 
         elif action == 'update_profile_pic':
             profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.userprofile)
             if profile_form.is_valid():
                 profile_form.save()
-                messages.success(request, 'Profile picture updated successfully.')
+                messages.success(request, _('Profile picture updated successfully.'))
             else:
-                messages.error(request, 'Error updating profile picture.')
+                messages.error(request, _('Error updating profile picture.'))
 
         elif action == 'change_password':
             password_form = PasswordChangeForm(request.user, request.POST)
             if password_form.is_valid():
                 user = password_form.save()
                 update_session_auth_hash(request, user)  # Important!
-                messages.success(request, 'Your password was successfully updated!')
+                messages.success(request, _('Your password was successfully updated!'))
             else:
-                messages.error(request, 'Please correct the error below.')
+                messages.error(request, _('Please correct the error below.'))
         
         elif action == 'link_partner':
             partner_code = request.POST.get('partner_code', '').strip()
             if partner_code:
                 result = link_partner(request.user, partner_code)
                 if result:
-                    ctx['partner_link_success'] = f'Successfully linked to partner!'
+                    ctx['partner_link_success'] = _('Successfully linked to partner!')
                 else:
-                    ctx['partner_link_error'] = 'Invalid partner code or partner already linked to someone else.'
+                    ctx['partner_link_error'] = _('Invalid partner code or partner already linked to someone else.')
             else:
-                ctx['partner_link_error'] = 'Please enter a partner code.'
+                ctx['partner_link_error'] = _('Please enter a partner code.')
         
         elif action == 'unlink_partner':
             try:
                 partner_profiles = PartnerProfile.objects.filter(linked_user=request.user)
                 for profile in partner_profiles:
                     unlink_partner(profile.user)
-                ctx['partner_unlink_success'] = 'Successfully unlinked all partners.'
+                ctx['partner_unlink_success'] = _('Successfully unlinked all partners.')
             except Exception as e:
-                ctx['partner_unlink_error'] = f'Error unlinking partners: {str(e)}'
+                ctx['partner_unlink_error'] = _('Error unlinking partners: {error}').format(error=str(e))
         
         elif action == 'unlink_single_partner':
             try:
@@ -293,9 +294,9 @@ def settings(request):
                     partner_user = User.objects.get(id=partner_user_id)
                     result = unlink_partner(partner_user)
                     if result:
-                        ctx['partner_unlink_success'] = f'Successfully unlinked partner.'
+                        ctx['partner_unlink_success'] = _('Successfully unlinked partner.')
                     else:
-                        ctx['partner_unlink_error'] = 'Partner profile not found.'
+                        ctx['partner_unlink_error'] = _('Partner profile not found.')
             except Exception as e:
                 ctx['partner_unlink_error'] = f'Error unlinking partner: {str(e)}'
         
@@ -304,14 +305,14 @@ def settings(request):
             if premium_form.is_valid():
                 plan = premium_form.cleaned_data['subscription_plan']
                 activatePremiumSubscription(request.user, plan)
-                messages.success(request, f'Welcome to Premium! You now have access to the forum.')
+                messages.success(request, _('Welcome to Premium! You now have access to the forum.'))
                 return redirect('dashboard:settings_page')
             else:
-                messages.error(request, 'Error processing payment. Please check your card details.')
+                messages.error(request, _('Error processing payment. Please check your card details.'))
         
         elif action == 'cancel_premium':
             deactivatePremiumSubscription(request.user)
-            messages.info(request, 'Your premium subscription has been canceled.')
+            messages.info(request, _('Your premium subscription has been canceled.'))
             return redirect('dashboard:settings_page')
     
     # Initialize forms
@@ -563,20 +564,24 @@ def ajax_load_log(request):
     # return data only if exists. return empty form if it doesn't
     if log:
         il = IntercourseLog.objects.filter(log=log).first()
+        from django.utils.translation import gettext as _rt
 
         response_data.update({
             "note": log.note,
             "flow": log.flow,
+            "flow_display": _rt(log.get_flow_display()) if log.flow is not None else None,
             "weight": log.weight,
             "temperature": log.temperature,
-            "ovulation_test": log.ovulation_test,
+            "ovulation_test": _rt(log.get_ovulation_test_display()) if log.ovulation_test else None,
 
-            "symptoms": list(log.symptoms_field.values_list("name", flat=True)),
-            "moods": list(log.moods_field.values_list("name", flat=True)),
-            "medications": list(log.medications_field.values_list("name", flat=True)),
+            "symptoms": [s.id for s in log.symptoms_field.all()],
+            "moods": [m.id for m in log.moods_field.all()],
+            "medications": [m.id for m in log.medications_field.all()],
 
             "protected": il.protected if il else None,
+            "protected_display": _rt("Yes") if il and il.protected else (_rt("No") if il and il.protected is False else None),
             "orgasm": il.orgasm if il else None,
+            "orgasm_display": _rt("Yes") if il and il.orgasm else (_rt("No") if il and il.orgasm is False else None),
             "quantity": il.quantity if il else None,
         })
 
@@ -584,6 +589,7 @@ def ajax_load_log(request):
         response_data.update({
             "note": "",
             "flow": "",
+            "flow_display": "",
             "weight": "",
             "temperature": "",
             "ovulation_test": "",
@@ -593,7 +599,9 @@ def ajax_load_log(request):
             "medications": [],
 
             "protected": "",
+            "protected_display": "",
             "orgasm": "",
+            "orgasm_display": "",
             "quantity": "",
         })
 
@@ -672,16 +680,15 @@ def ajax_get_top_symptoms(request):
         .annotate(count=Count('id'))\
         .order_by('-count')[:5]
         
+    from django.utils.translation import gettext as _rt
     results = []
     
     for item in top_symptoms_qs:
         name = item['symptom__name']
         count = item['count']
         
-
-
         results.append({
-            'name': name,
+            'name': _rt(name),
             'count': count
         })
         
@@ -698,14 +705,16 @@ def ajax_get_available_items(request):
     # To keep it simple and discoverable, let's return all available types.
     # Or better: distinct existing logs to show what *can* be analyzed.
     
-    symptoms = Symptom.objects.all().values_list('name', flat=True)
-    moods = Mood.objects.all().values_list('name', flat=True)
-    medications = Medication.objects.all().values_list('name', flat=True)
+    from django.utils.translation import gettext as _rt
+    
+    symptoms = Symptom.objects.all()
+    moods = Mood.objects.all()
+    medications = Medication.objects.all()
 
     return JsonResponse({
-        'symptoms': list(symptoms),
-        'moods': list(moods),
-        'medications': list(medications)
+        'symptoms': [{'id': s.name, 'name': _rt(s.name)} for s in symptoms],
+        'moods': [{'id': m.name, 'name': _rt(m.name)} for m in moods],
+        'medications': [{'id': med.name, 'name': _rt(med.name)} for med in medications]
     })
 
 @user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])

@@ -1,22 +1,24 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 
 {% block extra_head %}
     <link rel="stylesheet" href={% static "dashboard/css/dashboard.css" %}>
     <link rel="stylesheet" href={% static "dashboard/css/timeline_bar.css" %}>
 {% endblock extra_head %}
-{% block title %}Dashboard{% endblock title %}
+{% block title %}{% trans "Dashboard" %}{% endblock title %}
 
 {% block content %}
     <div class="dashboard-content-wrapper">
         {% include "dashboard/dashboard_topbar.html" %}
 
         <div class="dashboard-data">
-            <section class="log-period-section"><a href="{% url "dashboard:add_period" %}">log period</a></section>
-            <section class="add-symptoms-section"><a href="{% url "dashboard:add_log" %}">add symptoms</a></section>
+            <div class="action-buttons-row">
+                <section class="log-period-section"><a href="{% url "dashboard:add_period" %}">{% trans "log period" %}</a></section>
+                <section class="add-symptoms-section"><a href="{% url "dashboard:add_log" %}">{% trans "add symptoms" %}</a></section>
+            </div>
             <section class="period-prediction">{% include "dashboard/next_prediction.html" %}</section>
             <section class="cycle-phases">{% include "dashboard/stats/timeline_bar.html" %}</section>
-            <section class="logs"><a href="{% url 'dashboard:logs_page' %}">logs</a></section>
+            <section class="logs"><a href="{% url 'dashboard:logs_page' %}">{% trans "logs" %}</a></section>
         </div>
 
         <div class="dashboard-action-bar">

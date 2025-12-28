@@ -1,0 +1,1974 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 16:13+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: project/cycle_core/models.py:17 project/cycle_core/models.py:18
+#, python-brace-format
+msgid "{count} DAYS"
+msgstr "{count} GIORNI"
+
+#: project/cycle_core/models.py:18
+#, python-brace-format
+msgid "{count} DAY"
+msgstr "{count} GIORNO"
+
+#: project/cycle_core/models.py:27
+msgid "Base menstruation date"
+msgstr "Data della mestruazione iniziale"
+
+#: project/cycle_core/models.py:33
+#: project/dashboard/templates/dashboard/logs/logs.html:13
+msgid "Average cycle duration"
+msgstr "Durata media del ciclo"
+
+#: project/cycle_core/models.py:41
+msgid "Average menstruation duration"
+msgstr "Durata media della mestruazione"
+
+#: project/cycle_core/templates/cycle_core/prediction_table.html:5
+msgid "Menstruation dates"
+msgstr "Mestruazione"
+
+#: project/cycle_core/templates/cycle_core/prediction_table.html:6
+msgid "Ovulation dates"
+msgstr "Fase di ovulazione"
+
+#: project/dashboard/templates/dashboard/add_log/add_log.html:12
+msgid "Add Entry"
+msgstr "Aggiungi voce"
+
+#: project/dashboard/templates/dashboard/add_log/add_log.html:23
+msgid "Please correct the following errors:"
+msgstr "Per favore correggi i seguenti errori:"
+
+#: project/dashboard/templates/dashboard/add_log/add_log.html:38
+msgid "General data"
+msgstr "Dati generali"
+
+#: project/dashboard/templates/dashboard/add_log/add_log.html:45
+#, python-format
+msgid "Reset %(label)s"
+msgstr "Resetta %(label)s"
+
+#: project/dashboard/templates/dashboard/add_log/add_log.html:60
+#: project/dashboard/templates/dashboard/calendar_view.html:78
+msgid "Intercourse"
+msgstr "Rapporti sessuali"
+
+#: project/dashboard/templates/dashboard/add_log/add_log.html:74
+#: project/dashboard/templates/dashboard/log_period/log_period.html:40
+#: project/dashboard/templates/dashboard/settings.html:27
+msgid "Save"
+msgstr "Salva"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:8
+msgid "Calendar"
+msgstr "calendario"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:23
+msgid "Prev"
+msgstr "Precedente"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:24
+msgid "Next"
+msgstr "Successivo"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:33
+msgid "Select a date"
+msgstr "Seleziona una data"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:39
+msgid "Period"
+msgstr "Mestruazione"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:42
+msgid "Ovulation"
+msgstr "Ovulazione"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:47
+msgid "Log Details"
+msgstr "Dettagli"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:50
+msgid "Notes"
+msgstr "Note"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:53
+#: project/log_core/models.py:63 project/log_core/translation_strings.py:27
+msgid "Flow"
+msgstr "Flusso"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:56
+#: project/log_core/models.py:64
+msgid "Weight"
+msgstr "Peso"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:59
+msgid "Temp"
+msgstr "Temperatura"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:63
+#: project/log_core/models.py:71
+msgid "Ovulation Test"
+msgstr "Test di ovulazione"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:69
+#: project/dashboard/templates/dashboard/stats/stats.html:96
+#: project/log_core/forms.py:10 project/log_core/models.py:17
+#: project/log_core/models.py:73
+msgid "Symptoms"
+msgstr "Sintomi"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:73
+#: project/dashboard/templates/dashboard/stats/stats.html:97
+#: project/log_core/forms.py:16 project/log_core/models.py:28
+#: project/log_core/models.py:74
+msgid "Moods"
+msgstr "Stati d'animo"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:79
+#: project/log_core/models.py:110
+msgid "Quantity"
+msgstr "Quantità"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:81
+#: project/dashboard/templates/dashboard/stats/stats.html:43
+#: project/log_core/models.py:108
+msgid "Protected"
+msgstr "Protetti"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:83
+#: project/log_core/models.py:109
+msgid "Orgasm"
+msgstr "Orgasmo"
+
+#: project/dashboard/templates/dashboard/calendar_view.html:89
+msgid "No log entry for this day."
+msgstr "Nessuna voce diario per questo giorno."
+
+#: project/dashboard/templates/dashboard/calendar_view.html:97
+msgid "Edit Log"
+msgstr "Modifica voce"
+
+#: project/dashboard/templates/dashboard/dashboard.html:8
+msgid "Dashboard"
+msgstr "Bacheca"
+
+#: project/dashboard/templates/dashboard/dashboard.html:15
+msgid "log period"
+msgstr "registra ciclo"
+
+#: project/dashboard/templates/dashboard/dashboard.html:16
+msgid "add symptoms"
+msgstr "aggiungi sintomi"
+
+#: project/dashboard/templates/dashboard/dashboard.html:19
+#: project/dashboard/templates/dashboard/dashboard_readonly.html:24
+msgid "logs"
+msgstr "diario"
+
+#: project/dashboard/templates/dashboard/dashboard_actionbar.html:8
+#: project/dashboard/templates/dashboard/dashboard_actionbar.html:10
+msgid "home"
+msgstr "home"
+
+#: project/dashboard/templates/dashboard/dashboard_actionbar.html:12
+msgid "calendar"
+msgstr "calendario"
+
+#: project/dashboard/templates/dashboard/dashboard_actionbar.html:13
+msgid "stats"
+msgstr "statistiche"
+
+#: project/dashboard/templates/dashboard/dashboard_actionbar.html:15
+msgid "forums"
+msgstr "forum"
+
+#: project/dashboard/templates/dashboard/dashboard_readonly.html:9
+msgid "Dashboard - Read Only"
+msgstr "Bacheca - Solo lettura"
+
+#: project/dashboard/templates/dashboard/dashboard_readonly.html:19
+msgid "Go to Partner Setup"
+msgstr "Vai a Configurazione Partner"
+
+#: project/dashboard/templates/dashboard/dashboard_topbar.html:7
+#: project/dashboard/templates/dashboard/dashboard_topbar.html:9
+msgid "settings"
+msgstr "impostazioni"
+
+#: project/dashboard/templates/dashboard/log_period/log_period.html:19
+msgid "Add Period"
+msgstr "Registra ciclo"
+
+#: project/dashboard/templates/dashboard/logs/cycle_display.html:7
+msgid "Prediction"
+msgstr "Previsione"
+
+#: project/dashboard/templates/dashboard/logs/cycle_display.html:9
+msgid "Confirmed"
+msgstr "Confermato"
+
+#: project/dashboard/templates/dashboard/logs/cycle_display.html:14
+#: project/dashboard/templates/dashboard/logs/cycle_window_list.html:3
+msgid "Menstruation:"
+msgstr "Mestruazioni:"
+
+#: project/dashboard/templates/dashboard/logs/cycle_display.html:24
+#: project/dashboard/templates/dashboard/logs/cycle_window_list.html:7
+msgid "Ovulation:"
+msgstr "Ovulazione:"
+
+#: project/dashboard/templates/dashboard/logs/cycle_window_list.html:3
+#: project/dashboard/templates/dashboard/logs/cycle_window_list.html:7
+msgid "to"
+msgstr "a"
+
+#: project/dashboard/templates/dashboard/logs/logs.html:6
+msgid "My cycles"
+msgstr "I miei cicli"
+
+#: project/dashboard/templates/dashboard/logs/logs.html:17
+msgid "Logged periods"
+msgstr "Mestruazioni registrate"
+
+#: project/dashboard/templates/dashboard/logs/logs.html:21
+msgid "Average period duration"
+msgstr "Durata media mestruazioni"
+
+#: project/dashboard/templates/dashboard/logs/logs.html:25
+msgid "Average ovulation window"
+msgstr "Finestra media di ovulazione"
+
+#: project/dashboard/templates/dashboard/logs/logs.html:27
+#, python-format
+msgid "Day %(avg_ovulation_start_day)s-%(avg_ovulation_end_day)s"
+msgstr "Giorno %(avg_ovulation_start_day)s-%(avg_ovulation_end_day)s"
+
+#: project/dashboard/templates/dashboard/logs/logs.html:35
+msgid "History"
+msgstr "Storico"
+
+#: project/dashboard/templates/dashboard/logs/logs.html:36
+msgid "Predictions"
+msgstr "Previsioni"
+
+#: project/dashboard/templates/dashboard/next_prediction.html:6
+msgid "Next menstruation"
+msgstr "Prossima menstruazione"
+
+#: project/dashboard/templates/dashboard/next_prediction.html:11
+msgid "Next ovulation"
+msgstr "Prossima ovulazione"
+
+#: project/dashboard/templates/dashboard/partner/partner_setup.html:4
+#: project/dashboard/templates/dashboard/partner/partner_setup.html:12
+msgid "Partner Setup"
+msgstr "Configurazione Partner"
+
+#: project/dashboard/templates/dashboard/partner/partner_setup.html:13
+#, python-format
+msgid "Welcome %(user|upper)s!"
+msgstr "Benvenuto %(user|upper)s!"
+
+#: project/dashboard/templates/dashboard/partner/partner_setup.html:21
+msgid "To get started, share the following code with your partner:"
+msgstr "Per iniziare, condividi il seguente codice con il tuo partner:"
+
+#: project/dashboard/templates/dashboard/partner/partner_setup.html:28
+msgid "Linked Main User"
+msgstr "Utente Principale Collegato"
+
+#: project/dashboard/templates/dashboard/partner/partner_setup.html:30
+msgid "Connected to:"
+msgstr "Collegato a:"
+
+#: project/dashboard/templates/dashboard/partner/partner_setup.html:34
+#: project/dashboard/templates/dashboard/settings.html:156
+msgid "Unlink"
+msgstr "Scollega"
+
+#: project/dashboard/templates/dashboard/partner/partner_setup.html:37
+msgid "No main user linked yet."
+msgstr "Nessun utente principale collegato."
+
+#: project/dashboard/templates/dashboard/settings.html:6
+msgid "Settings"
+msgstr "impostazioni"
+
+#: project/dashboard/templates/dashboard/settings.html:22
+msgid "Cycle Settings"
+msgstr "Impostazioni ciclo"
+
+#: project/dashboard/templates/dashboard/settings.html:32
+msgid "Premium Membership"
+msgstr "Abbonamento Premium"
+
+#: project/dashboard/templates/dashboard/settings.html:35
+msgid "Unlock exclusive access to our community forum and connect with experts!"
+msgstr "Ottieni l'accesso esclusivo al nostro forum della community e entra in contatto con gli esperti!"
+
+#: project/dashboard/templates/dashboard/settings.html:46
+msgid "Payment Details"
+msgstr "Dettagli pagamento"
+
+#: project/dashboard/templates/dashboard/settings.html:63
+msgid "Upgrade to Premium"
+msgstr "Passa a Premium"
+
+#: project/dashboard/templates/dashboard/settings.html:68
+msgid "PREMIUM"
+msgstr "PREMIUM"
+
+#: project/dashboard/templates/dashboard/settings.html:69
+#, python-format
+msgid "You have an active <strong>%(plan)s</strong> subscription."
+msgstr "Hai un abbonamento <strong>%(plan)s</strong> attivo."
+
+#: project/dashboard/templates/dashboard/settings.html:70
+msgid "Valid until:"
+msgstr "Valido fino al:"
+
+#: project/dashboard/templates/dashboard/settings.html:75
+msgid "Are you sure you want to cancel your premium subscription? You will lose access to the forum."
+msgstr "Sei sicuro di voler annullare il tuo abbonamento premium? Perderai l'accesso al forum."
+
+#: project/dashboard/templates/dashboard/settings.html:75
+msgid "Cancel Subscription"
+msgstr "Annulla abbonamento"
+
+#: project/dashboard/templates/dashboard/settings.html:82
+msgid "Profile Settings"
+msgstr "Impostazioni profilo"
+
+#: project/dashboard/templates/dashboard/settings.html:84
+msgid "Profile Picture"
+msgstr "Foto profilo"
+
+#: project/dashboard/templates/dashboard/settings.html:88
+msgid "No profile picture set."
+msgstr "Nessuna foto profilo impostata."
+
+#: project/dashboard/templates/dashboard/settings.html:94
+msgid "Update Picture"
+msgstr "Aggiorna foto"
+
+#: project/dashboard/templates/dashboard/settings.html:99
+msgid "Account Information"
+msgstr "Informazioni account"
+
+#: project/dashboard/templates/dashboard/settings.html:104
+msgid "Update Email"
+msgstr "Aggiorna email"
+
+#: project/dashboard/templates/dashboard/settings.html:109
+#: project/dashboard/templates/dashboard/settings.html:114
+msgid "Change Password"
+msgstr "Cambia password"
+
+#: project/dashboard/templates/dashboard/settings.html:120
+msgid "Partner Management"
+msgstr "Gestione partner"
+
+#: project/dashboard/templates/dashboard/settings.html:136
+msgid "Link a Partner"
+msgstr "Collega un partner"
+
+#: project/dashboard/templates/dashboard/settings.html:140
+msgid "Enter partner code"
+msgstr "Inserisci il codice partner"
+
+#: project/dashboard/templates/dashboard/settings.html:141
+msgid "Link Partner"
+msgstr "Collega partner"
+
+#: project/dashboard/templates/dashboard/settings.html:147
+msgid "Linked Partners"
+msgstr "Partner collegati"
+
+#: project/dashboard/templates/dashboard/settings.html:164
+msgid "Unlink All Partners"
+msgstr "Scollega tutti i partner"
+
+#: project/dashboard/templates/dashboard/setup.html:5
+#: project/guest_mode/templates/guest_mode/show_form.html:22
+msgid "Send"
+msgstr "Invia"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:13
+msgid "Statistics"
+msgstr "Statistiche"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:22
+msgid "No matches found"
+msgstr "Nessun risultato trovato"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:26
+#: project/dashboard/templates/dashboard/stats/stats.html:54
+msgid "Last 1 Month"
+msgstr "Ultimo mese"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:27
+#: project/dashboard/templates/dashboard/stats/stats.html:55
+msgid "Last 3 Months"
+msgstr "Ultimi 3 mesi"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:28
+#: project/dashboard/templates/dashboard/stats/stats.html:56
+msgid "Last 6 Months"
+msgstr "Ultimi 6 mesi"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:29
+#: project/dashboard/templates/dashboard/stats/stats.html:57
+msgid "Last Year"
+msgstr "Anno scorso"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:32
+msgid "Activity"
+msgstr "Rapporti sessuali"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:35
+msgid "Total Intercourse"
+msgstr "Totale rapporti"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:39
+msgid "Orgasm Rate"
+msgstr "Percentuale Orgasmi"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:47
+msgid "Unprotected"
+msgstr "Non protetti"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:60
+msgid "Frequency"
+msgstr "Frequenza"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:63
+msgid "Intercourse Frequency"
+msgstr "Frequenza rapporti"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:67
+msgid "Orgasm Frequency"
+msgstr "Frequenza orgasmi"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:74
+msgid "Common Symptoms"
+msgstr "Sintomi comuni"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:78
+msgid "No enough data yet."
+msgstr "Dati insufficienti."
+
+#: project/dashboard/templates/dashboard/stats/stats.html:82
+msgid "Search Logs"
+msgstr "Cerca nel diario"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:84
+msgid "Search notes..."
+msgstr "Cerca nelle note..."
+
+#: project/dashboard/templates/dashboard/stats/stats.html:85
+#: project/forum_core/templates/forum_core/forum_home.html:27
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:160
+msgid "Search"
+msgstr "Cerca"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:88
+msgid "Results"
+msgstr "Risultati"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:94
+msgid "Symptom & Mood Analysis"
+msgstr "Analisi di sintomi e stati d'animo"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:98
+#: project/log_core/forms.py:22 project/log_core/models.py:38
+#: project/log_core/models.py:75
+msgid "Medications"
+msgstr "Farmaci"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:107
+msgid "Total Occurrences:"
+msgstr "Occorrenze totali:"
+
+#: project/dashboard/templates/dashboard/stats/stats.html:110
+msgid "Occurrences"
+msgstr "Occorrenze"
+
+#: project/dashboard/templates/dashboard/stats/timeline_bar.html:6
+msgid "Current Cycle"
+msgstr "Ciclo attuale"
+
+#: project/dashboard/templates/dashboard/stats/timeline_bar.html:31
+#: project/dashboard/templates/dashboard/stats/timeline_bar.html:59
+msgid "Today"
+msgstr "Oggi"
+
+#: project/dashboard/templates/dashboard/stats/timeline_bar.html:40
+msgid "Probable ovulation day"
+msgstr "Giorno di ovulazione probabile"
+
+#: project/dashboard/templates/dashboard/stats/timeline_bar.html:50
+msgid "Menstruation"
+msgstr "Mestruazione"
+
+#: project/dashboard/templates/dashboard/stats/timeline_bar.html:54
+msgid "Ovulation Window"
+msgstr "Fase di ovulazione"
+
+#: project/dashboard/templates/dashboard/stats/timeline_bar.html:63
+msgid "Probable ovulation"
+msgstr "Giorno di ovulazione probabile"
+
+#: project/dashboard/templates/dashboard/stats/timeline_bar.html:70
+msgid "No cycle data available. Log your menstruation to see the timeline."
+msgstr "Nessun dato di ciclo disponibile. Registra le tue mestruazioni per vedere la timeline."
+
+#: project/dashboard/templates/dashboard/subpage_topbar.html:8
+#: project/dashboard/templates/dashboard/subpage_topbar.html:10
+msgid "go back"
+msgstr "torna indietro"
+
+#: project/dashboard/views.py:165
+msgid "Successfully unlinked from partner."
+msgstr "Scollegato con successo dal partner."
+
+#: project/dashboard/views.py:169
+msgid "Error unlinking from partner."
+msgstr "Errore nello scollegamento dal partner."
+
+#: project/dashboard/views.py:172
+msgid "Partner profile not found"
+msgstr "Profilo partner non trovato"
+
+#: project/dashboard/views.py:184
+msgid "No linked profile. Please link to a main user in partner setup."
+msgstr "Nessun profilo collegato. Collega a un utente principale nella configurazione del partner."
+
+#: project/dashboard/views.py:241
+msgid "Cycle details updated successfully."
+msgstr "Dettagli sul ciclo aggiornati correttamente."
+
+#: project/dashboard/views.py:247
+msgid "Email updated successfully."
+msgstr "Email aggiornata correttamente."
+
+#: project/dashboard/views.py:249
+msgid "Error updating email."
+msgstr "Si è verificato un errore nell'aggiornamento dell'email."
+
+#: project/dashboard/views.py:255
+msgid "Profile picture updated successfully."
+msgstr "Foto profilo aggiornata correttamente."
+
+#: project/dashboard/views.py:257
+msgid "Error updating profile picture."
+msgstr "Si è verificato un errore nell'aggiornamento della foto profilo."
+
+#: project/dashboard/views.py:264
+msgid "Your password was successfully updated!"
+msgstr "La tua password è stata aggiornata correttamente!"
+
+#: project/dashboard/views.py:266
+msgid "Please correct the error below."
+msgstr "Correggi l'errore seguito:"
+
+#: project/dashboard/views.py:273
+msgid "Successfully linked to partner!"
+msgstr "Collegato con successo al partner!"
+
+#: project/dashboard/views.py:275
+msgid "Invalid partner code or partner already linked to someone else."
+msgstr "Codice partner non valido o partner già collegato ad qualcun altro."
+
+#: project/dashboard/views.py:277
+msgid "Please enter a partner code."
+msgstr "Per favore inserisci un codice partner."
+
+#: project/dashboard/views.py:284
+msgid "Successfully unlinked all partners."
+msgstr "Tutti i partner sono stati scollegati con successo."
+
+#: project/dashboard/views.py:286
+#, python-brace-format
+msgid "Error unlinking partners: {error}"
+msgstr "Errore nello scollegamento dei partner: {error}"
+
+#: project/dashboard/views.py:297
+msgid "Successfully unlinked partner."
+msgstr "Partner scollegato con successo."
+
+#: project/dashboard/views.py:299
+msgid "Partner profile not found."
+msgstr "Profilo partner non trovato."
+
+#: project/dashboard/views.py:308
+msgid "Welcome to Premium! You now have access to the forum."
+msgstr "Benvenuto a Premium! Ora hai accesso al forum."
+
+#: project/dashboard/views.py:311
+msgid "Error processing payment. Please check your card details."
+msgstr "Errore durante l'elaborazione del pagamento. Controlla i dettagli della tua carta."
+
+#: project/dashboard/views.py:315
+msgid "Your premium subscription has been canceled."
+msgstr "Il tuo abbonamento premium è stato annullato."
+
+#: project/forum_core/models.py:45
+msgid "Spam"
+msgstr "Spam"
+
+#: project/forum_core/models.py:46
+msgid "Harassment"
+msgstr "Molestie"
+
+#: project/forum_core/models.py:47
+msgid "Inappropriate Content"
+msgstr "Contenuto inappropriato"
+
+#: project/forum_core/models.py:48
+msgid "Other"
+msgstr "Altro"
+
+#: project/forum_core/models.py:52
+msgid "Pending"
+msgstr "In attesa"
+
+#: project/forum_core/models.py:53
+msgid "Resolved"
+msgstr "Risolto"
+
+#: project/forum_core/models.py:54
+msgid "Dismissed"
+msgstr "Respinto"
+
+#: project/forum_core/templates/forum_core/create_thread.html:3
+msgid "Create New Thread"
+msgstr "Crea nuova discussione"
+
+#: project/forum_core/templates/forum_core/create_thread.html:7
+msgid "Create a New Thread"
+msgstr "Crea una nuova discussione"
+
+#: project/forum_core/templates/forum_core/create_thread.html:8
+msgid "Start a conversation with the community."
+msgstr "Inizia una conversazione con la community"
+
+#: project/forum_core/templates/forum_core/create_thread.html:15
+#: project/forum_core/templates/forum_core/edit_thread.html:14
+#: project/notifications/models.py:15
+msgid "Title"
+msgstr "Titolo"
+
+#: project/forum_core/templates/forum_core/create_thread.html:19
+#: project/forum_core/templates/forum_core/edit_thread.html:18
+msgid "Content"
+msgstr "Contenuto"
+
+#: project/forum_core/templates/forum_core/create_thread.html:23
+#: project/forum_core/templates/forum_core/forum_home.html:42
+msgid "Create Thread"
+msgstr "Crea discussione"
+
+#: project/forum_core/templates/forum_core/create_thread.html:25
+#: project/forum_core/templates/forum_core/delete_confirm.html:24
+#: project/forum_core/templates/forum_core/delete_confirm.html:30
+#: project/forum_core/templates/forum_core/edit_comment.html:22
+#: project/forum_core/templates/forum_core/edit_thread.html:26
+#: project/forum_core/templates/forum_core/report_comment.html:42
+#: project/forum_core/templates/forum_core/report_thread.html:43
+msgid "Cancel"
+msgstr "Annulla"
+
+#: project/forum_core/templates/forum_core/delete_confirm.html:3
+msgid "Confirm Delete"
+msgstr "Conferma eliminazione"
+
+#: project/forum_core/templates/forum_core/delete_confirm.html:7
+msgid "Confirm Deletion"
+msgstr "Conferma eliminazione"
+
+#: project/forum_core/templates/forum_core/delete_confirm.html:8
+#, python-format
+msgid "Are you sure you want to delete this %(type)s?"
+msgstr "Sei sicuro di voler eliminare questo %(type)s?"
+
+#: project/forum_core/templates/forum_core/delete_confirm.html:21
+msgid "Yes, Delete"
+msgstr "Sì, Elimina"
+
+#: project/forum_core/templates/forum_core/doctor_ranking.html:3
+msgid "Doctor Rankings"
+msgstr "Classifica dei medici"
+
+#: project/forum_core/templates/forum_core/doctor_ranking.html:9
+#: project/forum_core/templates/forum_core/forum_home.html:9
+#: project/forum_core/templates/forum_core/profile.html:9
+msgid "Back to Dashboard"
+msgstr "Torna alla Bacheca"
+
+#: project/forum_core/templates/forum_core/doctor_ranking.html:14
+#: project/forum_core/templates/forum_core/thread.html:7
+msgid "Back to Forums"
+msgstr "Torna ai forum"
+
+#: project/forum_core/templates/forum_core/doctor_ranking.html:15
+msgid "Medical Experts Ranking"
+msgstr "Classifica dei medici"
+
+#: project/forum_core/templates/forum_core/doctor_ranking.html:16
+msgid "Our top-rated verified medical professionals"
+msgstr "I nostri medici più votati e verificati"
+
+#: project/forum_core/templates/forum_core/doctor_ranking.html:29
+msgid "Verified Specialist"
+msgstr "Medico verificato"
+
+#: project/forum_core/templates/forum_core/doctor_ranking.html:36
+msgid "N/A"
+msgstr "N/D"
+
+#: project/forum_core/templates/forum_core/doctor_ranking.html:39
+msgid "Avg Rating"
+msgstr "Voto medio"
+
+#: project/forum_core/templates/forum_core/doctor_ranking.html:43
+msgid "Reviews"
+msgstr "Recensioni"
+
+#: project/forum_core/templates/forum_core/doctor_ranking.html:50
+msgid "No rated doctors yet. Be the first to provide feedback on a doctor's profile!"
+msgstr "Nessun medico è stato ancora votato. Sii il primo a fornire feedback su un profilo medico!"
+
+#: project/forum_core/templates/forum_core/edit_comment.html:3
+#: project/forum_core/templates/forum_core/edit_comment.html:7
+msgid "Edit Comment"
+msgstr "Modifica commento"
+
+#: project/forum_core/templates/forum_core/edit_comment.html:14
+msgid "Comment"
+msgstr "Commento"
+
+#: project/forum_core/templates/forum_core/edit_comment.html:18
+#: project/forum_core/templates/forum_core/edit_thread.html:22
+msgid "Save Changes"
+msgstr "Salva modifiche"
+
+#: project/forum_core/templates/forum_core/edit_thread.html:3
+#: project/forum_core/templates/forum_core/edit_thread.html:7
+msgid "Edit Thread"
+msgstr "Modifica discussione"
+
+#: project/forum_core/templates/forum_core/forum_home.html:3
+msgid "Florcycle Forums | Homepage"
+msgstr "Florcycle Forums | Homepage"
+
+#: project/forum_core/templates/forum_core/forum_home.html:14
+msgid "Community Forum"
+msgstr "Forum della community"
+
+#: project/forum_core/templates/forum_core/forum_home.html:15
+msgid "Connect, share, and learn from others."
+msgstr "Connettiti, condividi e impara dagli altri."
+
+#: project/forum_core/templates/forum_core/forum_home.html:24
+msgid "Search threads by title..."
+msgstr "Cerca discussioni in base al titolo..."
+
+#: project/forum_core/templates/forum_core/forum_home.html:36
+msgid "My Profile"
+msgstr "Il mio profilo"
+
+#: project/forum_core/templates/forum_core/forum_home.html:39
+msgid "Doctor Ranking"
+msgstr "Classifica dei medici"
+
+#: project/forum_core/templates/forum_core/forum_home.html:45
+msgid "All Threads"
+msgstr "Tutte le discussioni"
+
+#: project/forum_core/templates/forum_core/forum_home.html:51
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:4
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:8
+msgid "Moderator Dashboard"
+msgstr "Dashboard moderatore"
+
+#: project/forum_core/templates/forum_core/forum_home.html:58
+msgid "Last Updated Threads"
+msgstr "Discussioni aggiornate di recente"
+
+#: project/forum_core/templates/forum_core/forum_home.html:70
+msgid "SOLVED"
+msgstr "RISOLTO"
+
+#: project/forum_core/templates/forum_core/forum_home.html:75
+msgid "by"
+msgstr "di"
+
+#: project/forum_core/templates/forum_core/forum_home.html:83
+msgid "Updated:"
+msgstr "Aggiornato:"
+
+#: project/forum_core/templates/forum_core/forum_home.html:86
+#, python-format
+msgid "%(count)s participants"
+msgstr "partecipanti: %(count)s"
+
+#: project/forum_core/templates/forum_core/forum_home.html:92
+#, python-format
+msgid "%(count)s comments"
+msgstr "commenti: %(count)s"
+
+#: project/forum_core/templates/forum_core/forum_home.html:100
+msgid "No threads found. Be the first to start a conversation!"
+msgstr "Nessuna discussione trovata. Sii il primo a iniziare una conversazione!"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:14
+msgid "Total Reports"
+msgstr "Totale rapporti"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:18
+msgid "Banned Users"
+msgstr "Utenti banditi"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:27
+msgid "Reported Comments"
+msgstr "Commenti segnalati"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:42
+#, python-format
+msgid "Comment by %(username)s:"
+msgstr "Commento di %(username)s:"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:47
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:107
+msgid "Details:"
+msgstr "Dettagli"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:48
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:108
+msgid "No description provided."
+msgstr "Nessuna descrizione fornita."
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:54
+msgid "View Context"
+msgstr "Visualizza contesto"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:68
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:128
+msgid "Resolve"
+msgstr "Risolvi"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:76
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:136
+msgid "Dismiss"
+msgstr "Ignora"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:84
+msgid "No reported comments."
+msgstr "Nessun commento segnalato."
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:89
+msgid "Reported Threads"
+msgstr "Discussioni segnalate."
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:103
+msgid "Thread:"
+msgstr "Discussione:"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:104
+#, python-format
+msgid "by %(username)s"
+msgstr "di %(username)s"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:114
+msgid "View Thread"
+msgstr "Visualizza discussione"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:144
+msgid "No reported threads."
+msgstr "Nessuna discussione segnalata."
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:152
+msgid "User Management"
+msgstr "Gestione utenti"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:157
+msgid "Search users..."
+msgstr "Cerca utenti..."
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:167
+msgid "Username"
+msgstr "Nome utente"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:168
+msgid "Type"
+msgstr "Tipo"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:169
+msgid "Status"
+msgstr "Stato"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:170
+msgid "Action"
+msgstr "Azione"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:180
+msgid "Banned"
+msgstr "Bandito"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:182
+#: project/users/models.py:47
+msgid "Active"
+msgstr "Attivo"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:192
+msgid "Unban"
+msgstr "Rimuovi bandito"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:203
+msgid "Ban this user?"
+msgstr "Bandire questo utente?"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:205
+msgid "Ban"
+msgstr "Bandisci"
+
+#: project/forum_core/templates/forum_core/moderator_dashboard.html:213
+msgid "No users found."
+msgstr "Nessun utente trovato."
+
+#: project/forum_core/templates/forum_core/profile.html:20
+#, python-format
+msgid "Member since %(date)s"
+msgstr "Membro since %(date)s"
+
+#: project/forum_core/templates/forum_core/profile.html:27
+#: project/forum_core/templates/forum_core/thread.html:58
+msgid "Comments"
+msgstr "Commenti"
+
+#: project/forum_core/templates/forum_core/profile.html:31
+msgid "Threads"
+msgstr "Discussioni"
+
+#: project/forum_core/templates/forum_core/profile.html:39
+msgid "Rating"
+msgstr "Valutazione"
+
+#: project/forum_core/templates/forum_core/profile.html:47
+msgid "Recent Activity"
+msgstr "Attività recente"
+
+#: project/forum_core/templates/forum_core/profile.html:57
+msgid "No recent activity."
+msgstr "Nessuna attività recente."
+
+#: project/forum_core/templates/forum_core/profile.html:64
+msgid "Rate this Doctor"
+msgstr "Valuta questo medico"
+
+#: project/forum_core/templates/forum_core/profile.html:70
+msgid "Score"
+msgstr "Punteggio"
+
+#: project/forum_core/templates/forum_core/profile.html:76
+msgid "Feedback"
+msgstr "Feedback"
+
+#: project/forum_core/templates/forum_core/profile.html:82
+msgid "Submit Rating"
+msgstr "Invia valutazione"
+
+#: project/forum_core/templates/forum_core/profile.html:88
+msgid "Doctor Ratings"
+msgstr "Valutazioni medici"
+
+#: project/forum_core/templates/forum_core/profile.html:100
+msgid "No ratings yet."
+msgstr "Ancora nessuna valutazione."
+
+#: project/forum_core/templates/forum_core/report_comment.html:3
+#: project/forum_core/templates/forum_core/report_comment.html:10
+msgid "Report Comment"
+msgstr "Segnala commento"
+
+#: project/forum_core/templates/forum_core/report_comment.html:8
+#: project/forum_core/templates/forum_core/report_thread.html:9
+msgid "Back to Thread"
+msgstr "Torna alla discussione"
+
+#: project/forum_core/templates/forum_core/report_comment.html:14
+msgid "Reporting this comment:"
+msgstr "Segnalazione commento:"
+
+#: project/forum_core/templates/forum_core/report_comment.html:30
+msgid "Why are you reporting this?"
+msgstr "Perché segnali questo commento?"
+
+#: project/forum_core/templates/forum_core/report_comment.html:34
+#: project/forum_core/templates/forum_core/report_thread.html:35
+msgid "Additional details (optional)"
+msgstr "Dettagli aggiuntivi (opzionale)"
+
+#: project/forum_core/templates/forum_core/report_comment.html:38
+#: project/forum_core/templates/forum_core/report_thread.html:39
+msgid "Submit Report"
+msgstr "Invia segnalazione"
+
+#: project/forum_core/templates/forum_core/report_thread.html:4
+#: project/forum_core/templates/forum_core/report_thread.html:11
+#: project/forum_core/templates/forum_core/thread.html:47
+msgid "Report Thread"
+msgstr "Segnala discussione"
+
+#: project/forum_core/templates/forum_core/report_thread.html:15
+msgid "Reporting this thread:"
+msgstr "Segnalazione discussione:"
+
+#: project/forum_core/templates/forum_core/report_thread.html:31
+msgid "Why are you reporting this thread?"
+msgstr "Perché segnali questa discussione?"
+
+#: project/forum_core/templates/forum_core/thread.html:11
+msgid "Posted by"
+msgstr "Pubblicato da"
+
+#: project/forum_core/templates/forum_core/thread.html:26
+#: project/forum_core/templates/forum_core/thread.html:96
+msgid "Edit"
+msgstr "Modifica voce"
+
+#: project/forum_core/templates/forum_core/thread.html:38
+#: project/forum_core/templates/forum_core/thread.html:107
+msgid "Are you sure?"
+msgstr "Sei sicuro?"
+
+#: project/forum_core/templates/forum_core/thread.html:40
+#: project/forum_core/templates/forum_core/thread.html:109
+#: project/notifications/templates/notifications/notification_list.html:86
+msgid "Delete"
+msgstr "Elimina"
+
+#: project/forum_core/templates/forum_core/thread.html:76
+msgid "SOLUTION"
+msgstr "SOLUZIONE"
+
+#: project/forum_core/templates/forum_core/thread.html:86
+msgid "Mark as Solution"
+msgstr "Contrassegna come soluzione"
+
+#: project/forum_core/templates/forum_core/thread.html:118
+msgid "Report"
+msgstr "Segnala"
+
+#: project/forum_core/templates/forum_core/thread.html:126
+msgid "No comments yet. Be the first to reply!"
+msgstr "Nessun commento ancora. Sii il primo a rispondere!"
+
+#: project/forum_core/templates/forum_core/thread.html:134
+msgid "Add a Comment"
+msgstr "Aggiungi un commento"
+
+#: project/forum_core/templates/forum_core/thread.html:138
+msgid "Post Comment"
+msgstr "Pubblica commento"
+
+#: project/forum_core/templates/forum_core/thread.html:143
+msgid "✓ This thread has been solved. It is no longer accepting new comments or modifications."
+msgstr "✓ Questa discussione è stata risolta e non accetta più nuovi commenti o modifiche."
+
+#: project/forum_core/views.py:38
+msgid "This thread is solved and no longer accepting new comments."
+msgstr "Questa discussione è stata risolta e non accetta più nuovi commenti."
+
+#: project/forum_core/views.py:77
+msgid "Solved threads cannot be modified."
+msgstr "Le discussioni risolte non possono essere modificate."
+
+#: project/forum_core/views.py:109
+msgid "Comments on solved threads cannot be modified."
+msgstr "I commenti nell discussioni risolte non possono essere modificati."
+
+#: project/forum_core/views.py:130
+msgid "Comments on solved threads cannot be deleted."
+msgstr "I commenti nelle discussioni risolte non possono essere eliminati."
+
+#: project/forum_core/views.py:193
+msgid "Report submitted successfully. Thank you for keeping our community safe."
+msgstr "Segnalazione inviata con successo. Grazie per aver contribuito a mantenere sicura la nostra community."
+
+#: project/forum_core/views.py:208
+msgid "Thread reported successfully."
+msgstr "Discussione segnalata con successo."
+
+#: project/forum_core/views.py:240
+msgid "Report marked as resolved."
+msgstr "Segnalazione contrassegnata come risolta."
+
+#: project/forum_core/views.py:244
+msgid "Report dismissed."
+msgstr "Segnalazione respinta."
+
+#: project/forum_core/views.py:254
+msgid "Thread report resolved."
+msgstr "Sgenalazione sulla discussione risolta."
+
+#: project/forum_core/views.py:258
+msgid "Thread report dismissed."
+msgstr "Segnalazione sulla discussione respinta."
+
+#: project/forum_core/views.py:267
+#, python-brace-format
+msgid "User {username} has been banned."
+msgstr "L'utente {username} è stato bandito."
+
+#: project/forum_core/views.py:269
+msgid "You cannot ban another moderator."
+msgstr "Non puoi bandire un altro moderatore."
+
+#: project/forum_core/views.py:277
+#, python-brace-format
+msgid "User {username} has been unbanned."
+msgstr "L'utente {username} è stato perdonato."
+
+#: project/forum_core/views.py:301
+msgid "Thread marked as solved!"
+msgstr "Discussione contrassegnata come risolta!"
+
+#: project/forum_core/views.py:303
+msgid "You do not have permission to mark this thread as solved."
+msgstr "Non hai il permesso di contrassegnare questa discussione come risolta."
+
+#: project/log_core/models.py:12 project/log_core/models.py:23
+#: project/log_core/models.py:34
+msgid "Name"
+msgstr "Nome"
+
+#: project/log_core/models.py:13 project/log_core/models.py:24
+msgid "Category"
+msgstr "Categoria"
+
+#: project/log_core/models.py:16 project/log_core/models.py:89
+msgid "Symptom"
+msgstr "Sintomo"
+
+#: project/log_core/models.py:27 project/log_core/models.py:98
+msgid "Mood"
+msgstr "Stato d'animo"
+
+#: project/log_core/models.py:37 project/log_core/models.py:118
+msgid "Medication"
+msgstr "Farmaco"
+
+#: project/log_core/models.py:45
+msgid "Positive"
+msgstr "Positivo"
+
+#: project/log_core/models.py:45
+msgid "Negative"
+msgstr "Negativo"
+
+#: project/log_core/models.py:46 project/log_core/translation_strings.py:54
+msgid "Spotting"
+msgstr "Spotting"
+
+#: project/log_core/models.py:46
+msgid "Light"
+msgstr "Leggero"
+
+#: project/log_core/models.py:46
+msgid "Medium"
+msgstr "Medio"
+
+#: project/log_core/models.py:46
+msgid "Heavy"
+msgstr "Pesante"
+
+#: project/log_core/models.py:48 project/notifications/models.py:14
+msgid "User"
+msgstr "Utente"
+
+#: project/log_core/models.py:49
+msgid "Date"
+msgstr "Data"
+
+#: project/log_core/models.py:58
+msgid "Cycle Window"
+msgstr "Finestra del ciclo"
+
+#: project/log_core/models.py:62
+msgid "Note"
+msgstr "Nota"
+
+#: project/log_core/models.py:68
+msgid "Temperature"
+msgstr "Temperatura"
+
+#: project/log_core/models.py:81
+msgid "Daily Log"
+msgstr "Nota giornaliera"
+
+#: project/log_core/models.py:82
+msgid "Daily Logs"
+msgstr "Note giornaliere"
+
+#: project/log_core/models.py:88 project/log_core/models.py:97
+#: project/log_core/models.py:107 project/log_core/models.py:117
+msgid "Log"
+msgstr "Note"
+
+#: project/log_core/models.py:93
+msgid "Symptom Log"
+msgstr "Sintomo"
+
+#: project/log_core/models.py:94
+msgid "Symptom Logs"
+msgstr "Sintomi"
+
+#: project/log_core/models.py:102
+msgid "Mood Log"
+msgstr "Umore"
+
+#: project/log_core/models.py:103
+msgid "Mood Logs"
+msgstr "Umori"
+
+#: project/log_core/models.py:113
+msgid "Intercourse Log"
+msgstr "Rapporto"
+
+#: project/log_core/models.py:114
+msgid "Intercourse Logs"
+msgstr "Rapporti"
+
+#: project/log_core/models.py:122
+msgid "Medication Log"
+msgstr "Farmaco"
+
+#: project/log_core/models.py:123
+msgid "Medication Logs"
+msgstr "Farmaci"
+
+#: project/log_core/translation_strings.py:4
+msgid "Abdominal cramps"
+msgstr "Crampi addominali"
+
+#: project/log_core/translation_strings.py:5
+msgid "Acne"
+msgstr "Acne"
+
+#: project/log_core/translation_strings.py:6
+msgid "Anxiety"
+msgstr "Ansia"
+
+#: project/log_core/translation_strings.py:7
+msgid "Backaches"
+msgstr "Mal di schiena"
+
+#: project/log_core/translation_strings.py:8
+msgid "Bloating"
+msgstr "Gonfiore"
+
+#: project/log_core/translation_strings.py:9
+msgid "Body ache"
+msgstr "Dolore corporeo"
+
+#: project/log_core/translation_strings.py:10
+msgid "Cervical firmness"
+msgstr "Consistenza cervicale"
+
+#: project/log_core/translation_strings.py:11
+msgid "Cervical mucus"
+msgstr "Muco cervicale"
+
+#: project/log_core/translation_strings.py:12
+msgid "Cervical opening"
+msgstr "Apertura cervicale"
+
+#: project/log_core/translation_strings.py:13
+msgid "Chills"
+msgstr "Brividi"
+
+#: project/log_core/translation_strings.py:14
+msgid "Confusion"
+msgstr "Confusione"
+
+#: project/log_core/translation_strings.py:15
+msgid "Constipation"
+msgstr "Stitichezza"
+
+#: project/log_core/translation_strings.py:16
+msgid "Cottage-cheese"
+msgstr "Perdite a ricotta"
+
+#: project/log_core/translation_strings.py:17
+msgid "Cramps"
+msgstr "Crampi"
+
+#: project/log_core/translation_strings.py:18
+msgid "Craving"
+msgstr "Voglie"
+
+#: project/log_core/translation_strings.py:19
+msgid "Creamy"
+msgstr "Cremose"
+
+#: project/log_core/translation_strings.py:20
+msgid "Diarrhea"
+msgstr "Diarrea"
+
+#: project/log_core/translation_strings.py:21
+msgid "Dizziness"
+msgstr "Capogiri"
+
+#: project/log_core/translation_strings.py:22
+msgid "Dry"
+msgstr "Secco"
+
+#: project/log_core/translation_strings.py:23
+msgid "Egg-white"
+msgstr "Chiara d'uovo"
+
+#: project/log_core/translation_strings.py:24
+msgid "Fainting"
+msgstr "Svenimento"
+
+#: project/log_core/translation_strings.py:25
+msgid "Fatigue"
+msgstr "Stanchezza"
+
+#: project/log_core/translation_strings.py:26
+msgid "Fever"
+msgstr "Febbre"
+
+#: project/log_core/translation_strings.py:28
+msgid "Foul-smelling"
+msgstr "Cattivo odore"
+
+#: project/log_core/translation_strings.py:29
+msgid "Gas"
+msgstr "Gas"
+
+#: project/log_core/translation_strings.py:30
+msgid "Green"
+msgstr "Verdi"
+
+#: project/log_core/translation_strings.py:31
+msgid "Headache"
+msgstr "Mal di testa"
+
+#: project/log_core/translation_strings.py:32
+msgid "Hot flashees"
+msgstr "Vampate di calore"
+
+#: project/log_core/translation_strings.py:33
+msgid "Hunger"
+msgstr "Fame"
+
+#: project/log_core/translation_strings.py:34
+msgid "Illness"
+msgstr "Malattia"
+
+#: project/log_core/translation_strings.py:35
+msgid "Influenza"
+msgstr "Influenza"
+
+#: project/log_core/translation_strings.py:36
+msgid "Insomnia"
+msgstr "Insonnia"
+
+#: project/log_core/translation_strings.py:37
+msgid "Irritability"
+msgstr "Irritabilità"
+
+#: project/log_core/translation_strings.py:38
+msgid "Irritation"
+msgstr "Irritazione"
+
+#: project/log_core/translation_strings.py:39
+msgid "Itchiness"
+msgstr "Prurito"
+
+#: project/log_core/translation_strings.py:40
+msgid "Low back pain"
+msgstr "Dolore lombare"
+
+#: project/log_core/translation_strings.py:41
+msgid "Migraines"
+msgstr "Emicrania"
+
+#: project/log_core/translation_strings.py:42
+msgid "Moodiness"
+msgstr "Sbalzi d'umore"
+
+#: project/log_core/translation_strings.py:43
+msgid "Muscle pain"
+msgstr "Dolore muscolare"
+
+#: project/log_core/translation_strings.py:44
+msgid "Nausea"
+msgstr "Nausea"
+
+#: project/log_core/translation_strings.py:45
+msgid "Neck ache"
+msgstr "Dolore al collo"
+
+#: project/log_core/translation_strings.py:46
+msgid "Night sweats"
+msgstr "Sudorazione notturna"
+
+#: project/log_core/translation_strings.py:47
+msgid "Ovulation pain"
+msgstr "Dolore da ovulazione"
+
+#: project/log_core/translation_strings.py:48
+msgid "Pelvic pain"
+msgstr "Dolore pelvico"
+
+#: project/log_core/translation_strings.py:49
+msgid "Pms"
+msgstr "Sindome premestruale"
+
+#: project/log_core/translation_strings.py:50
+msgid "Rashes"
+msgstr "Eruzioni cutanee"
+
+#: project/log_core/translation_strings.py:51
+msgid "Sensitive breasts"
+msgstr "Seno sensibile"
+
+#: project/log_core/translation_strings.py:52
+msgid "Severe Pain"
+msgstr "Dolore forte"
+
+#: project/log_core/translation_strings.py:53
+msgid "Shoulder ache"
+msgstr "Dolore alle spalle"
+
+#: project/log_core/translation_strings.py:55
+msgid "Sticky"
+msgstr "Appiccicose"
+
+#: project/log_core/translation_strings.py:56
+msgid "Stress"
+msgstr "Stress"
+
+#: project/log_core/translation_strings.py:57
+msgid "Tender breasts"
+msgstr "Seno tenero"
+
+#: project/log_core/translation_strings.py:58
+msgid "Tension"
+msgstr "Tensione"
+
+#: project/log_core/translation_strings.py:59
+msgid "Unable to concentrate"
+msgstr "Incapacità di concentrazione"
+
+#: project/log_core/translation_strings.py:60
+msgid "Watery"
+msgstr "Acquose"
+
+#: project/log_core/translation_strings.py:61
+msgid "Weight gain"
+msgstr "Aumento di peso"
+
+#: project/log_core/translation_strings.py:62
+msgid "With blood"
+msgstr "Con tracce di sangue"
+
+#: project/log_core/translation_strings.py:65
+msgid "Angry"
+msgstr "Arrabbiato"
+
+#: project/log_core/translation_strings.py:66
+msgid "Anxious"
+msgstr "Ansioso"
+
+#: project/log_core/translation_strings.py:67
+msgid "Ashamed"
+msgstr "Vergognoso"
+
+#: project/log_core/translation_strings.py:68
+msgid "Assertive"
+msgstr "Determinato"
+
+#: project/log_core/translation_strings.py:69
+msgid "Bashful"
+msgstr "Timido"
+
+#: project/log_core/translation_strings.py:70
+msgid "Blue"
+msgstr "Triste"
+
+#: project/log_core/translation_strings.py:71
+msgid "Bored"
+msgstr "Noiato"
+
+#: project/log_core/translation_strings.py:72
+msgid "Confident"
+msgstr "Fiducioso"
+
+#: project/log_core/translation_strings.py:73
+msgid "Depresed"
+msgstr "Depresso"
+
+#: project/log_core/translation_strings.py:74
+msgid "Disappointed"
+msgstr "Deluso"
+
+#: project/log_core/translation_strings.py:75
+msgid "Distrustful"
+msgstr "Diffidente"
+
+#: project/log_core/translation_strings.py:76
+msgid "Embarassed"
+msgstr "Imbarazzato"
+
+#: project/log_core/translation_strings.py:77
+msgid "Emotional"
+msgstr "Emotivo"
+
+#: project/log_core/translation_strings.py:78
+msgid "Evil"
+msgstr "Cattivo"
+
+#: project/log_core/translation_strings.py:79
+msgid "Excited"
+msgstr "Eccitato"
+
+#: project/log_core/translation_strings.py:80
+msgid "Exhausted"
+msgstr "Esausto"
+
+#: project/log_core/translation_strings.py:81
+msgid "Fliratious"
+msgstr "Provocante"
+
+#: project/log_core/translation_strings.py:82
+msgid "Forgetful"
+msgstr "Dimentico"
+
+#: project/log_core/translation_strings.py:83
+msgid "Frisky"
+msgstr "Vivace"
+
+#: project/log_core/translation_strings.py:84
+msgid "Frustrated"
+msgstr "Frustrato"
+
+#: project/log_core/translation_strings.py:85
+msgid "Furious"
+msgstr "Furioso"
+
+#: project/log_core/translation_strings.py:86
+msgid "Good"
+msgstr "Bene"
+
+#: project/log_core/translation_strings.py:87
+msgid "Grumpy"
+msgstr "Scontroso"
+
+#: project/log_core/translation_strings.py:88
+msgid "Happy"
+msgstr "Felice"
+
+#: project/log_core/translation_strings.py:89
+msgid "Harsh"
+msgstr "Duro"
+
+#: project/log_core/translation_strings.py:90
+msgid "Hopeful"
+msgstr "Speranzoso"
+
+#: project/log_core/translation_strings.py:91
+msgid "Horny"
+msgstr "Attizzato"
+
+#: project/log_core/translation_strings.py:92
+msgid "Ill"
+msgstr "Malato"
+
+#: project/log_core/translation_strings.py:93
+msgid "Impatient"
+msgstr "Impaziente"
+
+#: project/log_core/translation_strings.py:94
+msgid "In love"
+msgstr "Innamorato"
+
+#: project/log_core/translation_strings.py:95
+msgid "Indifferent"
+msgstr "Indifferente"
+
+#: project/log_core/translation_strings.py:96
+msgid "Inspired"
+msgstr "Ispirato"
+
+#: project/log_core/translation_strings.py:97
+msgid "Jealous"
+msgstr "Geloso"
+
+#: project/log_core/translation_strings.py:98
+msgid "Lonely"
+msgstr "Solo"
+
+#: project/log_core/translation_strings.py:99
+msgid "Mischievous"
+msgstr "Malizioso"
+
+#: project/log_core/translation_strings.py:100
+msgid "Miserable"
+msgstr "Miserabile"
+
+#: project/log_core/translation_strings.py:101
+msgid "Neutral"
+msgstr "Neutrale"
+
+#: project/log_core/translation_strings.py:102
+msgid "Normal"
+msgstr "Normale"
+
+#: project/log_core/translation_strings.py:103
+msgid "Panicky"
+msgstr "Preso dal panico"
+
+#: project/log_core/translation_strings.py:104
+msgid "Peaceful"
+msgstr "Tranquillo"
+
+#: project/log_core/translation_strings.py:105
+msgid "Playful"
+msgstr "Giocoso"
+
+#: project/log_core/translation_strings.py:106
+msgid "Proud"
+msgstr "Orgoglioso"
+
+#: project/log_core/translation_strings.py:107
+msgid "Pure"
+msgstr "Puro"
+
+#: project/log_core/translation_strings.py:108
+msgid "Relaxed"
+msgstr "Rilassato"
+
+#: project/log_core/translation_strings.py:109
+msgid "Sad"
+msgstr "Triste"
+
+#: project/log_core/translation_strings.py:110
+msgid "Satisfied"
+msgstr "Soddisfatto"
+
+#: project/log_core/translation_strings.py:111
+msgid "Secretive"
+msgstr "Riservato"
+
+#: project/log_core/translation_strings.py:112
+msgid "Sexy"
+msgstr "Sexy"
+
+#: project/log_core/translation_strings.py:113
+msgid "Silly"
+msgstr "Sciocco"
+
+#: project/log_core/translation_strings.py:114
+msgid "Sleepy"
+msgstr "Assonnato"
+
+#: project/log_core/translation_strings.py:115
+msgid "Smug"
+msgstr "Compiaciuto"
+
+#: project/log_core/translation_strings.py:116
+msgid "Stressed"
+msgstr "Stressato"
+
+#: project/log_core/translation_strings.py:117
+msgid "Stunned"
+msgstr "Stordito"
+
+#: project/log_core/translation_strings.py:118
+msgid "Surprise"
+msgstr "Sorpreso"
+
+#: project/log_core/translation_strings.py:119
+msgid "Tense"
+msgstr "Teso"
+
+#: project/log_core/translation_strings.py:120
+msgid "Tormented"
+msgstr "Tormentato"
+
+#: project/log_core/translation_strings.py:121
+msgid "Unsafe"
+msgstr "Inscuro"
+
+#: project/log_core/translation_strings.py:122
+msgid "Weird"
+msgstr "Strano"
+
+#: project/log_core/translation_strings.py:123
+msgid "Worried"
+msgstr "Preoccupato"
+
+#: project/log_core/translation_strings.py:126
+msgid "Contraceptive pill"
+msgstr "Pillola anticoncezionale"
+
+#: project/log_core/translation_strings.py:127
+msgid "V-ring"
+msgstr "Anello vaginale"
+
+#: project/log_core/translation_strings.py:128
+msgid "Patch"
+msgstr "Cerotto"
+
+#: project/log_core/translation_strings.py:129
+msgid "Injection"
+msgstr "Iniezione"
+
+#: project/log_core/translation_strings.py:130
+msgid "IUD"
+msgstr "Spirale"
+
+#: project/log_core/translation_strings.py:131
+msgid "Implant"
+msgstr "Impianto sottocutaneo"
+
+#: project/log_core/translation_strings.py:134
+msgid "Yes"
+msgstr "Sì"
+
+#: project/log_core/translation_strings.py:135
+msgid "No"
+msgstr "No"
+
+#: project/notifications/models.py:9
+msgid "Medical Advice"
+msgstr "Consulenza medica"
+
+#: project/notifications/models.py:10 project/notifications/services.py:63
+#: project/notifications/services.py:70 project/notifications/services.py:95
+msgid "Cycle Reminder"
+msgstr "Promemoria ciclo"
+
+#: project/notifications/models.py:11
+msgid "Forum Interaction"
+msgstr "Interazione forum"
+
+#: project/notifications/models.py:16
+msgid "Message"
+msgstr "Messaggio"
+
+#: project/notifications/models.py:17
+msgid "Notification type"
+msgstr "Tipo di notifica"
+
+#: project/notifications/services.py:34
+msgid "URGENT: Medical Advice Needed"
+msgstr "URGENTE: Necessaria consulenza medica"
+
+#: project/notifications/services.py:35
+msgid "You have logged all critical symptoms together: Severe Pain, Fainting, Fever, and Heavy Bleeding. Please contact a medical professional immediately."
+msgstr "Hai registrato tutti i sintomi critici insieme: dolore forte, svenimento, febbre e sanguinamento abbondante. Contatta immediatamente un medico."
+
+#: project/notifications/services.py:71
+msgid "Your period is predicted to start tomorrow."
+msgstr "La mestruazione dovrebbe iniziare domani."
+
+#: project/notifications/services.py:88 project/notifications/services.py:96
+msgid "Your ovulation window is predicted to start tomorrow."
+msgstr "La finestra di ovulazione dovrebbe iniziare domani."
+
+#: project/notifications/services.py:111 project/notifications/services.py:118
+msgid "Ovulation Day Reminder"
+msgstr "Promemoria ovulazione"
+
+#: project/notifications/services.py:119
+msgid "Your most likely ovulation day is tomorrow."
+msgstr "Il giorno più probabile dell'ovulazione è domani."
+
+#: project/notifications/templates/notifications/notification_list.html:3
+msgid "Notifications"
+msgstr "Notifiche"
+
+#: project/notifications/templates/notifications/notification_list.html:13
+msgid "Back"
+msgstr "Torna indietro"
+
+#: project/notifications/templates/notifications/notification_list.html:16
+msgid "Your Notifications"
+msgstr "Le tue notifiche"
+
+#: project/notifications/templates/notifications/notification_list.html:30
+msgid "Mark all as read"
+msgstr "Contrassegna tutto come letto"
+
+#: project/notifications/templates/notifications/notification_list.html:49
+#, python-format
+msgid "%(time)s ago"
+msgstr "%(time)s fa"
+
+#: project/notifications/templates/notifications/notification_list.html:59
+msgid "Mark as read"
+msgstr "Contrassegna come letto"
+
+#: project/notifications/templates/notifications/notification_list.html:65
+msgid "View"
+msgstr "Visualizza"
+
+#: project/notifications/templates/notifications/notification_list.html:84
+msgid "Delete this notification?"
+msgstr "Eliminare questa notifica?"
+
+#: project/notifications/templates/notifications/notification_list.html:95
+msgid "No notifications yet."
+msgstr "Dati insufficienti."
+
+#: project/templates/navbar.html:5
+msgid "login"
+msgstr "login"
+
+#: project/templates/navbar.html:6
+msgid "register"
+msgstr "registrati"
+
+#: project/templates/navbar.html:18
+msgid "logout"
+msgstr "logout"
+
+#: project/templates/registration/banned.html:18
+msgid "ACCESS DENIED"
+msgstr "ACCESSO NEGATO"
+
+#: project/templates/registration/banned.html:21
+msgid "Your account has been <strong>permanently suspended</strong> for violating our community guidelines."
+msgstr "Il tuo account è stato <strong>sospeso permanentemente</strong> per violazione delle nostre linee guida."
+
+#: project/templates/registration/banned.html:33
+#: project/templates/registration/verification_pending.html:22
+msgid "Return to Login"
+msgstr "Torna alla pagina di accesso"
+
+#: project/templates/registration/login.html:5
+msgid "Log in"
+msgstr "Accedi"
+
+#: project/templates/registration/login.html:8
+msgid "Forgot your password?"
+msgstr "Password dimenticata?"
+
+#: project/templates/registration/login.html:9
+msgid "Register"
+msgstr "Registrati"
+
+#: project/templates/registration/signup.html:18
+msgid "Sign up"
+msgstr "Registrati"
+
+#: project/templates/registration/verification_pending.html:3
+msgid "Verification Pending"
+msgstr "Verifica dell'account in corso"
+
+#: project/templates/registration/verification_pending.html:8
+msgid "Account Verification Pending"
+msgstr "Verifica dell'account in corso"
+
+#: project/templates/registration/verification_pending.html:11
+msgid "Thank you for joining Florcycle's medical community. Your medical credentials are currently being reviewed by our administration team."
+msgstr "Grazie per esserti unito alla comunità medica di Florcycle. Le tue credenziali mediche sono attualmente in fase di revisione da parte del nostro team amministrativo."
+
+#: project/templates/registration/verification_pending.html:16
+msgid "This process typically takes 24-48 hours. You will receive an email once your account has been verified and you can access the forum."
+msgstr "Questo processo richiede in genere 24-48 ore. Riceverai un'email una volta verificato il tuo account e potrai accedere al forum."
+
+#: project/templates/registration/verification_pending.html:22
+msgid "Try Again"
+msgstr "Riprova"
+
+#: project/users/forms.py:41
+msgid "This license number is already registered."
+msgstr "Questo numero di licenza è già registrato."
+
+#: project/users/forms.py:73
+msgid "Card Number"
+msgstr "Numero carta"
+
+#: project/users/forms.py:74
+msgid "Expiry Date"
+msgstr "Data di scadenza"
+
+#: project/users/forms.py:75
+msgid "CVV"
+msgstr "CVV"
+
+#: project/users/models.py:13
+msgid "Standard"
+msgstr "Standard"
+
+#: project/users/models.py:14
+msgid "Moderator"
+msgstr "Moderatore"
+
+#: project/users/models.py:15
+msgid "Doctor"
+msgstr "Medico"
+
+#: project/users/models.py:16
+msgid "Partner"
+msgstr "Partner"
+
+#: project/users/models.py:17
+msgid "Premium"
+msgstr "Premium"
+
+#: project/users/models.py:41
+msgid "trial"
+msgstr "prova"
+
+#: project/users/models.py:42
+msgid "monthly"
+msgstr "mensile"
+
+#: project/users/models.py:43
+msgid "yearly"
+msgstr "annuale"
+
+#: project/users/models.py:48
+msgid "Expired"
+msgstr "Scaduto"
+
+#: project/users/models.py:49
+msgid "Canceled"
+msgstr "Annullato"
+
+#: project/users/models.py:63
+msgid "Subscription plan"
+msgstr "Piano di abbonamento"
+
+#: project/users/models.py:71
+msgid "Subscription status"
+msgstr "Stato abbonamento"
+
+#, python-format
+#~ msgid "%(username)s's Profile"
+#~ msgstr "Profilo di %(username)s"

@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block extra_head %}<link rel="stylesheet" href={% static "dashboard/css/settings.css" %}>{% endblock extra_head %}
-{% block title %}Settings{% endblock title %}
+{% block title %}{% trans "Settings" %}{% endblock title %}
 
 {% block content %}
     <div class="settings-content-wrapper">
@@ -18,20 +19,20 @@
 
         <div class="settings-sections">
             <div class="cycle-details">
-                <h3>Cycle Settings</h3>
+                <h3>{% trans "Cycle Settings" %}</h3>
                 <form method='post'>
                     {% csrf_token %}
                     <input type="hidden" name="cycle_details" value="1">
                     {{ cycle_details_form.as_p }}
-                    <button type="submit">Save</button>
+                    <button type="submit">{% trans "Save" %}</button>
                 </form>
             </div>
             
             <div class="premium-subscription">
-                <h3>Premium Membership</h3>
+                <h3>{% trans "Premium Membership" %}</h3>
                 {% if not user.userprofile.is_premium %}
                     <div class="premium-upgrade-card">
-                        <p>Unlock exclusive access to our community forum and connect with experts!</p>
+                        <p>{% trans "Unlock exclusive access to our community forum and connect with experts!" %}</p>
                         <form method='post' class="premium-form-container">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="upgrade_premium">
@@ -42,7 +43,7 @@
                             </div>
 
                             <div class="payment-details">
-                                <h4>Payment Details</h4>
+                                <h4>{% trans "Payment Details" %}</h4>
                                 <div class="form-group">
                                     {{ premium_form.card_number.label_tag }}
                                     {{ premium_form.card_number }}
@@ -59,64 +60,64 @@
                                 </div>
                             </div>
                             
-                            <button type="submit" class="btn-premium-upgrade">Upgrade to Premium</button>
+                            <button type="submit" class="btn-premium-upgrade">{% trans "Upgrade to Premium" %}</button>
                         </form>
                     </div>
                 {% else %}
                     <div class="premium-status">
-                        <div class="status-badge">PREMIUM</div>
-                        <p>You have an active <strong>{{ user.userprofile.get_subscription_plan_display }}</strong> subscription.</p>
-                        <p>Valid until: {{ user.userprofile.end_date }}</p>
+                        <div class="status-badge">{% trans "PREMIUM" %}</div>
+                        <p>{% blocktrans with plan=user.userprofile.get_subscription_plan_display %}You have an active <strong>{{ plan }}</strong> subscription.{% endblocktrans %}</p>
+                        <p>{% trans "Valid until:" %} {{ user.userprofile.end_date }}</p>
                         
                         <form method="post" class="cancel-premium-form">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="cancel_premium">
-                            <button type="submit" class="btn-cancel-subscription" onclick="return confirm('Are you sure you want to cancel your premium subscription? You will lose access to the forum.')">Cancel Subscription</button>
+                            <button type="submit" class="btn-cancel-subscription" onclick="return confirm('{% trans "Are you sure you want to cancel your premium subscription? You will lose access to the forum." %}')">{% trans "Cancel Subscription" %}</button>
                         </form>
                     </div>
                 {% endif %}
             </div>
 
             <div class="user-management">
-                <h3>Profile Settings</h3>
+                <h3>{% trans "Profile Settings" %}</h3>
                 <div class="profile-pic-section">
-                    <h4>Profile Picture</h4>
+                    <h4>{% trans "Profile Picture" %}</h4>
                     {% if user.userprofile.profile_picture %}
                         <img src="{{ user.userprofile.profile_picture.url }}" alt="Current profile picture" style="max-width: 150px; border-radius: 50%;">
                     {% else %}
-                        <p>No profile picture set.</p>
+                        <p>{% trans "No profile picture set." %}</p>
                     {% endif %}
                     <form method='post' enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="update_profile_pic">
                         {{ profile_form.as_p }}
-                        <button type="submit">Update Picture</button>
+                        <button type="submit">{% trans "Update Picture" %}</button>
                     </form>
                 </div>
 
                 <div class="email-section">
-                    <h4>Account Information</h4>
+                    <h4>{% trans "Account Information" %}</h4>
                     <form method='post'>
                         {% csrf_token %}
                         <input type="hidden" name="action" value="update_user_info">
                         {{ user_form.as_p }}
-                        <button type="submit">Update Email</button>
+                        <button type="submit">{% trans "Update Email" %}</button>
                     </form>
                 </div>
 
                 <div class="password-section">
-                    <h4>Change Password</h4>
+                    <h4>{% trans "Change Password" %}</h4>
                     <form method='post'>
                         {% csrf_token %}
                         <input type="hidden" name="action" value="change_password">
                         {{ password_form.as_p }}
-                        <button type="submit">Change Password</button>
+                        <button type="submit">{% trans "Change Password" %}</button>
                     </form>
                 </div>
             </div>
 
             <div class="partner-management">
-                <h3>Partner Management</h3>
+                <h3>{% trans "Partner Management" %}</h3>
                 
                 {% if partner_link_success %}
                     <p class="success-message">{{ partner_link_success }}</p>
@@ -132,18 +133,18 @@
                 {% endif %}
 
                 <div class="link-partner-form">
-                    <h4>Link a Partner</h4>
+                    <h4>{% trans "Link a Partner" %}</h4>
                     <form method='post'>
                         {% csrf_token %}
                         <input type="hidden" name="action" value="link_partner">
-                        <input type="text" name="partner_code" placeholder="Enter partner code" maxlength="10" required>
-                        <button type="submit">Link Partner</button>
+                        <input type="text" name="partner_code" placeholder="{% trans 'Enter partner code' %}" maxlength="10" required>
+                        <button type="submit">{% trans "Link Partner" %}</button>
                     </form>
                 </div>
 
                 {% if linked_partners %}
                     <div class="linked-partners-list">
-                        <h4>Linked Partners</h4>
+                        <h4>{% trans "Linked Partners" %}</h4>
                         <ul>
                         {% for partner in linked_partners %}
                             <li>
@@ -152,7 +153,7 @@
                                     {% csrf_token %}
                                     <input type="hidden" name="action" value="unlink_single_partner">
                                     <input type="hidden" name="partner_user_id" value="{{ partner.user.id }}">
-                                    <button type="submit" class="unlink-single-btn">Unlink</button>
+                                    <button type="submit" class="unlink-single-btn">{% trans "Unlink" %}</button>
                                 </form>
                             </li>
                         {% endfor %}
@@ -160,7 +161,7 @@
                         <form method='post'>
                             {% csrf_token %}
                             <input type="hidden" name="action" value="unlink_partner">
-                            <button type="submit">Unlink All Partners</button>
+                            <button type="submit">{% trans "Unlink All Partners" %}</button>
                         </form>
                     </div>
                 {% endif %}

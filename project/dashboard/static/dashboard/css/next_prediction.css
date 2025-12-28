@@ -6,6 +6,18 @@
 
 .prediction-item {
     flex: 1;
-    margin: 0 10px;
-    border: 1px solid black;
+    margin: 5px;
+}
+
+.prediction-item b {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 2px;
+}
+
+.prediction-item p {
+    margin: 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #666;
 }

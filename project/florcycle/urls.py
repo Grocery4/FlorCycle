@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('i18n/', include('django.conf.urls.i18n')),
     path('cycle-core/', include('cycle_core.urls')),
     path('guest-mode/', include('guest_mode.urls')),
     path('accounts/', include('users.urls')),

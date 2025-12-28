@@ -3,9 +3,8 @@
     justify-content: space-evenly;
     width: 100%;
     box-sizing: border-box;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid black;
+    padding: 5px;
+    margin: 0;
 }
 
 .action-bar > a {

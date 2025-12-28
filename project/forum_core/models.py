@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from users.models import DoctorProfile
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class Comment(models.Model):
@@ -41,16 +42,16 @@ class DoctorRating(models.Model):
 
 class CommentReport(models.Model):
     REPORT_REASON_CHOICES = [
-        ('SPAM', 'Spam'),
-        ('HARASSMENT', 'Harassment'),
-        ('INAPPROPRIATE', 'Inappropriate Content'),
-        ('OTHER', 'Other'),
+        ('SPAM', _('Spam')),
+        ('HARASSMENT', _('Harassment')),
+        ('INAPPROPRIATE', _('Inappropriate Content')),
+        ('OTHER', _('Other')),
     ]
 
     STATUS_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('RESOLVED', 'Resolved'),
-        ('DISMISSED', 'Dismissed'),
+        ('PENDING', _('Pending')),
+        ('RESOLVED', _('Resolved')),
+        ('DISMISSED', _('Dismissed')),
     ]
 
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='reports')

@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from .models import Notification
 
 def create_notification(user, title, message, notification_type, link=None):
@@ -30,8 +31,8 @@ def check_dangerous_symptoms(user, symptom_names, flow_level=None):
     if has_all_symptoms and has_heavy_bleeding:
         create_notification(
             user=user,
-            title="URGENT: Medical Advice Needed",
-            message="You have logged all critical symptoms together: Severe Pain, Fainting, Fever, and Heavy Bleeding. Please contact a medical professional immediately.",
+            title=_("URGENT: Medical Advice Needed"),
+            message=_("You have logged all critical symptoms together: Severe Pain, Fainting, Fever, and Heavy Bleeding. Please contact a medical professional immediately."),
             notification_type='MEDICAL'
         )
         return True
@@ -59,15 +60,15 @@ def check_upcoming_predictions(user):
         existing_notification = Notification.objects.filter(
             user=user,
             notification_type='CYCLE',
-            message__contains='period is predicted to start tomorrow',
+            title=_("Cycle Reminder"),
             created_at__date=date.today()
         ).exists()
         
         if not existing_notification:
             create_notification(
                 user=user,
-                title="Cycle Reminder",
-                message="Your period is predicted to start tomorrow.",
+                title=_("Cycle Reminder"),
+                message=_("Your period is predicted to start tomorrow."),
                 notification_type='CYCLE',
                 link='/dashboard/calendar'
             )
@@ -84,15 +85,15 @@ def check_upcoming_predictions(user):
         existing_notification = Notification.objects.filter(
             user=user,
             notification_type='CYCLE',
-            message__contains='ovulation window is predicted to start tomorrow',
+            message=_("Your ovulation window is predicted to start tomorrow."),
             created_at__date=date.today()
         ).exists()
         
         if not existing_notification:
             create_notification(
                 user=user,
-                title="Cycle Reminder",
-                message="Your ovulation window is predicted to start tomorrow.",
+                title=_("Cycle Reminder"),
+                message=_("Your ovulation window is predicted to start tomorrow."),
                 notification_type='CYCLE',
                 link='/dashboard/calendar'
             )
@@ -107,15 +108,15 @@ def check_upcoming_predictions(user):
             existing_notification = Notification.objects.filter(
                 user=user,
                 notification_type='CYCLE',
-                message__contains='most likely ovulation day is tomorrow',
+                title=_("Ovulation Day Reminder"),
                 created_at__date=date.today()
             ).exists()
             
             if not existing_notification:
                 create_notification(
                     user=user,
-                    title="Ovulation Day Reminder",
-                    message="Your most likely ovulation day is tomorrow.",
+                    title=_("Ovulation Day Reminder"),
+                    message=_("Your most likely ovulation day is tomorrow."),
                     notification_type='CYCLE',
                     link='/dashboard/calendar'
                 )

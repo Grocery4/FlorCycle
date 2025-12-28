@@ -4,16 +4,17 @@ from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 
+from django.utils.translation import gettext_lazy as _
 from .services import doctorCvUploadPath, activatePremiumSubscription, userProfilePicturePath, generate_partner_code
 
 #TODO - implement pfps, cycledata into standarduser,
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = [
-        ('STANDARD', 'Standard'),
-        ('MODERATOR', 'Moderator'),
-        ('DOCTOR', 'Doctor'),
-        ('PARTNER', 'Partner'),
-        ('PREMIUM', 'Premium'),
+        ('STANDARD', _('Standard')),
+        ('MODERATOR', _('Moderator')),
+        ('DOCTOR', _('Doctor')),
+        ('PARTNER', _('Partner')),
+        ('PREMIUM', _('Premium')),
     ]
     
     first_name = None
@@ -37,15 +38,15 @@ class UserProfile(models.Model):
     
     #Premium fields
     PLAN_CHOICES = [
-        ('TRIAL', 'trial'),
-        ('MONTHLY', 'monthly'),
-        ('YEARLY', 'yearly')
+        ('TRIAL', _('trial')),
+        ('MONTHLY', _('monthly')),
+        ('YEARLY', _('yearly'))
     ]
 
     STATUS_CHOICES = [
-        ('ACTIVE', 'Active'),
-        ('EXPIRED', 'Expired'),
-        ('CANCELED', 'Canceled')
+        ('ACTIVE', _('Active')),
+        ('EXPIRED', _('Expired')),
+        ('CANCELED', _('Canceled'))
     ]
 
     payment_info = models.JSONField(
@@ -58,7 +59,8 @@ class UserProfile(models.Model):
         choices=PLAN_CHOICES,
         blank=True,
         null=True,
-        default=None
+        default=None,
+        verbose_name=_("Subscription plan")
     )
     subscription_status = models.CharField(
         max_length=20,
@@ -66,6 +68,7 @@ class UserProfile(models.Model):
         blank=True,
         null=True,
         default=None,
+        verbose_name=_("Subscription status")
     )
     start_date = models.DateField(
         blank=True, 
