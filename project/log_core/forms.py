@@ -27,7 +27,7 @@ class DailyLogForm(forms.ModelForm):
         fields = ['date', 'note', 'flow', 'weight', 'temperature', 'ovulation_test',
                   'symptoms', 'moods', 'medications']
         widgets = {
-            'date' : forms.DateInput(attrs={"type": "date"})
+            'date' : forms.DateInput(attrs={"type": "date"}, format='%Y-%m-%d')
         }
 
     def __init__(self, *args, **kwargs):

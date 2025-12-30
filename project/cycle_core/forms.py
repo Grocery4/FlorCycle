@@ -6,7 +6,7 @@ class CycleDetailsForm(forms.ModelForm):
         model = CycleDetails
         fields = ['base_menstruation_date', 'avg_cycle_duration', 'avg_menstruation_duration']
         widgets = {
-            "base_menstruation_date": forms.DateInput(attrs={"type": "date"})
+            "base_menstruation_date": forms.DateInput(attrs={"type": "date"}, format='%Y-%m-%d')
         }
     def __init__(self, *args, user=None, mode="setup", **kwargs):
         super().__init__(*args, **kwargs)
