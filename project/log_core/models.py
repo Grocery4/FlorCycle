@@ -84,6 +84,23 @@ class DailyLog(models.Model):
     def __str__(self):
         return f"{self.user} - {self.date}"
 
+    def is_empty(self):
+        # Check basic fields
+        if self.note or self.flow is not None or self.weight or self.temperature or self.ovulation_test:
+            return False
+        
+        # Check many-to-many fields
+        if self.symptoms_field.exists() or self.moods_field.exists() or self.medications_field.exists():
+            return False
+            
+        # Check related IntercourseLog
+        il = getattr(self, 'intercourse', None)
+        if il:
+            if il.protected is not None or il.orgasm is not None or il.quantity is not None:
+                return False
+                
+        return True
+
 class SymptomLog(models.Model):
     log = models.ForeignKey(DailyLog, on_delete=models.CASCADE, related_name='symptoms', verbose_name=_("Log"))
     symptom = models.ForeignKey(Symptom, on_delete=models.CASCADE, verbose_name=_("Symptom"))

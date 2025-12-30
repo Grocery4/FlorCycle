@@ -482,9 +482,19 @@ def add_log(request):
                 setattr(intercourse_log, field, value)
             intercourse_log.save()
             
+            # Delete log if empty
+            is_deleted = False
+            if daily_log.is_empty():
+                daily_log.delete()
+                is_deleted = True
+            
             next_url = request.GET.get('next')
             if next_url:
                 return redirect(next_url)
+
+            if is_deleted:
+                # If deleted, redirect to the same page but empty
+                return redirect(f"{request.path}?date={daily_log.date.strftime('%Y-%m-%d')}")
 
             ctx['dl_form'] = DailyLogForm(instance=daily_log)
             ctx['il_form'] = IntercourseLogForm(instance=intercourse_log)
