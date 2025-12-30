@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext_lazy as _
@@ -792,3 +792,209 @@ def ajax_search_logs(request):
         })
 
     return JsonResponse({'results': results})
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+def backup_data(request):
+    user = request.user
+    data = {
+        'cycle_details': {},
+        'cycle_stats': {},
+        'cycle_windows': [],
+        'daily_logs': []
+    }
+
+    # CycleDetails
+    cd = getattr(user, 'cycledetails', None)
+    if cd:
+        data['cycle_details'] = {
+            'base_menstruation_date': cd.base_menstruation_date.strftime('%Y-%m-%d'),
+            'avg_cycle_duration': cd.avg_cycle_duration,
+            'avg_menstruation_duration': cd.avg_menstruation_duration
+        }
+
+    # CycleStats
+    cs = getattr(user, 'cyclestats', None)
+    if cs:
+        data['cycle_stats'] = {
+            'avg_cycle_duration': cs.avg_cycle_duration,
+            'avg_menstruation_duration': cs.avg_menstruation_duration,
+            'avg_ovulation_start_day': cs.avg_ovulation_start_day,
+            'avg_ovulation_end_day': cs.avg_ovulation_end_day,
+            'log_count': cs.log_count
+        }
+
+    # CycleWindows
+    for cw in CycleWindow.objects.filter(user=user):
+        data['cycle_windows'].append({
+            'menstruation_start': cw.menstruation_start.strftime('%Y-%m-%d'),
+            'menstruation_end': cw.menstruation_end.strftime('%Y-%m-%d') if cw.menstruation_end else None,
+            'min_ovulation_window': cw.min_ovulation_window.strftime('%Y-%m-%d'),
+            'max_ovulation_window': cw.max_ovulation_window.strftime('%Y-%m-%d'),
+            'is_prediction': cw.is_prediction
+        })
+
+    # DailyLogs
+    for log in DailyLog.objects.filter(user=user):
+        log_data = {
+            'date': log.date.strftime('%Y-%m-%d'),
+            'note': log.note,
+            'flow': log.flow,
+            'weight': log.weight,
+            'temperature': log.temperature,
+            'ovulation_test': log.ovulation_test,
+            'symptoms': [s.name for s in log.symptoms_field.all()],
+            'moods': [m.name for m in log.moods_field.all()],
+            'medications': [med.name for med in log.medications_field.all()],
+        }
+        
+        il = getattr(log, 'intercourse', None)
+        if il:
+            log_data['intercourse'] = {
+                'protected': il.protected,
+                'orgasm': il.orgasm,
+                'quantity': il.quantity
+            }
+        
+        data['daily_logs'].append(log_data)
+
+    response_content = json.dumps(data, indent=4)
+    response = HttpResponse(response_content, content_type='application/json')
+    filename = f"florcycle_backup_{user.username}_{date.today()}.json"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+@require_POST
+def restore_data(request):
+    from django.db import transaction
+    from log_core.models import Symptom, Mood, Medication
+    
+    backup_file = request.FILES.get('backup_file')
+    if not backup_file:
+        messages.error(request, _("No backup file provided."))
+        return redirect('dashboard:settings_page')
+
+    try:
+        data = json.load(backup_file)
+    except json.JSONDecodeError:
+        messages.error(request, _("Invalid JSON file."))
+        return redirect('dashboard:settings_page')
+
+    try:
+        with transaction.atomic():
+            user = request.user
+            
+            # Delete existing data to prevent duplicates/conflicts (Cascade will handle logs-intercourse relationship)
+            CycleWindow.objects.filter(user=user).delete()
+            DailyLog.objects.filter(user=user).delete()
+
+            # Restore CycleDetails
+            if data.get('cycle_details'):
+                cd_data = data['cycle_details']
+                CycleDetails.objects.update_or_create(
+                    user=user,
+                    defaults={
+                        'base_menstruation_date': datetime.strptime(cd_data['base_menstruation_date'], '%Y-%m-%d').date(),
+                        'avg_cycle_duration': cd_data['avg_cycle_duration'],
+                        'avg_menstruation_duration': cd_data['avg_menstruation_duration']
+                    }
+                )
+
+            # Restore CycleStats
+            if data.get('cycle_stats'):
+                cs_data = data['cycle_stats']
+                CycleStats.objects.update_or_create(
+                    user=user,
+                    defaults={
+                        'avg_cycle_duration': cs_data['avg_cycle_duration'],
+                        'avg_menstruation_duration': cs_data['avg_menstruation_duration'],
+                        'avg_ovulation_start_day': cs_data['avg_ovulation_start_day'],
+                        'avg_ovulation_end_day': cs_data['avg_ovulation_end_day'],
+                        'log_count': cs_data['log_count']
+                    }
+                )
+
+            # Restore CycleWindows
+            for cw_data in data.get('cycle_windows', []):
+                CycleWindow.objects.create(
+                    user=user,
+                    menstruation_start=datetime.strptime(cw_data['menstruation_start'], '%Y-%m-%d').date(),
+                    menstruation_end=datetime.strptime(cw_data['menstruation_end'], '%Y-%m-%d').date() if cw_data['menstruation_end'] else None,
+                    min_ovulation_window=datetime.strptime(cw_data['min_ovulation_window'], '%Y-%m-%d').date(),
+                    max_ovulation_window=datetime.strptime(cw_data['max_ovulation_window'], '%Y-%m-%d').date(),
+                    is_prediction=cw_data['is_prediction']
+                )
+
+            # Restore DailyLogs
+            for log_data in data.get('daily_logs', []):
+                daily_log = DailyLog.objects.create(
+                    user=user,
+                    date=datetime.strptime(log_data['date'], '%Y-%m-%d').date(),
+                    note=log_data.get('note'),
+                    flow=log_data.get('flow'),
+                    weight=log_data.get('weight'),
+                    temperature=log_data.get('temperature'),
+                    ovulation_test=log_data.get('ovulation_test')
+                )
+
+                # Restore Symptoms
+                for name in log_data.get('symptoms', []):
+                    symptom = Symptom.objects.filter(name=name).first()
+                    if symptom:
+                        daily_log.symptoms_field.add(symptom)
+
+                # Restore Moods
+                for name in log_data.get('moods', []):
+                    mood = Mood.objects.filter(name=name).first()
+                    if mood:
+                        daily_log.moods_field.add(mood)
+
+                # Restore Medications
+                for name in log_data.get('medications', []):
+                    med = Medication.objects.filter(name=name).first()
+                    if med:
+                        daily_log.medications_field.add(med)
+
+                # Restore IntercourseLog
+                il_data = log_data.get('intercourse')
+                if il_data:
+                    IntercourseLog.objects.create(
+                        log=daily_log,
+                        protected=il_data.get('protected'),
+                        orgasm=il_data.get('orgasm'),
+                        quantity=il_data.get('quantity')
+                    )
+
+        messages.success(request, _("Data restored successfully."))
+    except Exception as e:
+        messages.error(request, _("Restore failed: {error}").format(error=str(e)))
+
+    return redirect('dashboard:settings_page')
+
+@user_type_required(['STANDARD', 'PREMIUM'])
+@configured_required
+@require_POST
+def reset_data(request):
+    from django.db import transaction
+    user = request.user
+    
+    try:
+        with transaction.atomic():
+            # Delete all cycle-related data
+            CycleWindow.objects.filter(user=user).delete()
+            DailyLog.objects.filter(user=user).delete()
+            CycleDetails.objects.filter(user=user).delete()
+            CycleStats.objects.filter(user=user).delete()
+            
+            # Reset configuration status
+            profile = user.userprofile
+            profile.is_configured = False
+            profile.save()
+            
+        messages.success(request, _("All data has been reset. You can now start over."))
+        return redirect('dashboard:setup_page')
+    except Exception as e:
+        messages.error(request, _("Reset failed: {error}").format(error=str(e)))
+        return redirect('dashboard:settings_page')

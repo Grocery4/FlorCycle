@@ -166,6 +166,38 @@
                     </div>
                 {% endif %}
             </div>
+
+            <div class="data-management">
+                <h3>{% trans "Backup & Restore" %}</h3>
+                <div class="backup-section">
+                    <h4>{% trans "Backup Data" %}</h4>
+                    <p>{% trans "Download your cycle data, logs, and settings as a JSON file." %}</p>
+                    <a href="{% url 'dashboard:backup_data' %}" class="btn-backup">{% trans "Download Backup" %}</a>
+                </div>
+
+                <div class="restore-section">
+                    <h4>{% trans "Restore Data" %}</h4>
+                    <div class="warning-notice">
+                        <strong>{% trans "WARNING:" %}</strong> {% trans "Restoring data will OVERWRITE your current logs and settings. This action cannot be undone." %}
+                    </div>
+                    <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:restore_data' %}">
+                        {% csrf_token %}
+                        <input type="file" name="backup_file" accept=".json" required>
+                        <button type="submit" class="btn-restore" onclick="return confirm('{% trans "Are you sure you want to restore data? This will replace your current entries." %}')">{% trans "Upload & Restore" %}</button>
+                    </form>
+                </div>
+
+                <div class="reset-section">
+                    <h4>{% trans "Reset All Data" %}</h4>
+                    <div class="warning-notice extreme">
+                        <strong>{% trans "DANGER:" %}</strong> {% trans "This will PERMANENTLY DELETE all your logs, settings, and stats. You will be redirected to the setup page." %}
+                    </div>
+                    <form method="post" action="{% url 'dashboard:reset_data' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-reset" onclick="return confirm('{% trans "FINAL WARNING: Are you sure you want to PERMANENTLY DELETE everything? This cannot be undone." %}')">{% trans "Reset All (Start Fresh)" %}</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
