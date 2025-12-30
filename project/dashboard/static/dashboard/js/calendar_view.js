@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const logSymptoms = document.getElementById("log-symptoms");
   const logMoods = document.getElementById("log-moods");
+  const logMedications = document.getElementById("log-medications");
 
   // Intercourse fields
   const logQuantity = document.getElementById("log-quantity");
@@ -94,8 +95,9 @@ document.addEventListener("DOMContentLoaded", function () {
               }
             };
 
-            populateList(logSymptoms, data.symptoms);
-            populateList(logMoods, data.moods);
+            populateList(logSymptoms, data.symptoms_display);
+            populateList(logMoods, data.moods_display);
+            populateList(logMedications, data.medications_display);
 
             // Intercourse
             logQuantity.textContent =

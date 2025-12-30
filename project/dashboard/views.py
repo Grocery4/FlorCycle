@@ -575,8 +575,11 @@ def ajax_load_log(request):
             "ovulation_test": log.ovulation_test,
 
             "symptoms": [s.id for s in log.symptoms_field.all()],
+            "symptoms_display": [str(s) for s in log.symptoms_field.all()],
             "moods": [m.id for m in log.moods_field.all()],
+            "moods_display": [str(m) for m in log.moods_field.all()],
             "medications": [m.id for m in log.medications_field.all()],
+            "medications_display": [str(med) for med in log.medications_field.all()],
 
             "protected": il.protected if il else None,
             "protected_display": _rt("Yes") if il and il.protected else (_rt("No") if il and il.protected is False else None),
@@ -595,8 +598,11 @@ def ajax_load_log(request):
             "ovulation_test": "",
 
             "symptoms": [],
+            "symptoms_display": [],
             "moods": [],
+            "moods_display": [],
             "medications": [],
+            "medications_display": [],
 
             "protected": "",
             "protected_display": "",
