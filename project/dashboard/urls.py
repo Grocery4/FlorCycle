@@ -24,4 +24,7 @@ urlpatterns = [
     path('ajax/get-available-items/', views.ajax_get_available_items, name='ajax_get_available_items'),
     path('ajax/analyze-item/', views.ajax_analyze_item, name='ajax_analyze_item'),
     path('ajax/search-logs/', views.ajax_search_logs, name='ajax_search_logs'),
+    path('backup/', views.backup_data, name='backup_data'),
+    path('restore/', views.restore_data, name='restore_data'),
+    path('reset-data/', views.reset_data, name='reset_data'),
 ]
