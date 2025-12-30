@@ -572,7 +572,7 @@ def ajax_load_log(request):
             "flow_display": _rt(log.get_flow_display()) if log.flow is not None else None,
             "weight": log.weight,
             "temperature": log.temperature,
-            "ovulation_test": _rt(log.get_ovulation_test_display()) if log.ovulation_test else None,
+            "ovulation_test": log.ovulation_test,
 
             "symptoms": [s.id for s in log.symptoms_field.all()],
             "moods": [m.id for m in log.moods_field.all()],
