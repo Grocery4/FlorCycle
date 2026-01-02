@@ -21,7 +21,6 @@ def root_redirect(request):
             if hasattr(request.user, 'partnerprofile') and request.user.partnerprofile.linked_user:
                  return redirect('dashboard:homepage_readonly')
         except OperationalError:
-            # Handle case where DB might be in weird state or migration
             pass
         return redirect('dashboard:partner_setup_page')
     elif request.user.user_type in ['DOCTOR', 'MODERATOR']:

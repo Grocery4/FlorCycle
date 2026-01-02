@@ -5,10 +5,9 @@
 <div class="forum-container">
   <div class="forum-nav">
     {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
-    <a href="{% url 'dashboard:homepage' %}" class="back-dashboard"
-      >← {% trans "Back to Dashboard" %}</a
-    >
+    <a href="{% url 'dashboard:homepage' %}" class="back-dashboard">← {% trans "Back to Dashboard" %}</a>
     {% endif %}
+    <a href="{% url 'dashboard:settings_page' %}" class="forum-settings-link">{% trans "Settings" %}</a>
   </div>
   <div class="forum-header">
     <h1>{% trans "Community Forum" %}</h1>
@@ -30,23 +29,11 @@
 
   <!-- Main Actions -->
   <div class="forum-actions">
-    <a
-      href="{% url 'forum_core:user_profile' request.user.username %}"
-      class="action-btn profile-btn"
-      >{% trans "My Profile" %}</a
-    >
-    <a href="{% url 'forum_core:doctor_ranking' %}" class="action-btn"
-      >{% trans "Doctor Ranking" %}</a
-    >
-    <a href="{% url 'forum_core:create_thread' %}" class="action-btn create-btn"
-      >{% trans "Create Thread" %}</a
-    >
+    <a href="{% url 'forum_core:user_profile' request.user.username %}" class="action-btn profile-btn">{% trans "My Profile" %}</a>
+    <a href="{% url 'forum_core:doctor_ranking' %}" class="action-btn">{% trans "Doctor Ranking" %}</a>
+    <a href="{% url 'forum_core:create_thread' %}" class="action-btn create-btn">{% trans "Create Thread" %}</a>
     {% if request.user.user_type == 'MODERATOR' %}
-    <a
-      href="{% url 'forum_core:moderator_dashboard' %}"
-      class="action-btn mod-btn"
-      >{% trans "Moderator Dashboard" %}</a
-    >
+      <a href="{% url 'forum_core:moderator_dashboard' %}" class="action-btn mod-btn">{% trans "Moderator Dashboard" %}</a>
     {% endif %}
   </div>
 
@@ -60,34 +47,22 @@
       <div class="thread-card">
         <div class="thread-info">
           <h3 class="thread-title">
-            <a href="{% url 'forum_core:thread' thread.id %}"
-              >{{ thread.title }}</a
-            >
+            <a href="{% url 'forum_core:thread' thread.id %}">{{ thread.title }}</a>
             {% if thread.is_solved %}
             <span class="solved-badge">✓ {% trans "SOLVED" %}</span>
             {% endif %}
           </h3>
           <div class="thread-meta">
-            <span class="thread-author"
-              >{% trans "by" %}
-              <a
-                href="{% url 'forum_core:user_profile' thread.created_by.username %}"
-                class="author-link"
-                >{{ thread.created_by.username }}</a
+            <span class="thread-author">{% trans "by" %}
+              <a href="{% url 'forum_core:user_profile' thread.created_by.username %}" class="author-link">{{ thread.created_by.username }}</a
               ></span
             >
-            <span class="thread-date"
-              >{% trans "Updated:" %} {{ thread.updated_at|date:"M d, Y" }}</span
-            >
-            <span class="thread-participants"
-              >{% blocktrans with count=thread.participants.count %}{{ count }} participants{% endblocktrans %}</span
-            >
+            <span class="thread-date">{% trans "Updated:" %} {{ thread.updated_at|date:"M d, Y"}}</span>
+            <span class="thread-participants">{% blocktrans with count=thread.participants.count %}{{ count }}participants{% endblocktrans %}</span>
           </div>
         </div>
         <div class="thread-stats">
-          <span class="comment-count"
-            >{% blocktrans with count=thread.comments.count %}{{ count }} comments{% endblocktrans %}</span
-          >
+          <span class="comment-count">{% blocktrans with count=thread.comments.count %}{{ count }}comments{% endblocktrans %}</span>
         </div>
       </div>
       {% endfor %}
@@ -121,6 +96,18 @@
     letter-spacing: 0.05em;
   }
   .back-dashboard:hover {
+    text-decoration: underline;
+  }
+  .forum-settings-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-left: 1rem;
+  }
+  .forum-settings-link:hover {
     text-decoration: underline;
   }
   .mod-btn {

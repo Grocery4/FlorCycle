@@ -221,9 +221,13 @@ def setup(request):
 
     return render(request, 'dashboard/setup.html', ctx)
 
-@user_type_required(['STANDARD', 'PREMIUM'])
+@user_type_required(['STANDARD', 'PREMIUM', 'PARTNER', 'DOCTOR', 'MODERATOR'])
 @configured_required
 def settings(request):
+    # Ensure UserProfile exists (for legacy users or those created before signal change)
+    from users.models import UserProfile
+    UserProfile.objects.get_or_create(user=request.user)
+    
     ctx = {}
     
     if request.method == 'POST':
@@ -317,7 +321,11 @@ def settings(request):
     
     # Initialize forms
     if 'cycle_details_form' not in ctx:
-        ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, mode='settings', instance=request.user.cycledetails)
+        try:
+            instance = request.user.cycledetails
+        except CycleDetails.DoesNotExist:
+            instance = None
+        ctx['cycle_details_form'] = CycleDetailsForm(user=request.user, mode='settings', instance=instance)
     if 'user_form' not in ctx:
         ctx['user_form'] = UserUpdateForm(instance=request.user)
     if 'profile_form' not in ctx:

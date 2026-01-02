@@ -49,8 +49,8 @@ def configured_required(view_func):
 
         profile = getattr(user, 'userprofile', None)
         if not profile or not profile.is_configured:
-            # Partners don't need to be configured, as they view linked data
-            if user.user_type == 'PARTNER':
+            # Partners, Doctors and Moderators don't need to be configured
+            if user.user_type in ['PARTNER', 'DOCTOR', 'MODERATOR']:
                 return view_func(request, *args, **kwargs)
             return redirect('dashboard:setup_page')
 

@@ -5,9 +5,11 @@ from .models import CustomUser, UserProfile, ModeratorProfile, DoctorProfile, Pa
 @receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        if instance.user_type == 'STANDARD' or instance.user_type == 'PREMIUM':
-            UserProfile.objects.get_or_create(user=instance)
-        elif instance.user_type == 'MODERATOR':
+        # UserProfile is created for ALL users to house generic data like profile_picture
+        UserProfile.objects.get_or_create(user=instance)
+
+        # Create specific profiles based on user type
+        if instance.user_type == 'MODERATOR':
             ModeratorProfile.objects.get_or_create(user=instance)
         elif instance.user_type == 'DOCTOR':
             DoctorProfile.objects.get_or_create(user=instance)
