@@ -292,8 +292,8 @@ def solve_thread(request, thread_id, comment_id):
         if comment_obj.created_by != request.user:
             create_notification(
                 user=comment_obj.created_by,
-                title="Your answer was marked as the solution!",
-                message=f"Your comment on '{thread_obj.title}' was marked as the solution.",
+                title=_("Your answer was marked as the solution!"),
+                message=_("Your comment on '{title}' was marked as the solution.").format(title=thread_obj.title),
                 notification_type='FORUM',
                 link=f"/forums/thread/{thread_obj.id}/"
             )

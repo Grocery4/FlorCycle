@@ -1,4 +1,5 @@
 from django.db.models.signals import post_save
+from django.utils.translation import gettext as _
 from django.dispatch import receiver
 from forum_core.models import Comment, CommentReport, ThreadReport
 from .services import create_notification
@@ -13,8 +14,8 @@ def notify_comment_reply(sender, instance, created, **kwargs):
         if thread.created_by != author:
             create_notification(
                 user=thread.created_by,
-                title="New reply on your thread",
-                message=f"{author.username} replied to your thread: '{thread.title}'",
+                title=_("New reply on your thread"),
+                message=_("{username} replied to your thread: '{title}'").format(username=author.username, title=thread.title),
                 notification_type='FORUM',
                 link=f"/forums/thread/{thread.id}/"
             )
@@ -24,8 +25,8 @@ def notify_comment_reply(sender, instance, created, **kwargs):
         for participant in participants:
             create_notification(
                 user=participant,
-                title="New reply in joined thread",
-                message=f"{author.username} replied to a thread you joined: '{thread.title}'",
+                title=_("New reply in joined thread"),
+                message=_("{username} replied to a thread you joined: '{title}'").format(username=author.username, title=thread.title),
                 notification_type='FORUM',
                 link=f"/forums/thread/{thread.id}/"
             )
@@ -42,8 +43,8 @@ def notify_moderators_comment_report(sender, instance, created, **kwargs):
         for moderator in moderators:
             create_notification(
                 user=moderator,
-                title="New Comment Report",
-                message=f"A comment has been reported for {instance.get_reason_display()}. Review needed.",
+                title=_("New Comment Report"),
+                message=_("A comment has been reported for {reason}. Review needed.").format(reason=instance.get_reason_display()),
                 notification_type='FORUM',
                 link="/forums/moderator/dashboard/"
             )
@@ -60,8 +61,8 @@ def notify_moderators_thread_report(sender, instance, created, **kwargs):
         for moderator in moderators:
             create_notification(
                 user=moderator,
-                title="New Thread Report",
-                message=f"A thread has been reported for {instance.get_reason_display()}. Review needed.",
+                title=_("New Thread Report"),
+                message=_("A thread has been reported for {reason}. Review needed.").format(reason=instance.get_reason_display()),
                 notification_type='FORUM',
                 link="/forums/moderator/dashboard/"
             )

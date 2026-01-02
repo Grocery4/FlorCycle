@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-02 16:43+0000\n"
+"POT-Creation-Date: 2026-01-02 18:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -449,7 +449,7 @@ msgstr "ATTENZIONE:"
 
 #: dashboard/templates/dashboard/settings.html:185
 msgid "This will PERMANENTLY DELETE all your logs, settings, and stats. You will be redirected to the setup page."
-msgstr "Questo cancellerà permanentemente tutti i tuoi log, le tue impostazioni e le tue statistiche. Verrai reindirizzato alla pagina di configurazione."
+msgstr "Questo CANCELLERÀ PERMANENTEMENTE tutti i tuoi log, le tue impostazioni e le tue statistiche. Verrai reindirizzato alla pagina di configurazione."
 
 #: dashboard/templates/dashboard/settings.html:189
 msgid "FINAL WARNING: Are you sure you want to PERMANENTLY DELETE everything? This cannot be undone."
@@ -1219,6 +1219,15 @@ msgstr "Non puoi bandire un altro moderatore."
 msgid "User {username} has been unbanned."
 msgstr "L'utente {username} è stato perdonato."
 
+#: forum_core/views.py:295
+msgid "Your answer was marked as the solution!"
+msgstr "La tua risposta è stata contrassegnata come soluzione!"
+
+#: forum_core/views.py:296
+#, python-brace-format
+msgid "Your comment on '{title}' was marked as the solution."
+msgstr "Il tuo commento su '{title}' è stato contrassegnato come soluzione."
+
 #: forum_core/views.py:301
 msgid "Thread marked as solved!"
 msgstr "Discussione contrassegnata come risolta!"
@@ -1876,6 +1885,42 @@ msgstr "Promemoria ovulazione"
 #: notifications/services.py:119
 msgid "Your most likely ovulation day is tomorrow."
 msgstr "Il giorno più probabile dell'ovulazione è domani."
+
+#: notifications/signals.py:17
+msgid "New reply on your thread"
+msgstr "Nuova risposta alla tua discussione"
+
+#: notifications/signals.py:18
+#, python-brace-format
+msgid "{username} replied to your thread: '{title}'"
+msgstr "{username} ha risposto alla tua discussione: '{title}'"
+
+#: notifications/signals.py:28
+msgid "New reply in joined thread"
+msgstr "Nuova risposta in una discussione cui partecipi"
+
+#: notifications/signals.py:29
+#, python-brace-format
+msgid "{username} replied to a thread you joined: '{title}'"
+msgstr "{username} ha risposto a una discussione a cui partecipi: '{title}'"
+
+#: notifications/signals.py:46
+msgid "New Comment Report"
+msgstr "Nuova segnalazione commento"
+
+#: notifications/signals.py:47
+#, python-brace-format
+msgid "A comment has been reported for {reason}. Review needed."
+msgstr "Un commento è stato segnalato per {reason}. È necessaria una revisione."
+
+#: notifications/signals.py:64
+msgid "New Thread Report"
+msgstr "Nuova segnalazione discussione"
+
+#: notifications/signals.py:65
+#, python-brace-format
+msgid "A thread has been reported for {reason}. Review needed."
+msgstr "Una discussione è stata segnalata per {reason}. È necessaria una revisione."
 
 #: notifications/templates/notifications/notification_list.html:3
 msgid "Notifications"
