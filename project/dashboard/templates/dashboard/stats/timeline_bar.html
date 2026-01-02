@@ -1,12 +1,10 @@
-{% if timeline_data.has_cycle %} 
 {% load i18n %}
+{% if timeline_data.has_cycle %} 
 
 <div class="timeline-container">
   <div class="timeline-header">
     <h3>{% trans "Current Cycle" %}</h3>
-    <p class="cycle-dates">
-      {{ timeline_data.cycle_start|date:"M d" }} — {{ timeline_data.cycle_end|date:"M d, Y" }}
-    </p>
+    <p class="cycle-dates">{{ timeline_data.cycle_start|date:"M d" }} — {{ timeline_data.cycle_end|date:"M d, Y" }}</p>
   </div>
 
   <div class="timeline-bar-wrapper">
@@ -14,31 +12,31 @@
       <!-- Menstruation phase -->
       <div
         class="phase menstruation-phase"
-        style="left: {{ timeline_data.menstruation.start_percent }}%; width: {{ timeline_data.menstruation.width_percent|floatformat:1 }}%;"
-      ></div>
+        style="left: {{ timeline_data.menstruation.start_percent|stringformat:'.2f' }}%; width: {{ timeline_data.menstruation.width_percent|stringformat:'.2f' }}%;">
+      </div>
 
       <!-- Ovulation phase -->
       <div
         class="phase ovulation-phase"
-        style="left: {{ timeline_data.ovulation.start_percent }}%; width: {{ timeline_data.ovulation.width_percent|floatformat:1 }}%;"
+        style="left: {{ timeline_data.ovulation.start_percent|stringformat:'.2f' }}%; width: {{ timeline_data.ovulation.width_percent|stringformat:'.2f' }}%;"
       ></div>
 
       <!-- Current day marker (only if within cycle) -->
       {% if timeline_data.show_markers and timeline_data.current_day_percent is not None %}
       <div
         class="marker current-day-marker"
-        style="left: {{ timeline_data.current_day_percent }}%;"
+        style="left: {{ timeline_data.current_day_percent|stringformat:'.2f' }}%;"
         title="{% trans 'Today' %}"
       ></div>
       {% endif %}
 
       <!-- Probable ovulation day marker (only if within cycle) -->
       {% if timeline_data.show_markers %}
-        <div
-          class="marker probable-ovulation-marker"
-          style="left: {{ timeline_data.ovulation.probable_percent }}%;"
-          title="{% trans 'Probable ovulation day' %}"
-        ></div>
+      <div
+        class="marker probable-ovulation-marker"
+        style="left: {{ timeline_data.ovulation.probable_percent|stringformat:'.2f' }}%;"
+        title="{% trans 'Probable ovulation day' %}">
+      </div>
       {% endif %}
     </div>
   </div>
