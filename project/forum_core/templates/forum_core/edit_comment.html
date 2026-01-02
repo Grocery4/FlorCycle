@@ -1,8 +1,11 @@
-{% extends "base.html" %} 
-{% load i18n %}
-{% block title %}{% trans "Edit Comment" %}{% endblock %} 
-{% block content %}
+{% extends "base.html" %} {% load i18n %} {% block title %}{% trans "Edit
+Comment" %}{% endblock %} {% block content %}
 <div class="forum-container">
+  <div class="forum-nav">
+    <a href="{% url 'forum_core:thread' comment.thread.id %}" class="nav-link"
+      >← {% trans "Back to Thread" %}</a
+    >
+  </div>
   <div class="forum-header">
     <h1>{% trans "Edit Comment" %}</h1>
   </div>
@@ -11,11 +14,15 @@
     <form method="POST">
       {% csrf_token %}
       <div class="form-group">
-        <label for="{{ form.content.id_for_label }}">{% trans "Comment" %}</label>
+        <label for="{{ form.content.id_for_label }}"
+          >{% trans "Comment" %}</label
+        >
         {{ form.content }}
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary">{% trans "Save Changes" %}</button>
+        <button type="submit" class="btn btn-primary">
+          {% trans "Save Changes" %}
+        </button>
         <a
           href="{% url 'forum_core:thread' comment.thread.id %}"
           class="btn btn-secondary"
@@ -27,6 +34,20 @@
 </div>
 
 <style>
+  .forum-nav {
+    margin-bottom: 2rem;
+  }
+  .nav-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .nav-link:hover {
+    text-decoration: underline;
+  }
   .form-container {
     max-width: 800px;
     margin: 2rem auto;

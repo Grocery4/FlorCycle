@@ -41,9 +41,6 @@
     <a href="{% url 'forum_core:create_thread' %}" class="action-btn create-btn"
       >{% trans "Create Thread" %}</a
     >
-    <a href="{% url 'forum_core:home' %}?view=all" class="action-btn"
-      >{% trans "All Threads" %}</a
-    >
     {% if request.user.user_type == 'MODERATOR' %}
     <a
       href="{% url 'forum_core:moderator_dashboard' %}"
@@ -67,7 +64,7 @@
               >{{ thread.title }}</a
             >
             {% if thread.is_solved %}
-              <span class="solved-badge">✓ {% trans "SOLVED" %}</span>
+            <span class="solved-badge">✓ {% trans "SOLVED" %}</span>
             {% endif %}
           </h3>
           <div class="thread-meta">

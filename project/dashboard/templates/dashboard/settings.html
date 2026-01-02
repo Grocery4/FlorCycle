@@ -9,14 +9,6 @@
     <div class="settings-content-wrapper">
         {% include "dashboard/subpage_topbar.html" %}
         
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
         <div class="settings-sections">
             <div class="cycle-details">
                 <h3>{% trans "Cycle Settings" %}</h3>

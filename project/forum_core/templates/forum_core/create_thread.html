@@ -1,11 +1,16 @@
-{% extends "base.html" %} 
-{% load i18n %}
-{% block title %}{% trans "Create New Thread" %}{% endblock %}
-{%block content %}
+{% extends "base.html" %} {% load i18n %} {% block title %}{% trans "Create New
+Thread" %}{% endblock %} {%block content %}
 <div class="forum-container">
+  <div class="forum-nav">
+    <a href="{% url 'forum_core:home' %}" class="nav-link"
+      >← {% trans "Back to Forums" %}</a
+    >
+  </div>
   <div class="forum-header">
     <h1>{% trans "Create a New Thread" %}</h1>
-    <p class="forum-subtitle">{% trans "Start a conversation with the community." %}</p>
+    <p class="forum-subtitle">
+      {% trans "Start a conversation with the community." %}
+    </p>
   </div>
 
   <div class="form-container">
@@ -16,11 +21,15 @@
         {{ form.title }}
       </div>
       <div class="form-group">
-        <label for="{{ form.content.id_for_label }}">{% trans "Content" %}</label>
+        <label for="{{ form.content.id_for_label }}"
+          >{% trans "Content" %}</label
+        >
         {{ form.content }}
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary">{% trans "Create Thread" %}</button>
+        <button type="submit" class="btn btn-primary">
+          {% trans "Create Thread" %}
+        </button>
         <a href="{% url 'forum_core:home' %}" class="btn btn-secondary"
           >{% trans "Cancel" %}</a
         >
@@ -30,6 +39,20 @@
 </div>
 
 <style>
+  .forum-nav {
+    margin-bottom: 2rem;
+  }
+  .nav-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .nav-link:hover {
+    text-decoration: underline;
+  }
   .form-container {
     max-width: 800px;
     margin: 2rem auto;

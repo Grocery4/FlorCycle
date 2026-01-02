@@ -1,11 +1,14 @@
-{% extends "base.html" %} {% load i18n %} {% block title %}{% blocktrans with
-username=profile_user.username %}{{ username }}'s Profile{% endblocktrans %}{%
-endblock %} {% block content %}
+{% extends "base.html" %} 
+{% load i18n %} 
+{% block title %}{% blocktrans with username=profile_user.username %}{{ username }}'s Profile{% endblocktrans %}{% endblock %}
+{% block content %}
 <div class="forum-container profile-page">
   <div class="forum-nav">
-    {% if request.user.user_type != 'DOCTOR' and request.user.user_type !=
-    'MODERATOR' %}
-    <a href="{% url 'dashboard:homepage' %}" class="back-dashboard"
+    <a href="{% url 'forum_core:home' %}" class="nav-link"
+      >← {% trans "Back to Forums" %}</a
+    >
+    {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
+    <a href="{% url 'dashboard:homepage' %}" class="nav-link"
       >← {% trans "Back to Dashboard" %}</a
     >
     {% endif %}
@@ -32,10 +35,7 @@ endblock %} {% block content %}
       </div>
       {% if profile_user.user_type == 'DOCTOR' %}
       <div class="stat-item">
-        <span class="stat-value"
-          >{% if avg_rating %} {{ avg_rating|stringformat:".1f" }} {% else %}{%
-          trans "N/A" %} {% endif %}</span
-        >
+        <span class="stat-value">{% if avg_rating %} {{ avg_rating|stringformat:".1f" }} {% else %}{% trans "N/A" %} {% endif %}</span>
         <span class="stat-label">{% trans "Rating" %}</span>
       </div>
       {% endif %}
