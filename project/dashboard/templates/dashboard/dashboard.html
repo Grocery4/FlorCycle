@@ -14,7 +14,6 @@
         <div class="dashboard-data">
             <div class="action-buttons-row">
                 <section class="log-period-section"><a href="{% url "dashboard:add_period" %}">{% trans "log period" %}</a></section>
-                <section class="add-symptoms-section"><a href="{% url "dashboard:add_log" %}">{% trans "add symptoms" %}</a></section>
             </div>
             <section class="period-prediction">{% include "dashboard/next_prediction.html" %}</section>
             <section class="cycle-phases">{% include "dashboard/stats/timeline_bar.html" %}</section>
