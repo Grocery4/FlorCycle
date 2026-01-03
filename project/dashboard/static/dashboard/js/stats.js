@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 data.results.forEach(log => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<span>${log.date}</span> <span>${log.note}</span>`;
+                    li.innerHTML = `<a href="/dashboard/calendar/?date=${log.date}"><span>${log.date}</span></a> <span>${log.note}</span>`;
                     resultsList.appendChild(li);
                 });
             }
@@ -173,9 +173,8 @@ document.addEventListener('DOMContentLoaded', function() {
             datesList.innerHTML = '';
             data.occurrences.slice(0, 10).forEach(date => {
                  const li = document.createElement('li');
-                 // Link to Add Log
-                 const next = encodeURIComponent(window.location.pathname);
-                 li.innerHTML = `<a href="/dashboard/add-log/?date=${date}&next=${next}">${date}</a>`;
+                 // Link to Calendar View instead of Add Log
+                 li.innerHTML = `<a href="/dashboard/calendar/?date=${date}">${date}</a>`;
                  datesList.appendChild(li);
             });
         });
