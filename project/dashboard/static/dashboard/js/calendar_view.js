@@ -14,25 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const periodInd = document.getElementById("period-indicator");
   const ovulInd = document.getElementById("ovulation-indicator");
 
-  // Log fields
-  const logNote = document.getElementById("log-note");
-  const logFlow = document.getElementById("log-flow");
-  const logWeight = document.getElementById("log-weight");
-  const logTemperature = document.getElementById("log-temp");
-  const logOvulationTest = document.getElementById("log-ovulation-test");
-
-  const logSymptoms = document.getElementById("log-symptoms");
-  const logMoods = document.getElementById("log-moods");
-  const logMedications = document.getElementById("log-medications");
-
-  // Intercourse fields
-  const logQuantity = document.getElementById("log-quantity");
-  const logProtected = document.getElementById("log-protected");
-  const logOrgasm = document.getElementById("log-orgasm");
-
-  const noLogData = document.getElementById("no-log-data");
-  const logData = document.getElementById("log-data");
-  const addLogBtn = document.getElementById("add-log-btn");
+  // Form Elements
+  const sidebarForm = document.getElementById("sidebar-log-form");
+  const selectedDateInput = document.getElementById("selected-date-input");
+  const saveBtn = document.getElementById("sidebar-save-btn");
 
   dateCells.forEach((cell) => {
     cell.addEventListener("click", function () {
@@ -54,9 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
       sidebar.classList.add("open");
       content.classList.remove("hidden");
 
-      // Update Edit Link
-      const returnUrl = encodeURIComponent(`${window.location.pathname}?date=${date}`);
-      addLogBtn.href = `${addLogUrl}?date=${date}&next=${returnUrl}`;
+      // Set hidden date input
+      selectedDateInput.value = date;
 
       // Fetch data
       fetch(ajaxLoadLogUrl, {
@@ -73,42 +57,88 @@ document.addEventListener("DOMContentLoaded", function () {
           periodInd.classList.toggle("hidden", !data.is_period);
           ovulInd.classList.toggle("hidden", !data.is_ovulation);
 
-          if (data.exists) {
-            logData.classList.remove("hidden");
-            noLogData.classList.add("hidden");
+          // Populate Form Fields
+          // Text/Select inputs
+          setFieldValue("note", data.note);
+          setFieldValue("flow", data.flow);
+          setFieldValue("weight", data.weight);
+          setFieldValue("temperature", data.temperature);
+          setFieldValue("ovulation_test", data.ovulation_test);
+          
+          setFieldValue("quantity", data.quantity);
 
-            logNote.textContent = data.note || "-";
-            logFlow.textContent = data.flow_display || "-";
-            logWeight.textContent = data.weight || "-";
-            logTemperature.textContent = data.temperature || "-";
-            logOvulationTest.textContent = data.ovulation_test || "-";
+          // Checkboxes (Groups)
+          setCheckboxGroup("symptoms", data.symptoms);
+          setCheckboxGroup("moods", data.moods);
+          setCheckboxGroup("medications", data.medications);
 
-            // Lists
-            const populateList = (element, items) => {
-              element.innerHTML = "";
-              if (items && items.length > 0) {
-                 items.forEach(item => {
-                    const li = document.createElement("li");
-                    li.textContent = item;
-                    element.appendChild(li);
-                 });
-              }
-            };
-
-            populateList(logSymptoms, data.symptoms_display);
-            populateList(logMoods, data.moods_display);
-            populateList(logMedications, data.medications_display);
-
-            // Intercourse
-            logQuantity.textContent =
-              data.quantity !== null ? data.quantity : "-";
-            logProtected.textContent = data.protected_display || "-";
-            logOrgasm.textContent = data.orgasm_display || "-";
-          } else {
-            logData.classList.add("hidden");
-            noLogData.classList.remove("hidden");
-          }
+          // Single Checkboxes (Intercourse)
+          setCheckbox("protected", data.protected);
+          setCheckbox("orgasm", data.orgasm);
         });
     });
   });
+
+  // Helper to set value of input by name
+  function setFieldValue(name, value) {
+      const input = sidebarForm.querySelector(`[name="${name}"]`);
+      if (input) {
+          input.value = (value === null || value === undefined) ? "" : value;
+      }
+  }
+
+  // Helper for multiple choice checkboxes (name="symptoms")
+  function setCheckboxGroup(name, activeIds) {
+      const checkboxes = sidebarForm.querySelectorAll(`input[name="${name}"]`);
+      checkboxes.forEach(cb => {
+          // activeIds is array of ints, cb.value is string
+          cb.checked = activeIds.includes(parseInt(cb.value));
+      });
+  }
+
+  // Helper for single boolean checkboxes
+  function setCheckbox(name, isChecked) {
+      const input = sidebarForm.querySelector(`input[name="${name}"]`);
+      if (input) {
+          input.checked = !!isChecked;
+      }
+  }
+
+  // Save Handler
+  if (saveBtn) {
+      saveBtn.addEventListener("click", function(e) {
+          e.preventDefault();
+          
+          // Basic UI feedback
+          const originalText = saveBtn.textContent;
+          saveBtn.textContent = "Saving...";
+          saveBtn.disabled = true;
+
+          const formData = new FormData(sidebarForm);
+          
+          // Since we are posting to a standard view that might redirect, 
+          // we can check if we want to handle it purely via fetch or allow form submission.
+          // For now, let's use fetch and reload to ensure state consistency (calendars re-render).
+          
+          fetch(sidebarForm.action, {
+              method: "POST",
+              body: formData,
+              headers: {
+                "X-CSRFToken": csrfToken,
+              },
+          }).then(response => {
+              // If success, reload to update calendar colors (simple approach)
+              // Or if we returned JSON, we could update UI locally.
+              // Given the backend returns a redirect, fetch follows it and returns the HTML of the new page.
+              // We can just reload the window.
+              window.location.reload();
+          }).catch(err => {
+              console.error("Error saving log:", err);
+              alert("Error saving log.");
+              saveBtn.textContent = originalText;
+              saveBtn.disabled = false;
+          });
+      });
+  }
+
 });

@@ -131,6 +131,11 @@ def calendar_view(request):
     ctx['prev_date'] = prev_date.strftime('%Y-%m-%d')
     ctx['next_date'] = next_date.strftime('%Y-%m-%d')
 
+    # Forms for the sidebar
+    # We initialize them empty; they will be populated/managed by JS for specific dates
+    ctx['dl_form'] = DailyLogForm()
+    ctx['il_form'] = IntercourseLogForm()
+
     return render(request, 'dashboard/calendar_view.html', ctx)
 
 
