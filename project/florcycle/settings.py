@@ -154,3 +154,6 @@ MEDIA_URL = '/media/'
 # Redirect to dashboard after login
 LOGIN_REDIRECT_URL = '/dashboard/redirect'
 LOGOUT_REDIRECT_URL = '/guest-mode'
+
+# Email backend for development
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
