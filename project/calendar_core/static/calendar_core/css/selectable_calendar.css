@@ -1,9 +1,43 @@
+/* Base Table Styles copied from calendar_view.css */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+th {
+  padding: 10px;
+  background: #f8f9fa;
+  color: #666;
+  font-weight: 600;
+}
+
+td {
+  height: 80px; /* Taller cells for modern look */
+  vertical-align: top;
+  padding: 0; /* Important: Label will provide padding */
+  border: 1px solid #f0f0f0;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+
+td:hover {
+  background-color: #fcfcfc;
+}
+
 .day-label {
-    display: block;
-    padding: 8px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
     cursor: pointer;
-    border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
 .day-label input {
@@ -11,26 +45,30 @@
 }
 
 .day-label .day-number {
-    display: inline-block;
-    padding: 4px 6px;
+    font-weight: 500;
+    font-size: 0.9em;
+    color: #333;
+    width: fit-content;
+    padding: 2px 5px;
+    border-radius: 4px;
 }
 
-.day-label input:checked + .day-number {
-    background: #9370FF;
+/* Checked state highlights the entire cell like menstruation highlight */
+.day-label:has(input:checked) {
+    background-color: rgba(229, 115, 115, 0.4); /* Consistent with period highlight but stronger for selection */
+}
+
+.day-label:has(input:checked) .day-number {
+    background: #e57373;
     color: white;
-    border-radius: 4px;
 }
 
-.day-label input:hover + .day-number{
-    background-color: lightgray;
-    border-radius: 4px;
-}
-
-.day-label input:disabled + .day-number {
+/* Future dates treatment */
+.day-label:has(input:disabled) {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.3;
 }
 
-.day-label input:disabled:hover + .day-number {
+.day-label:has(input:disabled):hover {
     background-color: transparent;
 }
