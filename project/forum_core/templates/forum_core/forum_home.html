@@ -29,11 +29,11 @@
 
   <!-- Main Actions -->
   <div class="forum-actions">
-    <a href="{% url 'forum_core:user_profile' request.user.username %}" class="action-btn profile-btn">{% trans "My Profile" %}</a>
-    <a href="{% url 'forum_core:doctor_ranking' %}" class="action-btn">{% trans "Doctor Ranking" %}</a>
-    <a href="{% url 'forum_core:create_thread' %}" class="action-btn create-btn">{% trans "Create Thread" %}</a>
+    <a href="{% url 'forum_core:user_profile' request.user.username %}" class="block-btn profile-btn">{% trans "My Profile" %}</a>
+    <a href="{% url 'forum_core:doctor_ranking' %}" class="block-btn">{% trans "Doctor Ranking" %}</a>
+    <a href="{% url 'forum_core:create_thread' %}" class="block-btn create-btn">{% trans "Create Thread" %}</a>
     {% if request.user.user_type == 'MODERATOR' %}
-      <a href="{% url 'forum_core:moderator_dashboard' %}" class="action-btn mod-btn">{% trans "Moderator Dashboard" %}</a>
+      <a href="{% url 'forum_core:moderator_dashboard' %}" class="block-btn mod-btn">{% trans "Moderator Dashboard" %}</a>
     {% endif %}
   </div>
 
@@ -74,46 +74,4 @@
     {% endif %}
   </div>
 </div>
-
-<style>
-  .author-link {
-    color: #000;
-    text-decoration: none;
-    font-weight: 700;
-  }
-  .author-link:hover {
-    text-decoration: underline;
-  }
-  .forum-nav {
-    margin-bottom: 2rem;
-  }
-  .back-dashboard {
-    color: #000;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .back-dashboard:hover {
-    text-decoration: underline;
-  }
-  .forum-settings-link {
-    color: #000;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-left: 1rem;
-  }
-  .forum-settings-link:hover {
-    text-decoration: underline;
-  }
-  .mod-btn {
-    background: #ffcc00 !important;
-    color: #000 !important;
-    border: 2px solid #000 !important;
-  }
-</style>
 {% endblock %}

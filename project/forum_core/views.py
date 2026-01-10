@@ -12,7 +12,11 @@ from notifications.services import create_notification
 # Create your views here.
 @user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
 def home(request):
-    threads = Thread.objects.all().order_by('-created_at')
+    query = request.GET.get('q')
+    if query:
+        threads = Thread.objects.filter(title__icontains=query).order_by('-created_at')
+    else:
+        threads = Thread.objects.all().order_by('-created_at')
     return render(request, 'forum_core/forum_home.html', {'threads': threads})
 
 @user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')
@@ -275,6 +279,22 @@ def unban_user(request, user_id):
     target_user.is_banned = False
     target_user.save()
     messages.success(request, _('User {username} has been unbanned.').format(username=target_user.username))
+    return redirect('forum_core:moderator_dashboard')
+
+@user_type_required(['MODERATOR'])
+def toggle_doctor_verification(request, user_id):
+    target_user = get_object_or_404(CustomUser, id=user_id)
+    if target_user.user_type == 'DOCTOR':
+        doctor_profile = getattr(target_user, 'doctorprofile', None)
+        if doctor_profile:
+            doctor_profile.is_verified = not doctor_profile.is_verified
+            doctor_profile.save()
+            status = _("verified") if doctor_profile.is_verified else _("unverified")
+            messages.success(request, _('Doctor {username} is now {status}.').format(username=target_user.username, status=status))
+        else:
+            messages.error(request, _('User {username} is a doctor but has no profile.').format(username=target_user.username))
+    else:
+        messages.error(request, _('User {username} is not a doctor.').format(username=target_user.username))
     return redirect('forum_core:moderator_dashboard')
 
 @user_type_required(['PREMIUM', 'DOCTOR', 'MODERATOR'], denied_redirect_url='dashboard:settings_page')

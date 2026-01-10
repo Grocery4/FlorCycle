@@ -169,7 +169,7 @@
           <tr>
             <th>{% trans "Username" %}</th>
             <th>{% trans "Type" %}</th>
-            <th>{% trans "Status" %}</th>
+            <th>{% trans "Status/Verification" %}</th>
             <th>{% trans "Action" %}</th>
           </tr>
         </thead>
@@ -183,6 +183,22 @@
               <span class="status-banned">{% trans "Banned" %}</span>
               {% else %}
               <span class="status-active">{% trans "Active" %}</span>
+              {% endif %}
+              
+              {% if user.user_type == 'DOCTOR' %}
+                <div class="verification-details">
+                  <strong>{% trans "License:" %}</strong> {{ user.doctorprofile.license_number }}<br>
+                  {% if user.doctorprofile.cv %}
+                  <a href="{{ user.doctorprofile.cv.url }}" target="_blank" class="cv-link">📄 {% trans "View CV" %}</a>
+                  {% else %}
+                  <span style="color: var(--error-color); font-size: 0.75rem;">{% trans "No CV uploaded" %}</span>
+                  {% endif %}
+                </div>
+                {% if user.doctorprofile.is_verified %}
+                <span class="status-verified">{% trans "Verified" %}</span>
+                {% else %}
+                <span class="status-unverified">{% trans "Unverified" %}</span>
+                {% endif %}
               {% endif %}
             </td>
             <td>
@@ -198,6 +214,7 @@
               <form
                 action="{% url 'forum_core:ban_user' user.id %}"
                 method="POST"
+                style="display: inline;"
               >
                 {% csrf_token %}
                 <button
@@ -206,6 +223,23 @@
                   onclick="return confirm('{% trans "Ban this user?" %}')"
                 >
                   {% trans "Ban" %}
+                </button>
+              </form>
+              {% endif %}
+
+              {% if user.user_type == 'DOCTOR' %}
+              <form
+                action="{% url 'forum_core:toggle_doctor_verification' user.id %}"
+                method="POST"
+                style="display: inline; margin-left: 0.5rem;"
+              >
+                {% csrf_token %}
+                <button type="submit" class="btn-link">
+                  {% if user.doctorprofile.is_verified %}
+                  {% trans "Unverify" %}
+                  {% else %}
+                  {% trans "Verify" %}
+                  {% endif %}
                 </button>
               </form>
               {% endif %}
@@ -383,10 +417,32 @@
     color: #dc3545;
     font-weight: 700;
   }
+  .status-verified {
+    color: #28a745;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .status-unverified {
+    color: #ffc107;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
   .user-type-tag {
     font-size: 0.8rem;
     background: #eee;
     padding: 0.2rem 0.4rem;
+  }
+  .verification-details {
+    font-size: 0.8rem;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: #fdfd;
+    border: 1px dashed #000;
+  }
+  .cv-link {
+    color: var(--primary-color, #ff69b4);
+    font-weight: 800;
+    text-decoration: underline;
   }
 
   .section-header {
