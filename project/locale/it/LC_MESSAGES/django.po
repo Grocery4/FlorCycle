@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-10 11:24+0000\n"
+"POT-Creation-Date: 2026-01-10 15:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -544,7 +544,7 @@ msgstr "Giorno di ovulazione probabile"
 
 #: dashboard/templates/dashboard/stats/timeline_bar.html:68
 msgid "No cycle data available. Log your menstruation to see the timeline."
-msgstr "Nessun dato di ciclo disponibile. Registra le tue mestruazioni per vedere la timeline."
+msgstr "Nessun dato sul ciclo disponibile. Registra le tue mestruazioni per vedere la timeline."
 
 #: dashboard/templates/dashboard/subpage_topbar.html:7
 #: dashboard/templates/dashboard/subpage_topbar.html:9
@@ -786,7 +786,7 @@ msgstr "I nostri medici più votati e verificati"
 
 #: forum_core/templates/forum_core/doctor_ranking.html:29
 msgid "Verified Specialist"
-msgstr "Medico verificato"
+msgstr "Dottore verificato"
 
 #: forum_core/templates/forum_core/doctor_ranking.html:36
 #: forum_core/templates/forum_core/profile.html:38
@@ -803,7 +803,7 @@ msgstr "Recensioni"
 
 #: forum_core/templates/forum_core/doctor_ranking.html:50
 msgid "No rated doctors yet. Be the first to provide feedback on a doctor's profile!"
-msgstr "Nessun medico è stato ancora votato. Sii il primo a fornire feedback su un profilo medico!"
+msgstr "Nessun dottore è stato ancora votato. Sii il primo a fornire feedback su un profilo dottore!"
 
 #: forum_core/templates/forum_core/edit_comment.html:10
 msgid "Edit Comment"
@@ -1059,7 +1059,7 @@ msgstr "Nessuna attività recente."
 
 #: forum_core/templates/forum_core/profile.html:64
 msgid "Rate this Doctor"
-msgstr "Valuta questo medico"
+msgstr "Valuta questo dottore"
 
 #: forum_core/templates/forum_core/profile.html:70
 msgid "Score"
@@ -1235,17 +1235,17 @@ msgstr "non verificato"
 #: forum_core/views.py:293
 #, python-brace-format
 msgid "Doctor {username} is now {status}."
-msgstr "Il medico {username} è ora {status}."
+msgstr "Il dottore {username} è ora {status}."
 
 #: forum_core/views.py:295
 #, python-brace-format
 msgid "User {username} is a doctor but has no profile."
-msgstr "L'utente {username} è un medico ma non ha un profilo."
+msgstr "L'utente {username} è un dottore ma non ha un profilo."
 
 #: forum_core/views.py:297
 #, python-brace-format
 msgid "User {username} is not a doctor."
-msgstr "L'utente {username} non è un medico."
+msgstr "L'utente {username} non è un dottore."
 
 #: forum_core/views.py:315
 msgid "Your answer was marked as the solution!"
@@ -1940,7 +1940,7 @@ msgstr "URGENTE: Necessaria consulenza medica"
 
 #: notifications/services.py:35
 msgid "You have logged all critical symptoms together: Severe Pain, Fainting, Fever, and Heavy Bleeding. Please contact a medical professional immediately."
-msgstr "Hai registrato tutti i sintomi critici insieme: dolore forte, svenimento, febbre e sanguinamento abbondante. Contatta immediatamente un medico."
+msgstr "Hai registrato tutti i sintomi critici insieme: dolore forte, svenimento, febbre e sanguinamento abbondante. Contatta immediatamente un dottore."
 
 #: notifications/services.py:71
 msgid "Your period is predicted to start tomorrow."
@@ -2039,7 +2039,15 @@ msgstr "login"
 msgid "register"
 msgstr "registrati"
 
-#: templates/navbar.html:31
+#: templates/navbar.html:21
+msgid "Partner Signup"
+msgstr "Configurazione Partner"
+
+#: templates/navbar.html:22
+msgid "Are you a doctor? Signup here!"
+msgstr "Sei un dottore? Registrati qui!"
+
+#: templates/navbar.html:33
 msgid "logout"
 msgstr "logout"
 
@@ -2052,6 +2060,7 @@ msgid "Your account has been <strong>permanently suspended</strong> for violatin
 msgstr "Il tuo account è stato <strong>sospeso permanentemente</strong> per violazione delle nostre linee guida."
 
 #: templates/registration/banned.html:33
+#: templates/registration/verification_pending.html:22
 msgid "Return to Login"
 msgstr "Torna alla pagina di accesso"
 
@@ -2112,8 +2121,6 @@ msgstr "Abbiamo inviato le istruzioni per reimpostare la tua password, se esiste
 msgid "If you don't receive an email, please check your spam folder."
 msgstr "Se non ricevi un'email, controlla la cartella spam."
 
-
-
 #: templates/registration/password_reset_done.html:14
 msgid "Return to log in"
 msgstr "Torna alla pagina di accesso"
@@ -2160,19 +2167,19 @@ msgstr "Questo processo richiede in genere 24-48 ore. Riceverai un'email una vol
 msgid "Try Again"
 msgstr "Riprova"
 
-#: users/forms.py:41
+#: users/forms.py:42
 msgid "This license number is already registered."
 msgstr "Questo numero di licenza è già registrato."
 
-#: users/forms.py:75
+#: users/forms.py:87
 msgid "Card Number"
 msgstr "Numero carta"
 
-#: users/forms.py:76
+#: users/forms.py:88
 msgid "Expiry Date"
 msgstr "Data di scadenza"
 
-#: users/forms.py:77
+#: users/forms.py:89
 msgid "CVV"
 msgstr "CVV"
 
@@ -2186,7 +2193,7 @@ msgstr "Moderatore"
 
 #: users/models.py:15
 msgid "Doctor"
-msgstr "Medico"
+msgstr "Dottore"
 
 #: users/models.py:16
 msgid "Partner"
