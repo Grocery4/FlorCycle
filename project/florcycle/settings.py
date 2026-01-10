@@ -26,8 +26,9 @@ SECRET_KEY = 'django-insecure-h-p_sev3on@5kadl8*f0ne18$6ye#=2xiwd9rr=79l8)!1i#%e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# Testing over internet purposes
+#ALLOWED_HOSTS = ['127.0.0.1', 'dietpi.tail4aea60.ts.net']
+#CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'https://dietpi.tail4aea60.ts.net:8000']
 
 # Application definition
 
