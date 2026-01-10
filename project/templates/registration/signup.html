@@ -1,19 +1,25 @@
-{% load i18n %} {% if form.non_field_errors %}
-<div class="non-field-errors">
-  {% for error in form.non_field_errors %}
-  <p class="error">{{ error }}</p>
-  {% endfor %}
-</div>
-{% endif %} {% for fields in form %} {% for field in fields %} {% if
-field.errors %}
-<div class="field-error-list">
-  {% for error in field.errors %}
-  <p class="error">{{ error }}</p>
-  {% endfor %}
-</div>
-{% endif %} {% endfor %} {% endfor %}
+{% load i18n %}
+{% if form.non_field_errors %}
+	<div class="non-field-errors">
+	{% for error in form.non_field_errors %}
+		<p class="error">{{ error }}</p>
+	{% endfor %}
+	</div>
+{% endif %}
+
+{% for fields in form %}
+	{% for field in fields %}
+		{% if field.errors %}
+			<div class="field-error-list">
+			{% for error in field.errors %}
+				<p class="error">{{ error }}</p>
+			{% endfor %}
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endfor %}
 
 <form method="post" enctype="multipart/form-data">
-  {% csrf_token %} {{ form }}
-  <button type="submit">{% trans "Sign up" %}</button>
+	{% csrf_token %} {{ form }}
+	<button type="submit">{% trans "Sign up" %}</button>
 </form>
