@@ -9,28 +9,25 @@ html, body {
     flex-direction: column;
     flex: 1;
     overflow: hidden;
-}
-
-nav {
-    margin-bottom: 10px !important; /* Squash navbar margin */
+    background-color: var(--bg-color);
 }
 
 .dashboard-data {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    gap: 8px; /* Slightly smaller gap */
-    padding: 10px;
+    gap: 20px;
+    padding: 20px;
     overflow-y: auto;
 }
 
 .action-buttons-row {
     display: flex;
-    width: 90%;
-    max-width: 500px;
-    gap: 10px;
+    width: 100%;
+    max-width: 600px;
+    gap: 15px;
 }
 
 .action-buttons-row > section {
@@ -38,24 +35,50 @@ nav {
 }
 
 .dashboard-data > section, .action-buttons-row > section {
-    padding: 6px 0; /* More compact sections */
-    border: 2px solid black;
-    text-align: center;
-    background: white;
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    transition: transform 0.1s;
+}
+
+.dashboard-data > section:hover, .action-buttons-row > section:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: calc(var(--shadow-offset) + 2px) calc(var(--shadow-offset) + 2px) 0 0 var(--border-color);
 }
 
 .dashboard-data > section a, .action-buttons-row > section a {
     text-decoration: none;
-    color: black;
+    color: var(--text-color);
     font-weight: 800;
     text-transform: uppercase;
     display: block;
     width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+}
+
+.period-prediction, .cycle-phases {
+    width: 100%;
+    max-width: 600px;
+}
+
+.logs {
+    width: 100%;
+    max-width: 600px;
 }
 
 .dashboard-action-bar {
     flex-shrink: 0;
-    padding: 10px;
-    border-top: 2px solid #000;
-    background: white;
+    padding: 20px;
+    border-top: var(--border-width) solid var(--border-color);
+    background: var(--surface-color);
+}
+
+/* Specific section overrides */
+.log-period-section {
+    background-color: var(--primary-color) !important;
+}
+
+.logs {
+    background-color: var(--secondary-color) !important;
 }

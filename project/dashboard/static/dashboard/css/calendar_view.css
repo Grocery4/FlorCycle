@@ -1,26 +1,26 @@
-
 .calendar-page-container {
   display: flex;
   flex-direction: column;
   padding: 20px;
-  height: 100vh;
+  min-height: 100vh;
   box-sizing: border-box;
 }
 
 .calendar-wrapper {
-  display: flex; /* Side by side layout */
+  display: flex;
   flex: 1;
   overflow: hidden;
-  gap: 20px;
+  gap: 30px;
+  margin-top: 20px;
 }
 
 .calendar-list {
-  flex: 2; /* Takes more space */
+  flex: 2;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding-right: 10px;
+  gap: 30px;
+  padding: 10px;
 }
 
 /* Navigation Header */
@@ -28,356 +28,224 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: white;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    background: var(--surface-color);
+    padding: 20px;
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    margin-bottom: 20px;
 }
 
 .nav-btn {
     text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 20px;
-    background-color: #f0f0f0;
-    transition: background-color 0.2s;
+    color: var(--text-color);
+    font-weight: 800;
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: 4px 4px 0 0 var(--border-color);
+    text-transform: uppercase;
 }
 
 .nav-btn:hover {
-    background-color: #e0e0e0;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--border-color);
 }
 
-.current-month-display {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #333;
+.nav-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 0 var(--border-color);
 }
-
 
 .daily-view-sidebar {
-  flex: 1; /* Takes less space */
-  background: #fff;
-  border-left: 1px solid #eee;
-  padding: 20px;
+  flex: 1;
+  background: var(--surface-color);
+  border: var(--border-width) solid var(--border-color);
+  padding: 25px;
   display: flex;
   flex-direction: column;
-  /* Optional: Slide in animation or just static */
-  border-radius: 12px;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
-  overflow: hidden; /* Prevent sidebar itself from scrolling, rely on content */
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+  overflow: hidden;
 }
 
 .daily-view-content {
     flex: 1;
-    overflow-y: auto; /* Enable scrolling for content */
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    padding-right: 5px; /* Space for scrollbar */
 }
 
 /* Calendar Styles */
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: var(--surface-color);
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+  margin-bottom: 30px;
 }
 
 th {
-  padding: 10px;
-  background: #f8f9fa;
-  color: #666;
-  font-weight: 600;
+  padding: 15px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-weight: 800;
+  text-transform: uppercase;
+  border: 1px solid var(--border-color);
 }
 
 td {
-  height: 80px; /* Taller cells for modern look */
+  height: 100px;
   vertical-align: top;
-  padding: 5px;
-  border: 1px solid #f0f0f0;
+  padding: 10px;
+  border: 1px solid var(--border-color);
   cursor: pointer;
   position: relative;
-  transition: background 0.2s;
+  transition: background 0.1s;
 }
 
 td:hover {
-  background-color: #fcfcfc;
+  background-color: #fdf2f8;
 }
 
 td.selected-date {
-  box-shadow: inset 0 0 0 2px var(--primary-color, #d55f5f);
+  background-color: #fce7f3;
+  box-shadow: inset 0 0 0 4px var(--primary-color);
 }
 
 .day-content {
-  font-weight: 500;
-  font-size: 0.9em;
-  color: #333;
+  font-weight: 800;
+  font-size: 1.1rem;
 }
 
 /* Highlights */
 .highlight-menstruation {
-  background-color: rgba(255, 182, 193, 0.4); /* Light pink */
+  background-color: #ffc1e3;
 }
 
 .highlight-ovulation {
-  background-color: rgba(173, 216, 230, 0.4); /* Light blue */
+  background-color: #b2dfdb;
 }
 
-/* Overlap handling? CSS classes are joined by space. 
-   If both present, background defaults to one. Gradient would be better. */
 .highlight-menstruation.highlight-ovulation {
   background: linear-gradient(
     135deg,
-    rgba(255, 182, 193, 0.4) 50%,
-    rgba(173, 216, 230, 0.4) 50%
+    #ffc1e3 50%,
+    #b2dfdb 50%
   );
 }
 
 .has-log::after {
   content: "";
   display: block;
-  width: 6px;
-  height: 6px;
-  background-color: #d55f5f;
-  border-radius: 50%;
-  margin: 4px auto;
+  width: 10px;
+  height: 10px;
+  background-color: var(--border-color);
+  border: 1px solid var(--surface-color);
+  margin: 5px auto;
 }
 
 /* Daily View */
 .daily-view-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
+  margin-bottom: 25px;
+  border-bottom: var(--border-width) solid var(--border-color);
+  padding-bottom: 15px;
 }
 
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
+.daily-view-header h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 .indicator {
   display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border: 2px solid var(--border-color);
   font-size: 0.8rem;
-  font-weight: bold;
-  color: white;
-  margin-right: 5px;
+  font-weight: 800;
+  color: #000;
+  margin-right: 10px;
+  text-transform: uppercase;
 }
 
-.indicator.period {
-  background-color: #e57373;
-}
+.indicator.period { background-color: var(--primary-color); }
+.indicator.ovulation { background-color: var(--secondary-color); }
 
-.indicator.ovulation {
-  background-color: #64b5f6;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.add-log-btn {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #333;
-  color: white;
-  text-decoration: none;
-  border-radius: 20px;
-  text-align: center;
-}
-@media (max-width: 768px) {
-    .add-entry-container {
-        padding: 10px;
-    }
-    
-    .sub-form {
-        padding: 12px;
-        margin: 12px 0;
-    }
-}
-
-.add-entry-container {
-    width: 100%;
-    margin: 0;
-    padding: 5px;
-    box-sizing: border-box;
-}
+.hidden { display: none !important; }
 
 .sub-form {
-    border: 2px solid #000;
-    padding: 16px;
-    margin: 16px 0;
-    background: white;
-    width: 100%;
-    box-sizing: border-box;
+    border: var(--border-width) solid var(--border-color);
+    padding: 20px;
+    margin: 20px 0;
+    background: var(--surface-color);
+    box-shadow: 4px 4px 0 0 var(--border-color);
 }
 
-
-
-#id_symptoms, 
-#id_moods, 
-#id_medications {
-    border: 1px solid black;
-    padding: 10px;
-    max-height: 300px;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
+.sub-form h3 {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
 }
 
-/* Hide checkboxes */
-#id_symptoms input[type="checkbox"],
-#id_moods input[type="checkbox"],
-#id_medications input[type="checkbox"] {
-    display: none;
+.field-wrapper {
+    margin-bottom: 15px;
 }
 
-/* Style labels as clickable items */
-#id_symptoms label,
-#id_moods label,
-#id_medications label {
+.field-wrapper label {
     display: block;
-    padding: 8px 12px;
-    margin: 0;
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: center;
-    font-weight: normal;
+    margin-bottom: 5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.85rem;
 }
 
-/* Hover state */
-#id_symptoms label:hover,
-#id_moods label:hover,
-#id_medications label:hover {
-    background-color: #e9ecef;
-    border-color: #adb5bd;
+/* Blocky overrides for existing complex widgets */
+#id_symptoms, #id_moods, #id_medications {
+    border: 2px solid var(--border-color) !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px !important;
 }
 
-/* Selected state - highlight when checkbox is checked */
+#id_symptoms label, #id_moods label, #id_medications label {
+    border: 2px solid var(--border-color) !important;
+    border-radius: 0 !important;
+    background-color: var(--surface-color) !important;
+    font-weight: 700 !important;
+    padding: 8px 12px !important;
+    font-size: 0.8rem !important;
+}
+
 #id_symptoms label:has(input[type="checkbox"]:checked),
 #id_moods label:has(input[type="checkbox"]:checked),
 #id_medications label:has(input[type="checkbox"]:checked) {
-    background-color: #000;
-    color: white;
-    border-color: #000;
+    background-color: var(--primary-color) !important;
+    box-shadow: 2px 2px 0 0 var(--border-color);
 }
 
-
-
-
-.sub-form h3 {
-    margin-top: 0;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #ccc;
-    top: 0;
-    background: white;
-    z-index: 1;
-}
-
-.sub-form label {
-    display: block;
-    margin: 8px 0 4px;
-    font-weight: bold;
-}
-
-.sub-form input,
-.sub-form select,
-.sub-form textarea {
+.save-btn {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.sub-form input:focus,
-.sub-form select:focus,
-.sub-form textarea:focus {
-    outline: none;
-    border-color: #000;
-}
-
-button[type="submit"] {
-    background-color: #000;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: var(--border-width) solid var(--border-color);
+    font-weight: 800;
+    text-transform: uppercase;
     cursor: pointer;
-    font-size: 16px;
-    margin-top: 16px;
-    width: 100%;
-}
-
-button[type="submit"]:hover {
-    background-color: #333;
-}
-
-
-
-form {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.form-errors {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border-radius: 0.25rem;
-}
-
-.error-message {
-    color: #dc3545;
-    font-size: 0.875em;
-    margin-top: 0.25rem;
-}
-
-
-
-.field-with-reset {
-    position: relative;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
 }
 
 .reset-btn {
-    display: block;
-    width: 100%;
-    margin-top: 8px;
-    padding: 6px 12px;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
-}
-
-.reset-btn:hover {
-    background-color: #5a6268;
-}
-
-.reset-btn:active {
-    background-color: #4e555b;
+    background-color: var(--warning-color);
+    color: #000;
+    border: 2px solid var(--border-color);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    padding: 5px;
+    margin-top: 5px;
 }

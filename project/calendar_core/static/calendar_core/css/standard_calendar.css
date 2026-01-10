@@ -1,14 +1,53 @@
-.highlight-menstruation {
-    background-color : pink;
-}
-
-.highlight-ovulation {
-    background-color : green;
-}
-
 .calendar-container {
     display: flex;
     flex-direction: row;
-    flex: 1;
-    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.cal {
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    padding: 10px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    border-bottom: var(--border-width) solid var(--border-color);
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    font-weight: 700;
+}
+
+.highlight-menstruation {
+    background-color: #ffc1e3;
+    color: #000;
+}
+
+.highlight-ovulation {
+    background-color: #b2dfdb;
+    color: #000;
+}
+
+.highlight-menstruation.highlight-ovulation {
+    background: linear-gradient(
+        135deg,
+        #ffc1e3 50%,
+        #b2dfdb 50%
+    );
 }

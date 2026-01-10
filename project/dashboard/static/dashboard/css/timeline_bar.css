@@ -2,7 +2,7 @@
 
 .timeline-container {
     width: 100%;
-    padding: 5px 0;
+    padding: 15px 0;
 }
 
 .timeline-container.no-cycle {
@@ -10,40 +10,40 @@
     align-items: center;
     justify-content: center;
     min-height: 80px;
-    color: #666;
-    font-style: italic;
+    color: var(--text-color);
+    font-weight: 700;
 }
 
 .timeline-header {
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 
 .timeline-header h3 {
-    margin: 0 0 2px 0;
-    font-size: 14px;
-    font-weight: 600;
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 .cycle-dates {
     margin: 0;
-    font-size: 12px;
-    color: #666;
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 
 /* Timeline Bar */
 .timeline-bar-wrapper {
     position: relative;
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 20px;
 }
 
 .timeline-bar {
     position: relative;
     width: 100%;
-    height: 30px;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    height: 40px;
+    background-color: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
     overflow: hidden;
 }
 
@@ -51,112 +51,97 @@
 .phase {
     position: absolute;
     height: 100%;
-    opacity: 0.8;
-    transition: opacity 0.2s ease;
-}
-
-.phase:hover {
-    opacity: 1;
+    border-right: 2px solid var(--border-color);
 }
 
 .menstruation-phase {
-    background-color: #ff69b4;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: var(--primary-color);
 }
 
 .ovulation-phase {
-    background-color: #90ee90;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: var(--secondary-color);
 }
 
 /* Markers */
 .marker {
     position: absolute;
-    top: 50%;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    width: 4px;
+    height: 100%;
     z-index: 10;
-    border: 2px solid white;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    background-color: var(--border-color);
 }
 
 .current-day-marker {
-    background-color: #ff0000;
+    width: 8px;
+    background-color: var(--error-color);
+    border: 2px solid var(--border-color);
+    box-shadow: 2px 0 0 0 var(--border-color);
 }
 
 .probable-ovulation-marker {
-    background-color: #ffa500;
+    width: 6px;
+    background-color: var(--warning-color);
+    border: 2px solid var(--border-color);
 }
 
 /* Legend */
 .timeline-legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    font-size: 11px;
+    gap: 15px;
+    font-size: 0.8rem;
+    font-weight: 700;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 
 .legend-color {
     display: inline-block;
-    width: 16px;
-    height: 16px;
-    border-radius: 2px;
-    border: 1px solid #ccc;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-color);
 }
 
 .legend-color.menstruation {
-    background-color: #ff69b4;
+    background-color: var(--primary-color);
 }
 
 .legend-color.ovulation {
-    background-color: #90ee90;
+    background-color: var(--secondary-color);
 }
 
 .legend-marker {
     display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 1px solid white;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-color);
 }
 
 .legend-marker.current-day {
-    background-color: #ff0000;
+    background-color: var(--error-color);
 }
 
 .legend-marker.probable-ovulation {
-    background-color: #ffa500;
+    background-color: var(--warning-color);
 }
 
 .legend-label {
-    color: #333;
+    color: var(--text-color);
+    text-transform: uppercase;
 }
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
     .timeline-bar {
-        height: 32px;
+        height: 50px;
     }
     
     .timeline-legend {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .timeline-header h3 {
-        font-size: 14px;
-    }
-    
-    .cycle-dates {
-        font-size: 12px;
+        gap: 10px;
     }
 }

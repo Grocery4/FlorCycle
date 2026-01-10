@@ -1,23 +1,39 @@
 .prediction-wrapper {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    gap: 15px;
+    padding: 10px;
 }
 
 .prediction-item {
     flex: 1;
-    margin: 5px;
+    text-align: center;
+    padding: 15px;
+    border: 2px solid var(--border-color);
+    background: var(--surface-color);
+}
+
+.prediction-item.menstruation {
+    background-color: var(--primary-color);
+    color: #000;
+}
+
+.prediction-item.ovulation {
+    background-color: var(--secondary-color);
+    color: #000;
 }
 
 .prediction-item b {
     display: block;
-    font-size: 1.1rem;
-    margin-bottom: 2px;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 .prediction-item p {
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 700;
     text-transform: uppercase;
-    color: #666;
 }
