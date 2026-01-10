@@ -1,119 +1,122 @@
 .forum-container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 40px auto;
     padding: 20px;
-    /* font-family inherited from base */
 }
 
 .forum-header {
-    text-align: center;
+    text-align: left;
     margin-bottom: 40px;
-    border-bottom: 2px solid #000;
+    border-bottom: var(--border-width) solid var(--border-color);
     padding-bottom: 20px;
+    background: var(--surface-color);
+    padding: 20px;
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
 }
 
 .forum-header h1 {
     font-size: 2.5rem;
-    color: #000;
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
     font-weight: 800;
+    text-transform: uppercase;
 }
 
 .forum-subtitle {
     font-size: 1.1rem;
-    color: #666;
+    margin: 0;
+    font-weight: 700;
 }
 
 /* Search Section */
 .forum-search-section {
     margin-bottom: 30px;
-    display: flex;
-    justify-content: center;
 }
 
 .search-form {
     display: flex;
-    width: 100%;
-    max-width: 600px;
-    gap: 10px;
+    gap: 0;
 }
 
 .search-form input {
     flex: 1;
-    padding: 12px 20px;
-    border: 2px solid #000; /* Dashboard token */
-    font-size: 1rem;
+    padding: 15px;
+    border: var(--border-width) solid var(--border-color);
+    border-right: none;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    background: var(--surface-color);
     outline: none;
-    background: white;
 }
 
 .search-form input:focus {
-    background: #f0f0f0;
+    background: #fdf2f8;
 }
 
 .search-btn {
-    padding: 12px 30px;
-    background-color: #000; /* Dashboard token */
-    color: white;
-    border: none;
+    padding: 15px 30px;
+    background-color: var(--secondary-color);
+    color: #000;
+    border: var(--border-width) solid var(--border-color);
     cursor: pointer;
-    font-weight: 700;
-    transition: background-color 0.2s;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
 }
 
 .search-btn:hover {
-    background-color: #333;
+    background-color: #3fb0a4;
 }
 
 /* Actions */
 .forum-actions {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.forum-actions .action-btn {
+    flex: 1;
+    min-width: 150px;
 }
 
 .action-btn {
-    text-decoration: none;
-    color: white;
-    background-color: #000; /* Dashboard token */
-    font-weight: 700;
-    padding: 10px 20px;
-    border: none;
-    transition: all 0.2s;
-}
-
-.action-btn:hover {
-    background-color: #333;
+    text-align: center;
 }
 
 /* Threads List */
 .threads-section h2 {
-    font-size: 1.5rem;
-    color: #000;
+    font-size: 1.8rem;
     margin-bottom: 20px;
-    border-bottom: 2px solid #000; /* Dashboard token */
-    padding-bottom: 10px;
-    font-weight: 700;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: inline-block;
+    background: var(--primary-color);
+    padding: 5px 15px;
+    border: var(--border-width) solid var(--border-color);
 }
 
 .threads-list {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
 .thread-card {
-    background: white;
-    border: 2px solid #000; /* Dashboard token */
-    padding: 20px;
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
+    padding: 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background 0.2s;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    transition: transform 0.1s;
 }
 
 .thread-card:hover {
-    background: #f9f9f9;
+    transform: translate(-3px, -3px);
+    box-shadow: calc(var(--shadow-offset) + 3px) calc(var(--shadow-offset) + 3px) 0 0 var(--border-color);
 }
 
 .thread-info {
@@ -121,62 +124,88 @@
 }
 
 .thread-title {
-    margin: 0 0 8px 0;
-    font-size: 1.2rem;
-    font-weight: 700;
+    margin: 0 0 12px 0;
+    font-size: 1.4rem;
+    font-weight: 800;
 }
 
 .thread-title a {
     text-decoration: none;
-    color: #000;
+    color: var(--text-color);
 }
 
 .thread-title a:hover {
     text-decoration: underline;
+    text-decoration-thickness: 3px;
 }
 
 .solved-badge {
-    background: #008000;
-    color: white;
-    padding: 2px 8px;
+    background: var(--success-color);
+    color: #000;
+    padding: 4px 10px;
     font-size: 0.75rem;
     font-weight: 800;
-    border-radius: 4px;
+    border: var(--border-width) solid var(--border-color);
     margin-left: 10px;
     vertical-align: middle;
 }
 
 .thread-meta {
-    font-size: 0.85rem;
-    color: #555;
+    font-size: 0.9rem;
+    font-weight: 700;
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-.thread-meta span {
-    display: inline-flex;
-    align-items: center;
+.author-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+}
+
+.author-link:hover {
+    border-bottom-color: var(--primary-color);
 }
 
 .thread-stats {
     margin-left: 20px;
-    min-width: 80px;
+    min-width: 100px;
     text-align: right;
 }
 
 .comment-count {
-    background: #f0f0f0; /* Dashboard token */
-    border: 1px solid #000; /* Dashboard token */
-    padding: 5px 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    background: var(--primary-color);
+    border: var(--border-width) solid var(--border-color);
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    font-weight: 800;
     color: #000;
+    box-shadow: 3px 3px 0 0 var(--border-color);
+    display: inline-block;
 }
 
 .empty-state {
     text-align: center;
-    padding: 40px;
-    color: #666;
-    border: 2px dashed #000; /* Dashboard token */
-    background: #fff;
+    padding: 50px;
+    border: var(--border-width) solid var(--border-color);
+    background: var(--surface-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+}
+
+.empty-state p {
+    font-weight: 800;
+    font-size: 1.2rem;
+}
+
+/* From inline styles in forum_home.html */
+.forum-nav {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.mod-btn {
+    background: var(--warning-color) !important;
+    color: #000 !important;
 }

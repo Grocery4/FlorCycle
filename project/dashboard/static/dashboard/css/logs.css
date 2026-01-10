@@ -14,7 +14,3 @@
     flex-direction: row;
     justify-content: space-between;
 }
-
-.button-group > a {
-    padding: 0 10px;
-}

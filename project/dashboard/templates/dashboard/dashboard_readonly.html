@@ -16,7 +16,7 @@
             {% if error %}
                 <section class="error-section">
                     <p>{{ error }}</p>
-                    <a href="{% url 'dashboard:partner_setup_page' %}"><button>{% trans "Go to Partner Setup" %}</button></a>
+                    <a href="{% url 'dashboard:partner_setup_page' %}"><button class="block-btn">{% trans "Go to Partner Setup" %}</button></a>
                 </section>
             {% else %}
                 <section class="period-prediction">{% include "dashboard/next_prediction.html" %}</section>

@@ -1,8 +1,16 @@
-{% extends "base.html" %} {% load i18n %} {% block title %}{% trans "Edit
-Thread" %}{% endblock %} {% block content %}
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'forum_core/css/forum_home.css' %}" />
+<link rel="stylesheet" href="{% static 'forum_core/css/forum_form.css' %}" />
+{% endblock %}
+{% block title %}{% trans "Edit Thread" %}{% endblock %}
+
+{% block content %}
 <div class="forum-container">
   <div class="forum-nav">
-    <a href="{% url 'forum_core:thread' thread.id %}" class="nav-link"
+    <a href="{% url 'forum_core:thread' thread.id %}" class="back-link"
       >← {% trans "Back to Thread" %}</a
     >
   </div>
@@ -10,99 +18,40 @@ Thread" %}{% endblock %} {% block content %}
     <h1>{% trans "Edit Thread" %}</h1>
   </div>
 
-  <div class="form-container">
+  <div class="forum-form-container">
     <form method="POST">
       {% csrf_token %}
       <div class="form-group">
         <label>{% trans "Title" %}</label>
-        <div class="static-field">{{ thread.title }}</div>
+        <div class="block-input" style="background: #eee; cursor: not-allowed">
+          {{ thread.title }}
+        </div>
       </div>
       <div class="form-group">
         <label for="{{ form.content.id_for_label }}"
           >{% trans "Content" %}</label
         >
-        {{ form.content }}
+        <textarea
+          name="content"
+          id="{{ form.content.id_for_label }}"
+          class="block-input"
+          rows="10"
+          required
+        >
+{{ form.content.value }}</textarea
+        >
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="block-btn">
           {% trans "Save Changes" %}
         </button>
         <a
           href="{% url 'forum_core:thread' thread.id %}"
-          class="btn btn-secondary"
+          class="block-btn block-btn-outline"
           >{% trans "Cancel" %}</a
         >
       </div>
     </form>
   </div>
 </div>
-
-<style>
-  .forum-nav {
-    margin-bottom: 2rem;
-  }
-  .nav-link {
-    color: #000;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .nav-link:hover {
-    text-decoration: underline;
-  }
-  .form-container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: white;
-    border: 2px solid #000;
-  }
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-  }
-  .form-input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid #000;
-    background: white;
-    color: black;
-    font-family: inherit;
-    box-sizing: border-box;
-  }
-  .static-field {
-    padding: 0.75rem;
-    background: #f0f0f0;
-    border: 2px solid #ddd;
-    color: #666;
-  }
-  .btn {
-    padding: 0.75rem 1.5rem;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: 800;
-    transition: all 0.2s;
-    border: 2px solid #000;
-  }
-  .btn-primary {
-    background: #000;
-    color: white;
-  }
-  .btn-secondary {
-    background: white;
-    color: #000;
-    margin-left: 1rem;
-  }
-  .btn:hover {
-    background: #333;
-    color: white;
-  }
-</style>
 {% endblock %}
