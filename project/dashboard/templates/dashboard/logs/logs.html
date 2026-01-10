@@ -32,8 +32,8 @@
 
   <div class="cycle-windows-container">
     <div class="button-group">
-      <a href="?view=history">{% trans "History" %}</a>
-      <a href="?view=predictions">{% trans "Predictions" %}</a>
+      <a href="?view=history" class="block-btn {% if active_view != 'history' %}block-btn-outline{% endif %}">{% trans "History" %}</a>
+      <a href="?view=predictions" class="block-btn {% if active_view != 'predictions' %}block-btn-outline{% endif %}">{% trans "Predictions" %}</a>
     </div>
 
     <div class="cycle-list">

@@ -4,10 +4,10 @@
 
 <div class="top-bar">
   {% if request.user.user_type == 'PARTNER' %}
-  <a href="{% url 'dashboard:homepage_readonly'%}" class="settings">{% trans "go back" %}</a>
+    <a href="{% url 'dashboard:homepage_readonly'%}" class="block-btn block-btn-secondary">{% trans "go back" %}</a>
   {% elif request.user.user_type == 'DOCTOR' or request.user.user_type == 'MODERATOR' %}
-  <a href="{% url 'forum_core:home'%}" class="settings">{% trans "go back" %}</a >
+    <a href="{% url 'forum_core:home'%}" class="block-btn block-btn-secondary">{% trans "go back" %}</a>
   {% else %}
-  <a href="{% url 'dashboard:homepage'%}" class="settings">{% trans "go back" %}</a>
+    <a href="{% url 'dashboard:homepage'%}" class="block-btn block-btn-secondary">{% trans "go back" %}</a>
   {% endif %}
 </div>

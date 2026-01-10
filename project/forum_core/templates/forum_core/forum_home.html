@@ -1,13 +1,16 @@
-{% extends 'base.html' %} {% load static %} {% load i18n %} {% block extra_head %}
-<link rel="stylesheet" href="{% static 'forum_core/css/forum_home.css' %}" />
-{% endblock extra_head %} {% block title %}{% trans "Florcycle Forums | Homepage" %}{% endblock %} 
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'forum_core/css/forum_home.css' %}" />{% endblock extra_head %} 
+{% block title %}{% trans "Florcycle Forums | Homepage" %}{% endblock %} 
+
 {% block content %}
 <div class="forum-container">
   <div class="forum-nav">
     {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
-    <a href="{% url 'dashboard:homepage' %}" class="back-dashboard">← {% trans "Back to Dashboard" %}</a>
+    <a href="{% url 'dashboard:homepage' %}" class="block-btn block-btn-secondary">{% trans "Back to Dashboard" %}</a>
     {% endif %}
-    <a href="{% url 'dashboard:settings_page' %}" class="forum-settings-link">{% trans "Settings" %}</a>
+    <a href="{% url 'dashboard:settings_page' %}" class="block-btn">{% trans "Settings" %}</a>
   </div>
   <div class="forum-header">
     <h1>{% trans "Community Forum" %}</h1>
@@ -32,9 +35,7 @@
     <a href="{% url 'forum_core:user_profile' request.user.username %}" class="block-btn profile-btn">{% trans "My Profile" %}</a>
     <a href="{% url 'forum_core:doctor_ranking' %}" class="block-btn">{% trans "Doctor Ranking" %}</a>
     <a href="{% url 'forum_core:create_thread' %}" class="block-btn create-btn">{% trans "Create Thread" %}</a>
-    {% if request.user.user_type == 'MODERATOR' %}
-      <a href="{% url 'forum_core:moderator_dashboard' %}" class="block-btn mod-btn">{% trans "Moderator Dashboard" %}</a>
-    {% endif %}
+    {% if request.user.user_type == 'MODERATOR' %}<a href="{% url 'forum_core:moderator_dashboard' %}" class="block-btn mod-btn">{% trans "Moderator Dashboard" %}</a>{% endif %}
   </div>
 
   <!-- Last Updated Threads -->
@@ -46,31 +47,19 @@
       {% for thread in threads %}
       <div class="thread-card">
         <div class="thread-info">
-          <h3 class="thread-title">
-            <a href="{% url 'forum_core:thread' thread.id %}">{{ thread.title }}</a>
-            {% if thread.is_solved %}
-            <span class="solved-badge">✓ {% trans "SOLVED" %}</span>
-            {% endif %}
-          </h3>
+          <h3 class="thread-title"><a href="{% url 'forum_core:thread' thread.id %}">{{ thread.title }}</a>{% if thread.is_solved %}<span class="solved-badge">✓ {% trans "SOLVED" %}</span>{% endif %}</h3>
           <div class="thread-meta">
-            <span class="thread-author">{% trans "by" %}
-              <a href="{% url 'forum_core:user_profile' thread.created_by.username %}" class="author-link">{{ thread.created_by.username }}</a
-              ></span
-            >
+            <span class="thread-author">{% trans "by" %}<a href="{% url 'forum_core:user_profile' thread.created_by.username %}" class="author-link">{{ thread.created_by.username }}</a></span>
             <span class="thread-date">{% trans "Updated:" %} {{ thread.updated_at|date:"M d, Y"}}</span>
             <span class="thread-participants">{% blocktrans with count=thread.participants.count %}{{ count }}participants{% endblocktrans %}</span>
           </div>
         </div>
-        <div class="thread-stats">
-          <span class="comment-count">{% blocktrans with count=thread.comments.count %}{{ count }}comments{% endblocktrans %}</span>
-        </div>
+        <div class="thread-stats"><span class="comment-count">{% blocktrans with count=thread.comments.count %}{{ count }}comments{% endblocktrans %}</span></div>
       </div>
       {% endfor %}
     </div>
     {% else %}
-    <div class="empty-state">
-      <p>{% trans "No threads found. Be the first to start a conversation!" %}</p>
-    </div>
+      <div class="empty-state"><p>{% trans "No threads found. Be the first to start a conversation!" %}</p></div>
     {% endif %}
   </div>
 </div>
