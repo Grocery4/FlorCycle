@@ -17,37 +17,41 @@
     </p>
   </div>
 
-  <div class="guest-form-section">
-    <form method="post" class="block-card">
-      <h3>{% trans "Enter Your Cycle Details" %}</h3>
-      {% csrf_token %} {% for field in form %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {{ field }}
-      </div>
-      {% endfor %}
-      <button type="submit" class="block-btn">
-        {% trans "Calculate Cycle" %}
-      </button>
-    </form>
-  </div>
-
-  {% if predictions %}
-  <div class="guest-results-section">
-    <div class="prediction-section">
-      <h3>{% trans "Your Predictions" %}</h3>
-      <div class="prediction_table">
-        {% include "cycle_core/prediction_table.html" %}
-      </div>
+  <div class="guest-content">
+    <div class="guest-form-section">
+      <form method="post" class="block-card">
+        <h3>{% trans "Enter Your Cycle Details" %}</h3>
+        {% csrf_token %} {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+        </div>
+        {% endfor %}
+        <button type="submit" class="block-btn">
+          {% trans "Calculate Cycle" %}
+        </button>
+      </form>
     </div>
 
-    {% if calendars %}
-    <div class="calendar-section">
-      <h3>{% trans "Cycle Calendar" %}</h3>
-      <div class="calendars">{% include "calendar_core/calendars.html" %}</div>
+    {% if predictions %}
+    <div class="guest-results-section">
+      <div class="prediction-section">
+        <h3>{% trans "Your Predictions" %}</h3>
+        <div class="prediction_table">
+          {% include "cycle_core/prediction_table.html" %}
+        </div>
+      </div>
+
+      {% if calendars %}
+      <div class="calendar-section">
+        <h3>{% trans "Cycle Calendar" %}</h3>
+        <div class="calendars">
+          {% include "calendar_core/calendars.html" %}
+        </div>
+      </div>
+      {% endif %}
     </div>
     {% endif %}
   </div>
-  {% endif %}
 </div>
 {% endblock content %}
