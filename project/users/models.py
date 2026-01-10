@@ -109,8 +109,10 @@ class UserProfile(models.Model):
             self.is_configured = False
 
         if self.user.user_type in ['STANDARD', 'PREMIUM']:
-            self.user.user_type = 'PREMIUM' if self.is_premium else 'STANDARD'
-            self.user.save(update_fields=['user_type'])
+            new_user_type = 'PREMIUM' if self.is_premium else 'STANDARD'
+            if self.user.user_type != new_user_type:
+                self.user.user_type = new_user_type
+                self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)
 
 class ModeratorProfile(models.Model):
@@ -121,12 +123,17 @@ class ModeratorProfile(models.Model):
 
     def save(self, *args, **kwargs):
         if self.user:
-            if self.is_verified:
-                self.user.is_staff = True
-            else:
-                self.user.is_staff = False
-            self.user.user_type = 'MODERATOR'
-            self.user.save(update_fields=['user_type', 'is_staff'])
+            new_is_staff = bool(self.is_verified)
+            changed = False
+            if self.user.is_staff != new_is_staff:
+                self.user.is_staff = new_is_staff
+                changed = True
+            if self.user.user_type != 'MODERATOR':
+                self.user.user_type = 'MODERATOR'
+                changed = True
+            
+            if changed:
+                self.user.save(update_fields=['user_type', 'is_staff'])
         super().save(*args, **kwargs)
 
 
@@ -140,8 +147,9 @@ class DoctorProfile(models.Model):
     # rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
     def save(self, *args, **kwargs):
-        self.user.user_type = 'DOCTOR'
-        self.user.save(update_fields=['user_type'])
+        if self.user.user_type != 'DOCTOR':
+            self.user.user_type = 'DOCTOR'
+            self.user.save(update_fields=['user_type'])
         super().save(*args, **kwargs)
 
 
@@ -152,8 +160,9 @@ class PartnerProfile(models.Model):
     linked_user = models.ForeignKey(CustomUser, related_name="partners", on_delete=models.CASCADE, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        self.user.user_type = 'PARTNER'
-        self.user.save(update_fields=['user_type'])
+        if self.user.user_type != 'PARTNER':
+            self.user.user_type = 'PARTNER'
+            self.user.save(update_fields=['user_type'])
         if not self.partner_code:
             self.partner_code = generate_partner_code()
             while PartnerProfile.objects.filter(partner_code=self.partner_code).exists():

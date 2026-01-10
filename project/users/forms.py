@@ -47,10 +47,12 @@ class DoctorSignupForm(UserCreationForm):
         user.user_type = 'DOCTOR'
         if commit:
             user.save()
-            DoctorProfile.objects.create(
+            DoctorProfile.objects.update_or_create(
                 user=user,
-                cv=self.cleaned_data["cv"],
-                license_number=self.cleaned_data["license_number"],
+                defaults={
+                    'cv': self.cleaned_data["cv"],
+                    'license_number': self.cleaned_data["license_number"],
+                }
             )
         return user
 
@@ -66,7 +68,7 @@ class PartnerSignupForm(UserCreationForm):
         user.user_type = 'PARTNER'
         if commit:
             user.save()
-            PartnerProfile.objects.create(user=user)
+            PartnerProfile.objects.get_or_create(user=user)
         return user
 
 class PremiumUpgradeForm(forms.ModelForm):

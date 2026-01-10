@@ -7,11 +7,3 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         # UserProfile is created for ALL users to house generic data like profile_picture
         UserProfile.objects.get_or_create(user=instance)
-
-        # Create specific profiles based on user type
-        if instance.user_type == 'MODERATOR':
-            ModeratorProfile.objects.get_or_create(user=instance)
-        elif instance.user_type == 'DOCTOR':
-            DoctorProfile.objects.get_or_create(user=instance)
-        elif instance.user_type == 'PARTNER':
-            PartnerProfile.objects.get_or_create(user=instance)
