@@ -42,7 +42,7 @@ def partner_form(request):
     ctx = {}
     ctx['form'] = PartnerSignupForm()
     if request.method == 'POST':
-        form = PartnerSignupForm(request.POST)
+        form = PartnerSignupForm(request.POST, request.FILES)
         ctx['form'] = form
         if form.is_valid():
             form.save()

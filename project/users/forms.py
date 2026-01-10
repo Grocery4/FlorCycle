@@ -30,6 +30,7 @@ class ModeratorSignupForm(UserCreationForm):
 class DoctorSignupForm(UserCreationForm):
     cv = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=["pdf", "docx"])], required=True)
     license_number = forms.CharField(max_length=100)
+    profile_picture = forms.ImageField(required=False)
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
@@ -54,10 +55,16 @@ class DoctorSignupForm(UserCreationForm):
                     'license_number': self.cleaned_data["license_number"],
                 }
             )
+            
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            if self.cleaned_data.get('profile_picture'):
+                profile.profile_picture = self.cleaned_data['profile_picture']
+            profile.save()
         return user
 
 
 class PartnerSignupForm(UserCreationForm):
+    profile_picture = forms.ImageField(required=False)
     
     class Meta(UserCreationForm.Meta):
         model = CustomUser
@@ -69,6 +76,11 @@ class PartnerSignupForm(UserCreationForm):
         if commit:
             user.save()
             PartnerProfile.objects.get_or_create(user=user)
+            
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            if self.cleaned_data.get('profile_picture'):
+                profile.profile_picture = self.cleaned_data['profile_picture']
+            profile.save()
         return user
 
 class PremiumUpgradeForm(forms.ModelForm):
