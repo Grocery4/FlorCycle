@@ -10,7 +10,7 @@
     align-items: center;
     justify-content: center;
     min-height: 80px;
-    color: var(--text-color);
+    color: var(--greyed-text-color);
     font-weight: 700;
 }
 
