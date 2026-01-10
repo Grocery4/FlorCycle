@@ -1,17 +1,22 @@
-{% extends "base.html" %} {% load static %} {% load i18n %} {% block title %}{%
-trans "Sign up" %}{% endblock %} {% block extra_head %}<link
-  rel="stylesheet"
-  href="{% static 'css/auth.css' %}"
-/>{% endblock %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% trans "Sign up" %}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/auth.css' %}">{% endblock %}
+
+{% block content %}
 <div class="auth-wrapper">
   <div class="auth-card">
     <h2>{% trans "Sign up" %}</h2>
     <form method="post" enctype="multipart/form-data">
-      {% csrf_token %} {% if form.non_field_errors %}
+      {% csrf_token %} 
+	  {% if form.non_field_errors %}
       <div class="error" style="margin-bottom: 1rem">
         {{ form.non_field_errors }}
       </div>
-      {% endif %} {% for field in form %}
+      {% endif %} 
+	  
+	  {% for field in form %}
       <div class="form-group">
         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
         {{ field }} {% if field.help_text %}
