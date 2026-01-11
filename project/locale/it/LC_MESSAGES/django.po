@@ -404,118 +404,132 @@ msgstr "Fornisci i tuoi dati del ciclo per iniziare."
 msgid "Save & Continue"
 msgstr "Salva & Continua"
 
-#: dashboard/templates/dashboard/stats/stats.html:13
+#: dashboard/templates/dashboard/stats/stats.html:87
 msgid "Statistics"
 msgstr "Statistiche"
 
-#: dashboard/templates/dashboard/stats/stats.html:22
+#: dashboard/templates/dashboard/stats/stats.html:96
 msgid "No matches found"
 msgstr "Nessun risultato trovato"
 
-#: dashboard/templates/dashboard/stats/stats.html:26
-#: dashboard/templates/dashboard/stats/stats.html:54
+#: dashboard/templates/dashboard/stats/stats.html:100
+msgid "Cycle Length Distribution"
+msgstr "Distribuzione della durata del ciclo"
+
+#: dashboard/templates/dashboard/stats/stats.html:105
+msgid "Not enough historical data to generate distribution."
+msgstr "Dati storici insufficienti per generare la distribuzione."
+
+#: dashboard/templates/dashboard/stats/stats.html:110
+#: dashboard/templates/dashboard/stats/stats.html:138
 msgid "Last 1 Month"
 msgstr "Ultimo mese"
 
-#: dashboard/templates/dashboard/stats/stats.html:27
-#: dashboard/templates/dashboard/stats/stats.html:55
+#: dashboard/templates/dashboard/stats/stats.html:111
+#: dashboard/templates/dashboard/stats/stats.html:139
 msgid "Last 3 Months"
 msgstr "Ultimi 3 mesi"
 
-#: dashboard/templates/dashboard/stats/stats.html:28
-#: dashboard/templates/dashboard/stats/stats.html:56
+#: dashboard/templates/dashboard/stats/stats.html:112
+#: dashboard/templates/dashboard/stats/stats.html:140
 msgid "Last 6 Months"
 msgstr "Ultimi 6 mesi"
 
-#: dashboard/templates/dashboard/stats/stats.html:29
-#: dashboard/templates/dashboard/stats/stats.html:57
+#: dashboard/templates/dashboard/stats/stats.html:113
+#: dashboard/templates/dashboard/stats/stats.html:141
 msgid "Last Year"
 msgstr "Anno scorso"
 
-#: dashboard/templates/dashboard/stats/stats.html:32
+#: dashboard/templates/dashboard/stats/stats.html:116
 msgid "Activity"
 msgstr "Rapporti sessuali"
 
-#: dashboard/templates/dashboard/stats/stats.html:35
+#: dashboard/templates/dashboard/stats/stats.html:119
 msgid "Total Intercourse"
 msgstr "Totale rapporti"
 
-#: dashboard/templates/dashboard/stats/stats.html:39
+#: dashboard/templates/dashboard/stats/stats.html:123
 msgid "Orgasm Rate"
 msgstr "Percentuale Orgasmi"
 
-#: dashboard/templates/dashboard/stats/stats.html:43 log_core/models.py:125
+#: dashboard/templates/dashboard/stats/stats.html:127 log_core/models.py:125
 msgid "Protected"
 msgstr "Protetti"
 
-#: dashboard/templates/dashboard/stats/stats.html:47
+#: dashboard/templates/dashboard/stats/stats.html:131
 msgid "Unprotected"
 msgstr "Non protetti"
 
-#: dashboard/templates/dashboard/stats/stats.html:60
+#: dashboard/templates/dashboard/stats/stats.html:23
+#: dashboard/templates/dashboard/stats/stats.html:144
 msgid "Frequency"
 msgstr "Frequenza"
 
-#: dashboard/templates/dashboard/stats/stats.html:63
+#: dashboard/templates/dashboard/stats/stats.html:147
 msgid "Intercourse Frequency"
 msgstr "Frequenza rapporti"
 
-#: dashboard/templates/dashboard/stats/stats.html:67
+#: dashboard/templates/dashboard/stats/stats.html:151
 msgid "Orgasm Frequency"
 msgstr "Frequenza orgasmi"
 
-#: dashboard/templates/dashboard/stats/stats.html:74
+#: dashboard/templates/dashboard/stats/stats.html:158
 msgid "Common Symptoms"
 msgstr "Sintomi comuni"
 
-#: dashboard/templates/dashboard/stats/stats.html:78
+#: dashboard/templates/dashboard/stats/stats.html:162
 msgid "No enough data yet."
 msgstr "Dati insufficienti."
 
-#: dashboard/templates/dashboard/stats/stats.html:82
+#: dashboard/templates/dashboard/stats/stats.html:166
 msgid "Search Logs"
 msgstr "Cerca nel diario"
 
-#: dashboard/templates/dashboard/stats/stats.html:84
+#: dashboard/templates/dashboard/stats/stats.html:168
 msgid "Search notes..."
 msgstr "Cerca nelle note..."
 
-#: dashboard/templates/dashboard/stats/stats.html:85
+#: dashboard/templates/dashboard/stats/stats.html:169
 #: forum_core/templates/forum_core/forum_home.html:29
 #: forum_core/templates/forum_core/moderator_dashboard.html:163
 msgid "Search"
 msgstr "Cerca"
 
-#: dashboard/templates/dashboard/stats/stats.html:88
+#: dashboard/templates/dashboard/stats/stats.html:172
 msgid "Results"
 msgstr "Risultati"
 
-#: dashboard/templates/dashboard/stats/stats.html:94
+#: dashboard/templates/dashboard/stats/stats.html:178
 msgid "Symptom & Mood Analysis"
 msgstr "Analisi di sintomi e stati d'animo"
 
-#: dashboard/templates/dashboard/stats/stats.html:96 log_core/forms.py:10
+#: dashboard/templates/dashboard/stats/stats.html:180 log_core/forms.py:10
 #: log_core/models.py:17 log_core/models.py:73
 msgid "Symptoms"
 msgstr "Sintomi"
 
-#: dashboard/templates/dashboard/stats/stats.html:97 log_core/forms.py:16
+#: dashboard/templates/dashboard/stats/stats.html:181 log_core/forms.py:16
 #: log_core/models.py:28 log_core/models.py:74
 msgid "Moods"
 msgstr "Stati d'animo"
 
-#: dashboard/templates/dashboard/stats/stats.html:98 log_core/forms.py:22
+#: dashboard/templates/dashboard/stats/stats.html:182 log_core/forms.py:22
 #: log_core/models.py:38 log_core/models.py:75
 msgid "Medications"
 msgstr "Farmaci"
 
-#: dashboard/templates/dashboard/stats/stats.html:107
+#: dashboard/templates/dashboard/stats/stats.html:191
 msgid "Total Occurrences:"
 msgstr "Occorrenze totali:"
 
-#: dashboard/templates/dashboard/stats/stats.html:110
+#: dashboard/templates/dashboard/stats/stats.html:46
+#: dashboard/templates/dashboard/stats/stats.html:194
 msgid "Occurrences"
 msgstr "Occorrenze"
+
+#: dashboard/templates/dashboard/stats/stats.html:56
+msgid "Cycle Length (Days)"
+msgstr "Durata del ciclo (giorni)"
 
 #: dashboard/templates/dashboard/stats/timeline_bar.html:6
 msgid "Current Cycle"

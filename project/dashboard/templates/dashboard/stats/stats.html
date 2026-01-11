@@ -4,10 +4,84 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href={% static "dashboard/css/stats.css" %}>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock extra_head %}
 
 {% block extra_js %}
     <script type="text/javascript" src="{% static "dashboard/js/stats.js" %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('cycleLengthChart').getContext('2d');
+            const data = {{ cycle_length_distribution|safe }};
+            
+            if (data.data && data.data.length > 0) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: '{% trans "Frequency" %}',
+                            data: data.data,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            borderColor: '#000',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            barPercentage: 0.6,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    font: {
+                                        family: "'JetBrains Mono', monospace"
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: '{% trans "Occurrences" %}',
+                                    font: {
+                                        family: "'JetBrains Mono', monospace",
+                                        weight: 'bold'
+                                    }
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '{% trans "Cycle Length (Days)" %}',
+                                    font: {
+                                        family: "'JetBrains Mono', monospace",
+                                        weight: 'bold'
+                                    }
+                                },
+                                ticks: {
+                                    font: {
+                                        family: "'JetBrains Mono', monospace"
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#000',
+                                titleFont: { family: "'JetBrains Mono', monospace" },
+                                bodyFont: { family: "'JetBrains Mono', monospace" },
+                                displayColors: false
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock extra_js %}
 
 {% block title %}{% trans "Statistics" %}{% endblock title %}
@@ -21,6 +95,16 @@
          data-csrf-token="{{ csrf_token }}"
          data-no-results-text="{% trans 'No matches found' %}">
         {% include "dashboard/subpage_topbar.html" %}
+
+        <div class="stat-section histogram-section">
+            <div class="stat-section-title">{% trans "Cycle Length Distribution" %}</div>
+            <div class="chart-container" style="position: relative; height:300px; width:100%">
+                <canvas id="cycleLengthChart"></canvas>
+            </div>
+            {% if not cycle_length_distribution.data %}
+                <p class="empty-state">{% trans "Not enough historical data to generate distribution." %}</p>
+            {% endif %}
+        </div>
 
         <select id="activity-range-dropdown" class="range-dropdown">
                 <option value="1" {% if activity_month_range == 1 %}selected{% endif %}>{% trans "Last 1 Month" %}</option>

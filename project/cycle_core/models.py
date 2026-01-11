@@ -104,6 +104,8 @@ class CycleWindow(models.Model):
     
 
     def getMenstruationDuration(self):
+        if not self.menstruation_end:
+            return timedelta(days=0)
         return (self.menstruation_end - self.menstruation_start) + timedelta(days=1)
 
 
@@ -119,7 +121,7 @@ class CycleWindow(models.Model):
             'menstruation': {
                 'start': self.menstruation_start,
                 'end': self.menstruation_end,
-                'duration': (self.menstruation_end - self.menstruation_start).days + 1
+                'duration': self.getMenstruationDuration().days
             },
             'ovulation': {
                 'start': self.min_ovulation_window,
