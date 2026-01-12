@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import FileExtensionValidator
-from .models import CustomUser, UserProfile, ModeratorProfile, DoctorProfile, PartnerProfile
+from .models import CustomUser, UserProfile, DoctorProfile, PartnerProfile
 
 class UserSignupForm(UserCreationForm):
     profile_picture = forms.ImageField(required=False)

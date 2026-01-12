@@ -1,6 +1,6 @@
-from django.db.models import Count, Sum
+from django.db.models import Sum
 
-from datetime import datetime, date
+from datetime import date
 from dateutil import relativedelta
 
 from log_core.models import IntercourseLog

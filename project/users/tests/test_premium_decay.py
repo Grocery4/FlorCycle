@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.utils import timezone
 from datetime import timedelta, date
 
 from users.models import CustomUser, UserProfile

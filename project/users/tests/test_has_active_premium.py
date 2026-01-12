@@ -1,5 +1,4 @@
 from django.test import TestCase
-from datetime import timedelta, date
 
 from users.models import CustomUser, UserProfile
 from users.services import activatePremiumSubscription, deactivatePremiumSubscription

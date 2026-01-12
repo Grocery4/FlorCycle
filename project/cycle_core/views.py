@@ -1,6 +1,5 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 
-from .models import CycleDetails
 from .services import PredictionBuilder
 from .forms import CycleDetailsForm
 

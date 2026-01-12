@@ -1,5 +1,5 @@
 from django import forms
-from .models import DailyLog, SymptomLog, MoodLog, IntercourseLog, MedicationLog, Symptom, Mood, Medication
+from .models import DailyLog, IntercourseLog, Symptom, Mood, Medication
 from django.utils.translation import gettext_lazy as _
 
 class DailyLogForm(forms.ModelForm):
