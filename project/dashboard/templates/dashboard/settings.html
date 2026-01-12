@@ -27,7 +27,7 @@
         {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
             <div class="premium-subscription">
                 <h3>{% trans "Premium Membership" %}</h3>
-                {% if not user.userprofile.is_premium %}
+                {% if not user.userprofile.has_active_premium %}
                     <div class="premium-upgrade-card">
                         <p>{% trans "Unlock exclusive access to our community forum and connect with experts!" %}</p>
                         <form method="post" class="premium-form-container">
