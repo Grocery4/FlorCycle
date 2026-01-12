@@ -1,37 +1,37 @@
 {% load i18n %}
 <nav class="main-nav">
-  <div class="nav-left">
-    <form action="{% url 'set_language' %}" method="post" style="margin: 0">
-      {% csrf_token %}
-      <select name="language" onchange="this.form.submit()" class="block-select">
-        {% get_current_language as LANGUAGE_CODE %}
-        {% get_available_languages as LANGUAGES %}
-        {% get_language_info_list for LANGUAGES as languages %}
-        {% for language in languages %}
-          <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
-            {{ language.code|upper }}
-          </option>
-        {% endfor %}
-      </select>
-    </form>
-    
-    {% if not request.user.is_authenticated %}
-      <a href="{% url 'login' %}" class="nav-link">{% trans "login" %}</a>
-      <a href="{% url 'users:standard_signup' %}" class="nav-link">{% trans "register" %}</a>
-      <a href="{% url 'users:partner_signup' %}" class="nav-link">{% trans "Partner Signup" %}</a>
-      <a href="{% url 'users:doctor_signup' %}" class="nav-link">{% trans "Are you a doctor? Signup here!" %}</a>
-    {% endif %}
-  </div>
+    <div class="nav-left">
+        <form action="{% url 'set_language' %}" method="post" style="margin: 0">
+            {% csrf_token %}
+            <select name="language" onchange="this.form.submit()" class="block-select">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                {% for language in languages %}
+                    <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                        {{ language.code|upper }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
 
-  {% if request.user.is_authenticated %}
-  <div class="nav-right">
-    <a href="{% url 'notifications:notification_list' %}" class="notification-bell nav-link">
-      🔔 <span id="notification-count" class="notification-count">{{ unread_notifications_count }}</span>
-    </a>
-    <form method="POST" action="{% url 'logout' %}" style="margin: 0">
-      {% csrf_token %}
-      <button type="submit" class="block-btn nav-logout-btn">{% trans "logout" %}</button>
-    </form>
-  </div>
-  {% endif %}
+        {% if not request.user.is_authenticated %}
+            <a href="{% url 'login' %}" class="nav-link">{% trans "login" %}</a>
+            <a href="{% url 'users:standard_signup' %}" class="nav-link">{% trans "register" %}</a>
+            <a href="{% url 'users:partner_signup' %}" class="nav-link">{% trans "Partner Signup" %}</a>
+            <a href="{% url 'users:doctor_signup' %}" class="nav-link">{% trans "Are you a doctor? Signup here!" %}</a>
+        {% endif %}
+    </div>
+
+    {% if request.user.is_authenticated %}
+        <div class="nav-right">
+            <a href="{% url 'notifications:notification_list' %}" class="notification-bell nav-link">
+                🔔 <span id="notification-count" class="notification-count">{{ unread_notifications_count }}</span>
+            </a>
+            <form method="POST" action="{% url 'logout' %}" style="margin: 0">
+                {% csrf_token %}
+                <button type="submit" class="block-btn nav-logout-btn">{% trans "logout" %}</button>
+            </form>
+        </div>
+    {% endif %}
 </nav>

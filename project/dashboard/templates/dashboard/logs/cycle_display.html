@@ -1,32 +1,32 @@
 {% load i18n %}
 <div class="cycle-container">
-  <span
-    class="prediction-badge {% if cycle.is_prediction %}predicted{% else %}confirmed{% endif %}"
-  >
-    {% if cycle.is_prediction %}
-        {% trans "Prediction" %}
-    {% else %}
-        {% trans "Confirmed" %}
-    {% endif %}
-  </span>
+    <span
+        class="prediction-badge {% if cycle.is_prediction %}predicted{% else %}confirmed{% endif %}"
+    >
+        {% if cycle.is_prediction %}
+            {% trans "Prediction" %}
+        {% else %}
+            {% trans "Confirmed" %}
+        {% endif %}
+    </span>
 
-  <div class="cycle-data-section menstruation">
-    <div class="label">{% trans "Menstruation:" %}</div>
-    <div class="date-range">
-      {{ cycle.menstruation_start|date:"M j" }} - {{ cycle.menstruation_end|date:"M j, Y" }}
+    <div class="cycle-data-section menstruation">
+        <div class="label">{% trans "Menstruation:" %}</div>
+        <div class="date-range">
+            {{ cycle.menstruation_start|date:"M j" }} - {{ cycle.menstruation_end|date:"M j, Y" }}
+        </div>
+        <div class="duration-badge">
+            {{ cycle.menstruation_start|timesince:cycle.menstruation_end }}
+        </div>
     </div>
-    <div class="duration-badge">
-      {{ cycle.menstruation_start|timesince:cycle.menstruation_end }}
-    </div>
-  </div>
 
-  <div class="cycle-data-section ovulation">
-    <div class="label">{% trans "Ovulation:" %}</div>
-    <div class="date-range">
-      {{ cycle.min_ovulation_window|date:"M j" }} - {{ cycle.max_ovulation_window|date:"M j" }}
+    <div class="cycle-data-section ovulation">
+        <div class="label">{% trans "Ovulation:" %}</div>
+        <div class="date-range">
+            {{ cycle.min_ovulation_window|date:"M j" }} - {{ cycle.max_ovulation_window|date:"M j" }}
+        </div>
+        <div class="duration-badge">
+            {{ cycle.min_ovulation_window|timesince:cycle.max_ovulation_window }}
+        </div>
     </div>
-    <div class="duration-badge">
-      {{ cycle.min_ovulation_window|timesince:cycle.max_ovulation_window }}
-    </div>
-  </div>
 </div>

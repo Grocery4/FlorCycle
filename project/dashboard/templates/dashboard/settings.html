@@ -8,70 +8,70 @@
 {% block content %}
     <div class="settings-content-wrapper">
         {% include "dashboard/subpage_topbar.html" %}
-        
+
         <div class="settings-sections">
             {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
-            <div class="cycle-details">
-                <h3>{% trans "Cycle Settings" %}</h3>
-                <form method='post'>
-                    {% csrf_token %}
-                    <input type="hidden" name="cycle_details" value="1">
-                    {{ cycle_details_form.as_p }}
-                    <button type="submit">{% trans "Save" %}</button>
-                </form>
-            </div>
+                <div class="cycle-details">
+                    <h3>{% trans "Cycle Settings" %}</h3>
+                    <form method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="cycle_details" value="1">
+                        {{ cycle_details_form.as_p }}
+                        <button type="submit">{% trans "Save" %}</button>
+                    </form>
+                </div>
             {% endif %}
-            
-            {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
-            <div class="premium-subscription">
-                <h3>{% trans "Premium Membership" %}</h3>
-                {% if not user.userprofile.is_premium %}
-                    <div class="premium-upgrade-card">
-                        <p>{% trans "Unlock exclusive access to our community forum and connect with experts!" %}</p>
-                        <form method='post' class="premium-form-container">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="upgrade_premium">
-                            
-                            <div class="plan-selection">
-                                {{ premium_form.subscription_plan.label_tag }}
-                                {{ premium_form.subscription_plan }}
-                            </div>
 
-                            <div class="payment-details">
-                                <h4>{% trans "Payment Details" %}</h4>
-                                <div class="form-group">
-                                    {{ premium_form.card_number.label_tag }}
-                                    {{ premium_form.card_number }}
+            {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
+                <div class="premium-subscription">
+                    <h3>{% trans "Premium Membership" %}</h3>
+                    {% if not user.userprofile.is_premium %}
+                        <div class="premium-upgrade-card">
+                            <p>{% trans "Unlock exclusive access to our community forum and connect with experts!" %}</p>
+                            <form method='post' class="premium-form-container">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="upgrade_premium">
+
+                                <div class="plan-selection">
+                                    {{ premium_form.subscription_plan.label_tag }}
+                                    {{ premium_form.subscription_plan }}
                                 </div>
-                                <div class="payment-row">
+
+                                <div class="payment-details">
+                                    <h4>{% trans "Payment Details" %}</h4>
                                     <div class="form-group">
-                                        {{ premium_form.expiry_date.label_tag }}
-                                        {{ premium_form.expiry_date }}
+                                        {{ premium_form.card_number.label_tag }}
+                                        {{ premium_form.card_number }}
                                     </div>
-                                    <div class="form-group">
-                                        {{ premium_form.cvv.label_tag }}
-                                        {{ premium_form.cvv }}
+                                    <div class="payment-row">
+                                        <div class="form-group">
+                                            {{ premium_form.expiry_date.label_tag }}
+                                            {{ premium_form.expiry_date }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ premium_form.cvv.label_tag }}
+                                            {{ premium_form.cvv }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <button type="submit" class="btn-premium-upgrade">{% trans "Upgrade to Premium" %}</button>
-                        </form>
-                    </div>
-                {% else %}
-                    <div class="premium-status">
-                        <div class="status-badge">{% trans "PREMIUM" %}</div>
-                        <p>{% blocktrans with plan=user.userprofile.get_subscription_plan_display %}You have an active <strong>{{ plan }}</strong> subscription.{% endblocktrans %}</p>
-                        <p>{% trans "Valid until:" %} {{ user.userprofile.end_date }}</p>
-                        
-                        <form method="post" class="cancel-premium-form">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="cancel_premium">
-                            <button type="submit" class="btn-cancel-subscription" onclick="return confirm('{% trans "Are you sure you want to cancel your premium subscription? You will lose access to the forum." %}')">{% trans "Cancel Subscription" %}</button>
-                        </form>
-                    </div>
-                {% endif %}
-            </div>
+
+                                <button type="submit" class="btn-premium-upgrade">{% trans "Upgrade to Premium" %}</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="premium-status">
+                            <div class="status-badge">{% trans "PREMIUM" %}</div>
+                            <p>{% blocktrans with plan=user.userprofile.get_subscription_plan_display %}You have an active <strong>{{ plan }}</strong> subscription.{% endblocktrans %}</p>
+                            <p>{% trans "Valid until:" %} {{ user.userprofile.end_date }}</p>
+
+                            <form method="post" class="cancel-premium-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="cancel_premium">
+                                <button type="submit" class="btn-cancel-subscription" onclick="return confirm('{% trans "Are you sure you want to cancel your premium subscription? You will lose access to the forum." %}')">{% trans "Cancel Subscription" %}</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
             {% endif %}
 
             <div class="user-management">
@@ -113,90 +113,90 @@
             </div>
 
             {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
-            <div class="partner-management">
-                <h3>{% trans "Partner Management" %}</h3>
-                
-                {% if partner_link_success %}
-                    <p class="success-message">{{ partner_link_success }}</p>
-                {% endif %}
-                {% if partner_link_error %}
-                    <p class="error-message">{{ partner_link_error }}</p>
-                {% endif %}
-                {% if partner_unlink_success %}
-                    <p class="success-message">{{ partner_unlink_success }}</p>
-                {% endif %}
-                {% if partner_unlink_error %}
-                    <p class="error-message">{{ partner_unlink_error }}</p>
-                {% endif %}
+                <div class="partner-management">
+                    <h3>{% trans "Partner Management" %}</h3>
 
-                <div class="link-partner-form">
-                    <h4>{% trans "Link a Partner" %}</h4>
-                    <form method='post'>
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="link_partner">
-                        <input type="text" name="partner_code" placeholder="{% trans 'Enter partner code' %}" maxlength="10" required>
-                        <button type="submit">{% trans "Link Partner" %}</button>
-                    </form>
-                </div>
+                    {% if partner_link_success %}
+                        <p class="success-message">{{ partner_link_success }}</p>
+                    {% endif %}
+                    {% if partner_link_error %}
+                        <p class="error-message">{{ partner_link_error }}</p>
+                    {% endif %}
+                    {% if partner_unlink_success %}
+                        <p class="success-message">{{ partner_unlink_success }}</p>
+                    {% endif %}
+                    {% if partner_unlink_error %}
+                        <p class="error-message">{{ partner_unlink_error }}</p>
+                    {% endif %}
 
-                {% if linked_partners %}
-                    <div class="linked-partners-list">
-                        <h4>{% trans "Linked Partners" %}</h4>
-                        <ul>
-                        {% for partner in linked_partners %}
-                            <li>
-                                {{ partner.user }}
-                                <form method='post' style="display:inline;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="action" value="unlink_single_partner">
-                                    <input type="hidden" name="partner_user_id" value="{{ partner.user.id }}">
-                                    <button type="submit" class="unlink-single-btn">{% trans "Unlink" %}</button>
-                                </form>
-                            </li>
-                        {% endfor %}
-                        </ul>
+                    <div class="link-partner-form">
+                        <h4>{% trans "Link a Partner" %}</h4>
                         <form method='post'>
                             {% csrf_token %}
-                            <input type="hidden" name="action" value="unlink_partner">
-                            <button type="submit">{% trans "Unlink All Partners" %}</button>
+                            <input type="hidden" name="action" value="link_partner">
+                            <input type="text" name="partner_code" placeholder="{% trans 'Enter partner code' %}" maxlength="10" required>
+                            <button type="submit">{% trans "Link Partner" %}</button>
                         </form>
                     </div>
-                {% endif %}
-            </div>
+
+                    {% if linked_partners %}
+                        <div class="linked-partners-list">
+                            <h4>{% trans "Linked Partners" %}</h4>
+                            <ul>
+                                {% for partner in linked_partners %}
+                                    <li>
+                                        {{ partner.user }}
+                                        <form method='post' style="display:inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="unlink_single_partner">
+                                            <input type="hidden" name="partner_user_id" value="{{ partner.user.id }}">
+                                            <button type="submit" class="unlink-single-btn">{% trans "Unlink" %}</button>
+                                        </form>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <form method='post'>
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="unlink_partner">
+                                <button type="submit">{% trans "Unlink All Partners" %}</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
             {% endif %}
 
             {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
-            <div class="data-management">
-                <h3>{% trans "Backup & Restore" %}</h3>
-                <div class="backup-section">
-                    <h4>{% trans "Backup Data" %}</h4>
-                    <p>{% trans "Download your cycle data, logs, and settings as a JSON file." %}</p>
-                    <a href="{% url 'dashboard:backup_data' %}" class="btn-backup">{% trans "Download Backup" %}</a>
-                </div>
-
-                <div class="restore-section">
-                    <h4>{% trans "Restore Data" %}</h4>
-                    <div class="warning-notice">
-                        <strong>{% trans "WARNING:" %}</strong> {% trans "Restoring data will OVERWRITE your current logs and settings. This action cannot be undone." %}
+                <div class="data-management">
+                    <h3>{% trans "Backup & Restore" %}</h3>
+                    <div class="backup-section">
+                        <h4>{% trans "Backup Data" %}</h4>
+                        <p>{% trans "Download your cycle data, logs, and settings as a JSON file." %}</p>
+                        <a href="{% url 'dashboard:backup_data' %}" class="btn-backup">{% trans "Download Backup" %}</a>
                     </div>
-                    <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:restore_data' %}">
-                        {% csrf_token %}
-                        <input type="file" name="backup_file" accept=".json" required>
-                        <button type="submit" class="btn-restore" onclick="return confirm('{% trans "Are you sure you want to restore data? This will replace your current entries." %}')">{% trans "Upload & Restore" %}</button>
-                    </form>
-                </div>
 
-                <div class="reset-section">
-                    <h4>{% trans "Reset All Data" %}</h4>
-                    <div class="warning-notice extreme">
-                        <strong>{% trans "DANGER:" %}</strong> {% trans "This will PERMANENTLY DELETE all your logs, settings, and stats. You will be redirected to the setup page." %}
+                    <div class="restore-section">
+                        <h4>{% trans "Restore Data" %}</h4>
+                        <div class="warning-notice">
+                            <strong>{% trans "WARNING:" %}</strong> {% trans "Restoring data will OVERWRITE your current logs and settings. This action cannot be undone." %}
+                        </div>
+                        <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:restore_data' %}">
+                            {% csrf_token %}
+                            <input type="file" name="backup_file" accept=".json" required>
+                            <button type="submit" class="btn-restore" onclick="return confirm('{% trans "Are you sure you want to restore data? This will replace your current entries." %}')">{% trans "Upload & Restore" %}</button>
+                        </form>
                     </div>
-                    <form method="post" action="{% url 'dashboard:reset_data' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-reset" onclick="return confirm('{% trans "FINAL WARNING: Are you sure you want to PERMANENTLY DELETE everything? This cannot be undone." %}')">{% trans "Reset All (Start Fresh)" %}</button>
-                    </form>
+
+                    <div class="reset-section">
+                        <h4>{% trans "Reset All Data" %}</h4>
+                        <div class="warning-notice extreme">
+                            <strong>{% trans "DANGER:" %}</strong> {% trans "This will PERMANENTLY DELETE all your logs, settings, and stats. You will be redirected to the setup page." %}
+                        </div>
+                        <form method="post" action="{% url 'dashboard:reset_data' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-reset" onclick="return confirm('{% trans "FINAL WARNING: Are you sure you want to PERMANENTLY DELETE everything? This cannot be undone." %}')">{% trans "Reset All (Start Fresh)" %}</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
             {% endif %}
         </div>
     </div>

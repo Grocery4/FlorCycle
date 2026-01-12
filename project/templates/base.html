@@ -2,30 +2,30 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>{% block title %}Florcycle{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    {% block extra_head %}{% endblock %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Florcycle{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+        {% block extra_head %}{% endblock %}
+        <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    </head>
 
-  <body>
-    {% include 'navbar.html' %} {% if messages %}
-    <div class="messages-container">
-      {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-      {% endfor %}
-    </div>
-    {% endif %}
+    <body>
+        {% include 'navbar.html' %} {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-    <main class="main-content">
-      {% block content %}{% endblock %}
-    </main>
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
 
-    {% block extra_js %}{% endblock %}
-  </body>
+        {% block extra_js %}{% endblock %}
+    </body>
 </html>

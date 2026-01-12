@@ -7,7 +7,7 @@
     margin: 0;
 }
 
-.action-bar > a {
+.action-bar>a {
     padding: 8px 12px;
     text-align: center;
     cursor: pointer;
@@ -16,6 +16,6 @@
     border: 1px solid transparent;
 }
 
-.action-bar > a:hover {
+.action-bar>a:hover {
     border-color: black;
 }

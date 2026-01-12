@@ -1,47 +1,48 @@
-{% extends "base.html" %} {% load static i18n %} 
-{% block extra_head %} 
-<link rel="stylesheet" href={% static "dashboard/css/logs.css" %}> 
-<link rel="stylesheet" href={% static "dashboard/css/cycle_displays.css" %}> 
-{% endblock extra_head %} 
-{% block title %}{% trans "My cycles" %}{% endblock title %} 
+{% extends "base.html" %} 
+{% load static i18n %}
+{% block extra_head %}
+    <link rel="stylesheet" href={% static "dashboard/css/logs.css" %}>
+    <link rel="stylesheet" href={% static "dashboard/css/cycle_displays.css" %}>
+{% endblock extra_head %}
+{% block title %}{% trans "My cycles" %}{% endblock title %}
 {% block content %}
-<div class="logs-container">
-  {% include "dashboard/subpage_topbar.html" %}
+    <div class="logs-container">
+        {% include "dashboard/subpage_topbar.html" %}
 
-  <div class="stats-container">
-    <div class="stat-item">
-      <h3 class="stat-title">{% trans "Average cycle duration" %}</h3>
-      <p class="stat-value">{{avg_cycle_duration}}</p>
-    </div>
-    <div class="stat-item">
-      <h3 class="stat-title">{% trans "Logged periods" %}</h3>
-      <p class="stat-value">{{log_count}}</p>
-    </div>
-    <div class="stat-item">
-      <h3 class="stat-title">{% trans "Average period duration" %}</h3>
-      <p class="stat-value">{{avg_menstruation_duration}}</p>
-    </div>
-    <div class="stat-item">
-      <h3 class="stat-title">{% trans "Average ovulation window" %}</h3>
-      <p class="stat-value">
-        {% blocktrans %}Day
-        {{avg_ovulation_start_day}}-{{avg_ovulation_end_day}}{% endblocktrans %}
-      </p>
-    </div>
-  </div>
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3 class="stat-title">{% trans "Average cycle duration" %}</h3>
+                <p class="stat-value">{{avg_cycle_duration}}</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="stat-title">{% trans "Logged periods" %}</h3>
+                <p class="stat-value">{{log_count}}</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="stat-title">{% trans "Average period duration" %}</h3>
+                <p class="stat-value">{{avg_menstruation_duration}}</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="stat-title">{% trans "Average ovulation window" %}</h3>
+                <p class="stat-value">
+                    {% blocktrans %}Day
+                        {{avg_ovulation_start_day}}-{{avg_ovulation_end_day}}{% endblocktrans %}
+                </p>
+            </div>
+        </div>
 
-  <div class="cycle-windows-container">
-    <div class="button-group">
-      <a href="?view=history" class="block-btn {% if active_view != 'history' %}block-btn-outline{% endif %}">{% trans "History" %}</a>
-      <a href="?view=predictions" class="block-btn {% if active_view != 'predictions' %}block-btn-outline{% endif %}">{% trans "Predictions" %}</a>
-    </div>
+        <div class="cycle-windows-container">
+            <div class="button-group">
+                <a href="?view=history" class="block-btn {% if active_view != 'history' %}block-btn-outline{% endif %}">{% trans "History" %}</a>
+                <a href="?view=predictions" class="block-btn {% if active_view != 'predictions' %}block-btn-outline{% endif %}">{% trans "Predictions" %}</a>
+            </div>
 
-    <div class="cycle-list">
-      {% for cycle in objects %} 
-        {% include "dashboard/logs/cycle_display.html" %} 
-      {% endfor %}
-    </div>
-  </div>
+            <div class="cycle-list">
+                {% for cycle in objects %}
+                    {% include "dashboard/logs/cycle_display.html" %}
+                {% endfor %}
+            </div>
+        </div>
 
-  {% endblock content %}
+{% endblock content %}
 </div>

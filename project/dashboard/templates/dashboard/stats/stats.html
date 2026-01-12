@@ -13,7 +13,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('cycleLengthChart').getContext('2d');
             const data = {{ cycle_length_distribution|safe }};
-            
+
             if (data.data && data.data.length > 0) {
                 new Chart(ctx, {
                     type: 'bar',
@@ -107,10 +107,10 @@
         </div>
 
         <select id="activity-range-dropdown" class="range-dropdown">
-                <option value="1" {% if activity_month_range == 1 %}selected{% endif %}>{% trans "Last 1 Month" %}</option>
-                <option value="3" {% if activity_month_range == 3 %}selected{% endif %}>{% trans "Last 3 Months" %}</option>
-                <option value="6" {% if activity_month_range == 6 %}selected{% endif %}>{% trans "Last 6 Months" %}</option>
-                <option value="12" {% if activity_month_range == 12 %}selected{% endif %}>{% trans "Last Year" %}</option>
+            <option value="1" {% if activity_month_range == 1 %}selected{% endif %}>{% trans "Last 1 Month" %}</option>
+            <option value="3" {% if activity_month_range == 3 %}selected{% endif %}>{% trans "Last 3 Months" %}</option>
+            <option value="6" {% if activity_month_range == 6 %}selected{% endif %}>{% trans "Last 6 Months" %}</option>
+            <option value="12" {% if activity_month_range == 12 %}selected{% endif %}>{% trans "Last Year" %}</option>
         </select>
         <div class="stat-section activity">
             <div class="stat-section-title">{% trans "Activity" %}</div>
@@ -135,10 +135,10 @@
         </div>
 
         <select id="frequency-range-dropdown" class="range-dropdown">
-                <option value="1" {% if frequency_month_range == 1 %}selected{% endif %}>{% trans "Last 1 Month" %}</option>
-                <option value="3" {% if frequency_month_range == 3 %}selected{% endif %}>{% trans "Last 3 Months" %}</option>
-                <option value="6" {% if frequency_month_range == 6 %}selected{% endif %}>{% trans "Last 6 Months" %}</option>
-                <option value="12" {% if frequency_month_range == 12 %}selected{% endif %}>{% trans "Last Year" %}</option>
+            <option value="1" {% if frequency_month_range == 1 %}selected{% endif %}>{% trans "Last 1 Month" %}</option>
+            <option value="3" {% if frequency_month_range == 3 %}selected{% endif %}>{% trans "Last 3 Months" %}</option>
+            <option value="6" {% if frequency_month_range == 6 %}selected{% endif %}>{% trans "Last 6 Months" %}</option>
+            <option value="12" {% if frequency_month_range == 12 %}selected{% endif %}>{% trans "Last Year" %}</option>
         </select>
         <div class="stat-section frequency">
             <div class="stat-section-title">{% trans "Frequency" %}</div>
@@ -175,26 +175,26 @@
         </div>
 
         <div class="stat-section analysis-section">
-             <div class="stat-section-title">{% trans "Symptom & Mood Analysis" %}</div>
-             <div class="analysis-tabs">
-                 <button class="tab-btn active" data-type="symptom">{% trans "Symptoms" %}</button>
-                 <button class="tab-btn" data-type="mood">{% trans "Moods" %}</button>
-                 <button class="tab-btn" data-type="medication">{% trans "Medications" %}</button>
-             </div>
-             
-             <div id="analysis-chips-container" class="chips-container">
-                 <!-- Populated by JS -->
-             </div>
+            <div class="stat-section-title">{% trans "Symptom & Mood Analysis" %}</div>
+            <div class="analysis-tabs">
+                <button class="tab-btn active" data-type="symptom">{% trans "Symptoms" %}</button>
+                <button class="tab-btn" data-type="mood">{% trans "Moods" %}</button>
+                <button class="tab-btn" data-type="medication">{% trans "Medications" %}</button>
+            </div>
 
-             <div id="analysis-result-panel" class="analysis-result hidden">
-                 <h3 id="analysis-item-name"></h3>
-                 <p>{% trans "Total Occurrences:" %} <span id="analysis-total-count"></span></p>
-                 
-                 <div class="recent-occurrences">
-                     <h4>{% trans "Occurrences" %}</h4>
-                     <ul id="analysis-dates-list"></ul>
-                 </div>
-             </div>
+            <div id="analysis-chips-container" class="chips-container">
+                 <!-- Populated by JS -->
+            </div>
+
+            <div id="analysis-result-panel" class="analysis-result hidden">
+                <h3 id="analysis-item-name"></h3>
+                <p>{% trans "Total Occurrences:" %} <span id="analysis-total-count"></span></p>
+
+                <div class="recent-occurrences">
+                    <h4>{% trans "Occurrences" %}</h4>
+                    <ul id="analysis-dates-list"></ul>
+                </div>
+            </div>
         </div>
     </div>
 

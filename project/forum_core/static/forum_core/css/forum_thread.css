@@ -106,10 +106,21 @@
     text-transform: uppercase;
 }
 
-.edit-link { color: var(--text-color); }
-.delete-link { color: var(--error-color); }
-.report-link { color: var(--warning-color); }
-.solve-link { color: var(--secondary-color); }
+.edit-link {
+    color: var(--text-color);
+}
+
+.delete-link {
+    color: var(--error-color);
+}
+
+.report-link {
+    color: var(--warning-color);
+}
+
+.solve-link {
+    color: var(--secondary-color);
+}
 
 .solution-badge {
     background: var(--success-color);

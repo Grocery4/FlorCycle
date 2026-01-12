@@ -45,9 +45,7 @@ td {
 }
 
 .highlight-menstruation.highlight-ovulation {
-    background: linear-gradient(
-        135deg,
-        #ffc1e3 50%,
-        #b2dfdb 50%
-    );
+    background: linear-gradient(135deg,
+            #ffc1e3 50%,
+            #b2dfdb 50%);
 }
