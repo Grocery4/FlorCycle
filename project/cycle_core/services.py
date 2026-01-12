@@ -63,7 +63,7 @@ def updateCycleStats(cs: CycleStats, min_logs:int=MIN_LOG_FOR_STATS):
                     end = end.date()
 
                 # menstruation duration: inclusive days (end - start + 1)
-                men_days = (end - start).days + 1
+                men_days = cw.getMenstruationDuration().days
                 if men_days > 0:
                     menstruation_lengths.append(men_days)
 

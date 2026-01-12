@@ -4,6 +4,43 @@ from datetime import datetime, date
 from dateutil import relativedelta
 
 from log_core.models import IntercourseLog
+from cycle_core.models import CycleWindow
+from collections import Counter
+
+def get_cycle_length_distribution(user):
+    """
+    Calculates the distribution of cycle lengths for historical data.
+    """
+    windows = CycleWindow.objects.filter(
+        user=user, 
+        is_prediction=False
+    ).order_by('menstruation_start')
+
+    if windows.count() < 2:
+        return {'labels': [], 'data': []}
+
+    cycle_lengths = []
+    
+    # Calculate lengths between consecutive menstruation starts
+    for i in range(len(windows) - 1):
+        delta = (windows[i+1].menstruation_start - windows[i].menstruation_start).days
+        # Filter out unrealistic values if necessary (e.g., < 15 or > 60)
+        if 15 < delta < 60:
+            cycle_lengths.append(delta)
+
+    if not cycle_lengths:
+        return {'labels': [], 'data': []}
+
+    # Count frequencies
+    counts = Counter(cycle_lengths)
+    
+    # Sort by length for the x-axis
+    sorted_lengths = sorted(counts.keys())
+    
+    return {
+        'labels': [str(l) for l in sorted_lengths],
+        'data': [counts[l] for l in sorted_lengths]
+    }
 
 def get_intercourse_activity_metrics(user, end_date=date.today(), month_range=1):
     start_date = end_date - relativedelta.relativedelta(months=month_range)

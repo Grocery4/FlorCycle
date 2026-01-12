@@ -10,7 +10,11 @@ from dateutil import relativedelta
 import json
 
 from .services import user_type_required, configured_required, fetch_closest_prediction, render_selectable_calendars, group_consecutive_days, generate_date_intervals, parse_list_of_dates, apply_period_windows, calculate_timeline_data
-from .dashboard_analytics import get_intercourse_activity_metrics, get_intercourse_frequency_metrics
+from .dashboard_analytics import (
+    get_intercourse_activity_metrics, 
+    get_intercourse_frequency_metrics,
+    get_cycle_length_distribution
+)
 from cycle_core.models import CycleDetails, CycleStats, CycleWindow, MIN_LOG_FOR_STATS
 from cycle_core.forms import CycleDetailsForm
 from log_core.services import get_day_log
@@ -657,6 +661,8 @@ def stats(request):
     
     ctx['frequency_intercourse'] = frequency_metrics['frequency_intercourse']
     ctx['frequency_orgasm'] = frequency_metrics['frequency_orgasm']
+
+    ctx['cycle_length_distribution'] = get_cycle_length_distribution(user)
 
     return render(request, 'dashboard/stats/stats.html', ctx)
 
