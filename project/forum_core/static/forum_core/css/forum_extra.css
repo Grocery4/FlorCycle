@@ -1,0 +1,118 @@
+/* Shared styles for forum forms, reports, and confirmations */
+
+.forum-nav {
+    margin-bottom: 2rem;
+}
+
+.nav-link, .back-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+}
+
+.nav-link:hover, .back-link:hover {
+    text-decoration: underline;
+}
+
+.form-container, .report-form-card {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border: 2px solid #000;
+}
+
+.delete-confirm-container .form-container {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 3rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.form-input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #000;
+    background: white;
+    color: black;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 800;
+    transition: all 0.2s;
+    border: 2px solid #000;
+}
+
+.btn-primary {
+    background: #000;
+    color: white;
+}
+
+.btn-secondary {
+    background: white;
+    color: #000;
+    margin-left: 1rem;
+}
+
+.btn:hover {
+    background: #333;
+    color: white;
+}
+
+.delete-preview, .target-thread-preview, .target-comment-preview {
+    margin-bottom: 2rem;
+}
+
+.delete-preview, .thread-preview-card, .comment-card {
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border: 2px dashed #000;
+    font-style: italic;
+}
+
+.btn-delete {
+    background: #ff0000;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #cc0000;
+}
+
+.report-header {
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #000;
+    padding-bottom: 1rem;
+}
+
+.thread-meta, .comment-meta {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.thread-author, .comment-author {
+    font-weight: 700;
+    color: #000;
+    margin-right: 1rem;
+}
