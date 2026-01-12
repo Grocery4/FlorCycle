@@ -1,16 +1,13 @@
 {% load i18n %}
-
 <table>
-<tr>
-    <th>{% trans "Menstruation dates" %}</th>
-    <th>{% trans "Ovulation dates" %}</th>
-</tr>
-
-{% for p in predictions  %}
     <tr>
-        <td>{{ p.menstruation_start|date:"M d" }} - {{ p.menstruation_end|date:"M d" }}</td>
-        <td>{{ p.min_ovulation_window|date:"M d" }} - {{ p.max_ovulation_window|date:"M d" }}</td>
+        <th>{% trans "Menstruation dates" %}</th>
+        <th>{% trans "Ovulation dates" %}</th>
     </tr>
-{% endfor %}
-
+    {% for p in predictions %}
+        <tr>
+            <td>{{ p.menstruation_start|date:"M d" }} - {{ p.menstruation_end|date:"M d" }}</td>
+            <td>{{ p.min_ovulation_window|date:"M d" }} - {{ p.max_ovulation_window|date:"M d" }}</td>
+        </tr>
+    {% endfor %}
 </table>

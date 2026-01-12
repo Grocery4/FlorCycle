@@ -12,10 +12,10 @@
     text-align: center;
     cursor: pointer;
     text-decoration: none;
-    color: black;
+    color: var(--text-color);
     border: 1px solid transparent;
 }
 
 .action-bar > a:hover {
-    border-color: black;
+    border-color: var(--border-color);
 }

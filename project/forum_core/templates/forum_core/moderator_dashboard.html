@@ -1,477 +1,164 @@
-{% extends "base.html" %} 
-{% load i18n %}
+{% extends "base.html" %}
+{% load static i18n %}
 
-{% block title %}{% trans "Moderator Dashboard" %}{% endblock %} 
+{% block title %}{% trans "Moderator Dashboard" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'forum_core/css/moderator_dashboard.css' %}" />
+{% endblock %}
+
 {% block content %}
 <div class="mod-dashboard-container">
-  <div class="forum-nav">
-    <a href="{% url 'forum_core:home' %}" class="back-forum">← {% trans "Back to Forums" %}</a>
-  </div>
-  <header class="dashboard-header">
-    <h1>{% trans "Moderator Dashboard" %}</h1>
-    <div class="stats-overview">
-      <div class="stat-card">
-        <span class="stat-value"
-          >{{ reports.count|add:thread_reports.count }}</span
-        >
-        <span class="stat-label">{% trans "Total Reports" %}</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-value">{{ banned_users.count }}</span>
-        <span class="stat-label">{% trans "Banned Users" %}</span>
-      </div>
+    <div class="forum-nav">
+        <a href="{% url 'forum_core:home' %}" class="back-forum">← {% trans "Back to Forums" %}</a>
     </div>
-  </header>
 
-  <div class="dashboard-grid">
-    <!-- Pending Reports Column -->
-    <section class="dashboard-section reports-section">
-      <div class="report-group">
-        <h2>{% trans "Reported Comments" %}</h2>
-        {% if reports %}
-        <div class="reports-list">
-          {% for report in reports %}
-          <div class="report-card">
-            <div class="report-meta">
-              <span class="report-reason badge-{{ report.reason|lower }}"
-                >{{ report.get_reason_display }}</span
-              >
-              <span class="report-date"
-                >{{ report.created_at|date:"M d, H:i" }}</span
-              >
+    <header class="dashboard-header">
+        <h1>{% trans "Moderator Dashboard" %}</h1>
+        <div class="stats-overview">
+            <div class="stat-card">
+                <span class="stat-value">{{ reports.count|add:thread_reports.count }}</span>
+                <span class="stat-label">{% trans "Total Reports" %}</span>
             </div>
-            <div class="report-comment-preview">
-              <strong
-                >{% blocktrans with username=report.comment.created_by.username %}Comment by {{ username }}:{% endblocktrans %}</strong
-              >
-              <p>"{{ report.comment.content|truncatewords:20 }}"</p>
+            <div class="stat-card">
+                <span class="stat-value">{{ banned_users.count }}</span>
+                <span class="stat-label">{% trans "Banned Users" %}</span>
             </div>
-            <div class="report-description">
-              <strong>{% trans "Details:" %}</strong>
-              <p>{{ report.description|default:_("No description provided.") }}</p>
-            </div>
-            <div class="report-actions">
-              <a
-                href="{% url 'forum_core:thread' report.comment.thread.id %}"
-                class="btn-small btn-outline"
-                >{% trans "View Context" %}</a
-              >
-              <form
-                action="{% url 'forum_core:resolve_report' report.id %}"
-                method="POST"
-                style="display: inline"
-              >
-                {% csrf_token %}
-                <button
-                  type="submit"
-                  name="action"
-                  value="resolve"
-                  class="btn-small btn-success"
-                >
-                  {% trans "Resolve" %}
-                </button>
-                <button
-                  type="submit"
-                  name="action"
-                  value="dismiss"
-                  class="btn-small btn-secondary"
-                >
-                  {% trans "Dismiss" %}
-                </button>
-              </form>
-            </div>
-          </div>
-          {% endfor %}
         </div>
-        {% else %}
-        <p class="empty-msg">{% trans "No reported comments." %}</p>
-        {% endif %}
-      </div>
+    </header>
 
-      <div class="report-group" style="margin-top: 3rem">
-        <h2>{% trans "Reported Threads" %}</h2>
-        {% if thread_reports %}
-        <div class="reports-list">
-          {% for report in thread_reports %}
-          <div class="report-card">
-            <div class="report-meta">
-              <span class="report-reason badge-{{ report.reason|lower }}"
-                >{{ report.get_reason_display }}</span
-              >
-              <span class="report-date"
-                >{{ report.created_at|date:"M d, H:i" }}</span
-              >
-            </div>
-            <div class="report-comment-preview">
-              <strong>{% trans "Thread:" %} {{ report.thread.title }}</strong>
-              <p>{% blocktrans with username=report.thread.created_by.username %}by {{ username }}{% endblocktrans %}</p>
-            </div>
-            <div class="report-description">
-              <strong>{% trans "Details:" %}</strong>
-              <p>{{ report.description|default:_("No description provided.") }}</p>
-            </div>
-            <div class="report-actions">
-              <a
-                href="{% url 'forum_core:thread' report.thread.id %}"
-                class="btn-small btn-outline"
-                >{% trans "View Thread" %}</a
-              >
-              <form
-                action="{% url 'forum_core:resolve_thread_report' report.id %}"
-                method="POST"
-                style="display: inline"
-              >
-                {% csrf_token %}
-                <button
-                  type="submit"
-                  name="action"
-                  value="resolve"
-                  class="btn-small btn-success"
-                >
-                  {% trans "Resolve" %}
-                </button>
-                <button
-                  type="submit"
-                  name="action"
-                  value="dismiss"
-                  class="btn-small btn-secondary"
-                >
-                  {% trans "Dismiss" %}
-                </button>
-              </form>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-        {% else %}
-        <p class="empty-msg">{% trans "No reported threads." %}</p>
-        {% endif %}
-      </div>
-    </section>
-
-    <!-- User Management Column -->
-    <section class="dashboard-section users-section">
-      <div class="section-header">
-        <h2>{% trans "User Management" %}</h2>
-        <form method="GET" class="search-form">
-          <input
-            type="text"
-            name="q"
-            placeholder="{% trans 'Search users...' %}"
-            value="{{ request.GET.q }}"
-          />
-          <button type="submit" class="btn-small">{% trans "Search" %}</button>
-        </form>
-      </div>
-
-      <table class="user-table">
-        <thead>
-          <tr>
-            <th>{% trans "Username" %}</th>
-            <th>{% trans "Type" %}</th>
-            <th>{% trans "Status/Verification" %}</th>
-            <th>{% trans "Action" %}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for user in all_users %}
-          <tr>
-            <td>{{ user.username }}</td>
-            <td><span class="user-type-tag">{{ user.get_user_type_display }}</span></td>
-            <td>
-              {% if user.is_banned %}
-              <span class="status-banned">{% trans "Banned" %}</span>
-              {% else %}
-              <span class="status-active">{% trans "Active" %}</span>
-              {% endif %}
-              
-              {% if user.user_type == 'DOCTOR' %}
-                <div class="verification-details">
-                  <strong>{% trans "License:" %}</strong> {{ user.doctorprofile.license_number }}<br>
-                  {% if user.doctorprofile.cv %}
-                  <a href="{{ user.doctorprofile.cv.url }}" target="_blank" class="cv-link">📄 {% trans "View CV" %}</a>
-                  {% else %}
-                  <span style="color: var(--error-color); font-size: 0.75rem;">{% trans "No CV uploaded" %}</span>
-                  {% endif %}
-                </div>
-                {% if user.doctorprofile.is_verified %}
-                <span class="status-verified">{% trans "Verified" %}</span>
+    <div class="dashboard-grid">
+        <!-- Pending Reports Column -->
+        <section class="dashboard-section reports-section">
+            <div class="report-group">
+                <h2>{% trans "Reported Comments" %}</h2>
+                {% if reports %}
+                    <div class="reports-list">
+                        {% for report in reports %}
+                            <div class="report-card">
+                                <div class="report-meta">
+                                    <span class="report-reason badge-{{ report.reason|lower }}">{{ report.get_reason_display }}</span>
+                                    <span class="report-date">{{ report.created_at|date:"M d, H:i" }}</span>
+                                </div>
+                                <div class="report-comment-preview">
+                                    <strong>{% blocktrans with username=report.comment.created_by.username %}Comment by {{ username }}:{% endblocktrans %}</strong>
+                                    <p>"{{ report.comment.content|truncatewords:20 }}"</p>
+                                </div>
+                                <div class="report-description">
+                                    <strong>{% trans "Details:" %}</strong>
+                                    <p>{{ report.description|default:_("No description provided.") }}</p>
+                                </div>
+                                <div class="report-actions">
+                                    <a href="{% url 'forum_core:thread' report.comment.thread.id %}" class="btn-small btn-outline">{% trans "View Context" %}</a>
+                                    <form action="{% url 'forum_core:resolve_report' report.id %}" method="POST" style="display: inline">
+                                        {% csrf_token %}
+                                        <button type="submit" name="action" value="resolve" class="btn-small btn-success">{% trans "Resolve" %}</button>
+                                        <button type="submit" name="action" value="dismiss" class="btn-small btn-secondary">{% trans "Dismiss" %}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 {% else %}
-                <span class="status-unverified">{% trans "Unverified" %}</span>
+                    <p class="empty-msg">{% trans "No reported comments." %}</p>
                 {% endif %}
-              {% endif %}
-            </td>
-            <td>
-              {% if user.is_banned %}
-              <form
-                action="{% url 'forum_core:unban_user' user.id %}"
-                method="POST"
-              >
-                {% csrf_token %}
-                <button type="submit" class="btn-link">{% trans "Unban" %}</button>
-              </form>
-              {% else %}
-              <form
-                action="{% url 'forum_core:ban_user' user.id %}"
-                method="POST"
-                style="display: inline;"
-              >
-                {% csrf_token %}
-                <button
-                  type="submit"
-                  class="btn-link btn-danger"
-                  onclick="return confirm('{% trans "Ban this user?" %}')"
-                >
-                  {% trans "Ban" %}
-                </button>
-              </form>
-              {% endif %}
+            </div>
 
-              {% if user.user_type == 'DOCTOR' %}
-              <form
-                action="{% url 'forum_core:toggle_doctor_verification' user.id %}"
-                method="POST"
-                style="display: inline; margin-left: 0.5rem;"
-              >
-                {% csrf_token %}
-                <button type="submit" class="btn-link">
-                  {% if user.doctorprofile.is_verified %}
-                  {% trans "Unverify" %}
-                  {% else %}
-                  {% trans "Verify" %}
-                  {% endif %}
-                </button>
-              </form>
-              {% endif %}
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="4" class="empty-table">{% trans "No users found." %}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </section>
-  </div>
+            <div class="report-group" style="margin-top: 3rem">
+                <h2>{% trans "Reported Threads" %}</h2>
+                {% if thread_reports %}
+                    <div class="reports-list">
+                        {% for report in thread_reports %}
+                            <div class="report-card">
+                                <div class="report-meta">
+                                    <span class="report-reason badge-{{ report.reason|lower }}">{{ report.get_reason_display }}</span>
+                                    <span class="report-date">{{ report.created_at|date:"M d, H:i" }}</span>
+                                </div>
+                                <div class="report-comment-preview">
+                                    <strong>{% trans "Thread:" %} {{ report.thread.title }}</strong>
+                                    <p>{% blocktrans with username=report.thread.created_by.username %}by {{ username }}{% endblocktrans %}</p>
+                                </div>
+                                <div class="report-description">
+                                    <strong>{% trans "Details:" %}</strong>
+                                    <p>{{ report.description|default:_("No description provided.") }}</p>
+                                </div>
+                                <div class="report-actions">
+                                    <a href="{% url 'forum_core:thread' report.thread.id %}" class="btn-small btn-outline">{% trans "View Thread" %}</a>
+                                    <form action="{% url 'forum_core:resolve_thread_report' report.id %}" method="POST" style="display: inline">
+                                        {% csrf_token %}
+                                        <button type="submit" name="action" value="resolve" class="btn-small btn-success">{% trans "Resolve" %}</button>
+                                        <button type="submit" name="action" value="dismiss" class="btn-small btn-secondary">{% trans "Dismiss" %}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="empty-msg">{% trans "No reported threads." %}</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- User Management Column -->
+        <section class="dashboard-section users-section">
+            <div class="section-header">
+                <h2>{% trans "User Management" %}</h2>
+                <form method="GET" class="search-form">
+                    <input type="text" name="q" placeholder="{% trans 'Search users...' %}" value="{{ request.GET.q }}" />
+                    <button type="submit" class="btn-small">{% trans "Search" %}</button>
+                </form>
+            </div>
+
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Username" %}</th>
+                        <th>{% trans "Type" %}</th>
+                        <th>{% trans "Status/Verification" %}</th>
+                        <th>{% trans "Action" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in all_users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td><span class="user-type-tag">{{ user.get_user_type_display }}</span></td>
+                            <td>
+                                {% if user.is_banned %}<span class="status-banned">{% trans "Banned" %}</span>{% else %}<span class="status-active">{% trans "Active" %}</span>{% endif %}
+                                {% if user.user_type == 'DOCTOR' %}
+                                    <div class="verification-details">
+                                        <strong>{% trans "License:" %}</strong> {{ user.doctorprofile.license_number }}<br>
+                                        {% if user.doctorprofile.cv %}<a href="{{ user.doctorprofile.cv.url }}" target="_blank" class="cv-link">📄 {% trans "View CV" %}</a>{% else %}<span style="color: var(--error-color); font-size: 0.75rem;">{% trans "No CV uploaded" %}</span>{% endif %}
+                                    </div>
+                                    {% if user.doctorprofile.is_verified %}<span class="status-verified">{% trans "Verified" %}</span>{% else %}<span class="status-unverified">{% trans "Unverified" %}</span>{% endif %}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.is_banned %}
+                                    <form action="{% url 'forum_core:unban_user' user.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-link">{% trans "Unban" %}</button>
+                                    </form>
+                                {% else %}
+                                    <form action="{% url 'forum_core:ban_user' user.id %}" method="POST" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-link btn-danger" onclick="return confirm('{% trans "Ban this user?" %}')">{% trans "Ban" %}</button>
+                                    </form>
+                                {% endif %}
+                                {% if user.user_type == 'DOCTOR' %}
+                                    <form action="{% url 'forum_core:toggle_doctor_verification' user.id %}" method="POST" style="display: inline; margin-left: 0.5rem;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-link">{% if user.doctorprofile.is_verified %}{% trans "Unverify" %}{% else %}{% trans "Verify" %}{% endif %}</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="4" class="empty-table">{% trans "No users found." %}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
 </div>
-
-<style>
-  .mod-dashboard-container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .forum-nav {
-    margin-bottom: 2rem;
-  }
-  .back-forum {
-    text-decoration: none;
-    color: #000;
-    font-weight: 800;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    border: 2px solid #000;
-    padding: 0.5rem 1rem;
-    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 1);
-    background: #fff;
-    transition: all 0.2s ease;
-  }
-  .back-forum:hover {
-    box-shadow: none;
-    transform: translate(2px, 2px);
-  }
-  .dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3rem;
-    border-bottom: 3px solid #000;
-    padding-bottom: 1.5rem;
-  }
-  .stats-overview {
-    display: flex;
-    gap: 2rem;
-  }
-  .stat-card {
-    text-align: center;
-    background: #000;
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 4px;
-  }
-  .stat-value {
-    display: block;
-    font-size: 2rem;
-    font-weight: 800;
-  }
-  .stat-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-  }
-  .dashboard-section h2 {
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-    border-left: 5px solid #000;
-    padding-left: 1rem;
-  }
-  .reports-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  .report-card {
-    background: white;
-    border: 2px solid #000;
-    padding: 1.5rem;
-    box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 1);
-  }
-  .report-meta {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-  .report-reason {
-    font-weight: 800;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    padding: 0.2rem 0.5rem;
-    border: 1px solid #000;
-  }
-  .badge-spam {
-    background: #e0e0e0;
-  }
-  .badge-harassment {
-    background: #ffcccc;
-  }
-  .badge-inappropriate {
-    background: #fff3cd;
-  }
-
-  .report-comment-preview,
-  .report-description {
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
-  }
-  .report-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-  .btn-small {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    border: 2px solid #000;
-    background: #000;
-    color: white;
-  }
-  .btn-outline {
-    background: white;
-    color: #000;
-    text-decoration: none;
-  }
-  .btn-success {
-    background: #28a745;
-    color: white;
-    border-color: #28a745;
-  }
-  .btn-danger {
-    color: #dc3545;
-  }
-  .btn-secondary {
-    background: #6c757d;
-    color: white;
-    border-color: #6c757d;
-  }
-
-  .user-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border: 2px solid #000;
-  }
-  .user-table th,
-  .user-table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-  .user-table th {
-    background: #f8f9fa;
-    font-weight: 800;
-    border-bottom: 2px solid #000;
-  }
-  .status-active {
-    color: #28a745;
-    font-weight: 700;
-  }
-  .status-banned {
-    color: #dc3545;
-    font-weight: 700;
-  }
-  .status-verified {
-    color: #28a745;
-    font-size: 0.75rem;
-    font-weight: 700;
-  }
-  .status-unverified {
-    color: #ffc107;
-    font-size: 0.75rem;
-    font-weight: 700;
-  }
-  .user-type-tag {
-    font-size: 0.8rem;
-    background: #eee;
-    padding: 0.2rem 0.4rem;
-  }
-  .verification-details {
-    font-size: 0.8rem;
-    margin: 0.5rem 0;
-    padding: 0.5rem;
-    background: #fdfd;
-    border: 1px dashed #000;
-  }
-  .cv-link {
-    color: var(--primary-color, #ff69b4);
-    font-weight: 800;
-    text-decoration: underline;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  .search-form {
-    display: flex;
-    gap: 0.5rem;
-  }
-  .search-form input {
-    padding: 0.4rem;
-    border: 2px solid #000;
-  }
-  .btn-link {
-    background: none;
-    border: none;
-    font-weight: 700;
-    cursor: pointer;
-    padding: 0;
-    text-decoration: underline;
-  }
-
-  @media (max-width: 992px) {
-    .dashboard-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
 {% endblock %}

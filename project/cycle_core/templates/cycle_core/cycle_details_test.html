@@ -1,13 +1,9 @@
 <form method="get">
     {{form.as_p}}
-    <button type="submit">Send</button>
+    <button type="submit">{% trans "Send" %}</button>
 </form>
 
-<b>Submitted data</b>
-<p>
-    {{ base_menstruation_date }}
-    {{ avg_cycle_duration }}
-    {{ avg_menstruation_duration }}
-</p>
+<b>{% trans "Submitted data" %}</b>
+<p>{{ base_menstruation_date }} {{ avg_cycle_duration }} {{ avg_menstruation_duration }}</p>
 
 {% include "cycle_core/prediction_table.html" %}

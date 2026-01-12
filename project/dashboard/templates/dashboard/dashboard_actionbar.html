@@ -1,7 +1,5 @@
-{% load static %}
-{% load i18n %}
-
-<link rel="stylesheet" href={% static 'dashboard/css/action_bar.css'%}>
+{% load static i18n %}
+<link rel="stylesheet" href="{% static 'dashboard/css/action_bar.css' %}" />
 
 <div class="action-bar">
     {% if request.user.user_type != 'PARTNER' %}
@@ -10,7 +8,7 @@
         <a href="{% url 'dashboard:homepage_readonly' %}" class="home">{% trans "home" %}</a>
     {% endif %}
     <a href="{% url 'dashboard:calendar_view' %}" class="calendar">{% trans "calendar" %}</a>
-    <a href="{% url "dashboard:stats" %}" class="stats">{% trans "stats" %}</a>
+    <a href="{% url 'dashboard:stats' %}" class="stats">{% trans "stats" %}</a>
     {% if request.user.user_type == 'PREMIUM' %}
         <a href="{% url 'forum_core:home' %}" class="premium">{% trans "forums" %}</a>
     {% endif %}

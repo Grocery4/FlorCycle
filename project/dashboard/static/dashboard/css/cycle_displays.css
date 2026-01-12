@@ -1,7 +1,8 @@
 .cycle-container {
-    border: 2px solid #000;
+    border: 2px solid var(--border-color);
     padding: 12px;
-    background: white;
+    background: var(--surface-color);
+    color: var(--text-color);
     margin: 10px 0;
     width: 100%;
     box-sizing: border-box;
@@ -9,7 +10,8 @@
 
 .prediction-badge {
     padding: 2px 8px;
-    border: 1px solid #000;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     font-size: 12px;
     font-weight: bold;
     margin-bottom: 10px;
@@ -21,13 +23,14 @@
     justify-content: space-between;
     padding: 8px;
     margin: 6px 0;
-    border: 1px solid #000;
-    background: #f0f0f0;
+    border: 1px solid var(--border-color);
+    background: var(--nav-hover-bg);
+    color: var(--text-color);
 }
 
 .duration-badge {
     padding: 2px 6px;
-    background: white;
-    border: 1px solid #666;
+    background: var(--surface-color);
+    border: 1px solid var(--greyed-text-color);
     font-size: 12px;
 }

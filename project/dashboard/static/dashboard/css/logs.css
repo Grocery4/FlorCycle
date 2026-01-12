@@ -6,7 +6,7 @@
 
 .stat-item {
     padding: 0 40px;
-    border: 1px solid black;
+    border: 1px solid var(--border-color);
 }
 
 .button-group {

@@ -1,201 +1,208 @@
 {% extends "base.html" %}
-{% load static %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href={% static "dashboard/css/stats.css" %}>
+    <link rel="stylesheet" href="{% static 'dashboard/css/stats.css' %}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-{% endblock extra_head %}
+{% endblock %}
 
 {% block extra_js %}
-    <script type="text/javascript" src="{% static "dashboard/js/stats.js" %}"></script>
+    <script type="text/javascript" src="{% static 'dashboard/js/stats.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('cycleLengthChart').getContext('2d');
             const data = {{ cycle_length_distribution|safe }};
-            
-            if (data.data && data.data.length > 0) {
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            label: '{% trans "Frequency" %}',
-                            data: data.data,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            borderColor: '#000',
-                            borderWidth: 1,
-                            borderRadius: 4,
-                            barPercentage: 0.6,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1,
-                                    font: {
-                                        family: "'JetBrains Mono', monospace"
-                                    }
-                                },
-                                title: {
-                                    display: true,
-                                    text: '{% trans "Occurrences" %}',
-                                    font: {
-                                        family: "'JetBrains Mono', monospace",
-                                        weight: 'bold'
-                                    }
-                                }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: '{% trans "Cycle Length (Days)" %}',
-                                    font: {
-                                        family: "'JetBrains Mono', monospace",
-                                        weight: 'bold'
-                                    }
-                                },
-                                ticks: {
-                                    font: {
-                                        family: "'JetBrains Mono', monospace"
-                                    }
-                                }
-                            }
+            let chartInstance = null;
+
+            function createChart() {
+                if (chartInstance) chartInstance.destroy();
+
+                if (data.data && data.data.length > 0) {
+                    const style = getComputedStyle(document.documentElement);
+                    const primaryColor = style.getPropertyValue('--primary-color').trim();
+                    const borderColor = style.getPropertyValue('--border-color').trim();
+                    const textColor = style.getPropertyValue('--text-color').trim();
+                    const gridColor = style.getPropertyValue('--nav-hover-bg').trim();
+                    const surfaceColor = style.getPropertyValue('--surface-color').trim();
+
+                    chartInstance = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: '{% trans "Frequency" %}',
+                                data: data.data,
+                                backgroundColor: primaryColor,
+                                borderColor: borderColor,
+                                borderWidth: 2,
+                                borderRadius: 0,
+                                barPercentage: 0.6,
+                            }]
                         },
-                        plugins: {
-                            legend: {
-                                display: false
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    grid: { color: gridColor },
+                                    ticks: {
+                                        stepSize: 1,
+                                        color: textColor,
+                                        font: { family: "'JetBrains Mono', monospace" }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: '{% trans "Occurrences" %}',
+                                        color: textColor,
+                                        font: { family: "'JetBrains Mono', monospace", weight: 'bold' }
+                                    }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    title: {
+                                        display: true,
+                                        text: '{% trans "Cycle Length (Days)" %}',
+                                        color: textColor,
+                                        font: { family: "'JetBrains Mono', monospace", weight: 'bold' }
+                                    },
+                                    ticks: {
+                                        color: textColor,
+                                        font: { family: "'JetBrains Mono', monospace" }
+                                    }
+                                }
                             },
-                            tooltip: {
-                                backgroundColor: '#000',
-                                titleFont: { family: "'JetBrains Mono', monospace" },
-                                bodyFont: { family: "'JetBrains Mono', monospace" },
-                                displayColors: false
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    backgroundColor: borderColor,
+                                    titleColor: surfaceColor,
+                                    bodyColor: surfaceColor,
+                                    titleFont: { family: "'JetBrains Mono', monospace" },
+                                    bodyFont: { family: "'JetBrains Mono', monospace" },
+                                    displayColors: false
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
+
+            createChart();
+            window.addEventListener('themeChanged', function() { setTimeout(createChart, 10); });
         });
     </script>
-{% endblock extra_js %}
+{% endblock %}
 
-{% block title %}{% trans "Statistics" %}{% endblock title %}
+{% block title %}{% trans "Statistics" %}{% endblock %}
 
 {% block content %}
-    <div class="stats-container"
-         data-search-url="{% url 'dashboard:ajax_search_logs' %}"
-         data-get-items-url="{% url 'dashboard:ajax_get_available_items' %}"
-         data-analyze-url="{% url 'dashboard:ajax_analyze_item' %}"
-         data-top-symptoms-url="{% url 'dashboard:ajax_get_top_symptoms' %}"
-         data-csrf-token="{{ csrf_token }}"
-         data-no-results-text="{% trans 'No matches found' %}">
-        {% include "dashboard/subpage_topbar.html" %}
+<div class="stats-container" 
+     data-search-url="{% url 'dashboard:ajax_search_logs' %}" 
+     data-get-items-url="{% url 'dashboard:ajax_get_available_items' %}" 
+     data-analyze-url="{% url 'dashboard:ajax_analyze_item' %}" 
+     data-top-symptoms-url="{% url 'dashboard:ajax_get_top_symptoms' %}" 
+     data-csrf-token="{{ csrf_token }}" 
+     data-no-results-text="{% trans 'No matches found' %}">
+    
+    {% include "dashboard/subpage_topbar.html" %}
 
-        <div class="stat-section histogram-section">
-            <div class="stat-section-title">{% trans "Cycle Length Distribution" %}</div>
-            <div class="chart-container" style="position: relative; height:300px; width:100%">
-                <canvas id="cycleLengthChart"></canvas>
-            </div>
-            {% if not cycle_length_distribution.data %}
-                <p class="empty-state">{% trans "Not enough historical data to generate distribution." %}</p>
-            {% endif %}
+    <div class="stat-section histogram-section">
+        <div class="stat-section-title">{% trans "Cycle Length Distribution" %}</div>
+        <div class="chart-container" style="position: relative; height:300px; width:100%">
+            <canvas id="cycleLengthChart"></canvas>
         </div>
+        {% if not cycle_length_distribution.data %}
+            <p class="empty-state">{% trans "Not enough historical data to generate distribution." %}</p>
+        {% endif %}
+    </div>
 
-        <select id="activity-range-dropdown" class="range-dropdown">
-                <option value="1" {% if activity_month_range == 1 %}selected{% endif %}>{% trans "Last 1 Month" %}</option>
-                <option value="3" {% if activity_month_range == 3 %}selected{% endif %}>{% trans "Last 3 Months" %}</option>
-                <option value="6" {% if activity_month_range == 6 %}selected{% endif %}>{% trans "Last 6 Months" %}</option>
-                <option value="12" {% if activity_month_range == 12 %}selected{% endif %}>{% trans "Last Year" %}</option>
-        </select>
-        <div class="stat-section activity">
-            <div class="stat-section-title">{% trans "Activity" %}</div>
-            <div class="stat-items-grid">
-                <div class="stat-item">
-                    <h3 class="stat-title">{% trans "Total Intercourse" %}</h3>
-                    <p class="stat-value" id="intercourse-count">{{ intercourse_count|default:"-" }}</p>
-                </div>
-                <div class="stat-item">
-                    <h3 class="stat-title">{% trans "Orgasm Rate" %}</h3>
-                    <p class="stat-value percentage" id="orgasm-percentage">{{ orgasm_percentage|floatformat:1|default:"-" }}</p>
-                </div>
-                <div class="stat-item">
-                    <h3 class="stat-title">{% trans "Protected" %}</h3>
-                    <p class="stat-value" id="protected-count">{{ protected_count|default:"-" }}</p>
-                </div>
-                <div class="stat-item">
-                    <h3 class="stat-title">{% trans "Unprotected" %}</h3>
-                    <p class="stat-value" id="unprotected-count">{{ unprotected_count|default:"-" }}</p>
-                </div>
+    <select id="activity-range-dropdown" class="range-dropdown">
+        <option value="1" {% if activity_month_range == 1 %}selected{% endif %}>{% trans "Last 1 Month" %}</option>
+        <option value="3" {% if activity_month_range == 3 %}selected{% endif %}>{% trans "Last 3 Months" %}</option>
+        <option value="6" {% if activity_month_range == 6 %}selected{% endif %}>{% trans "Last 6 Months" %}</option>
+        <option value="12" {% if activity_month_range == 12 %}selected{% endif %}>{% trans "Last Year" %}</option>
+    </select>
+    
+    <div class="stat-section activity">
+        <div class="stat-section-title">{% trans "Activity" %}</div>
+        <div class="stat-items-grid">
+            <div class="stat-item">
+                <h3 class="stat-title">{% trans "Total Intercourse" %}</h3>
+                <p class="stat-value" id="intercourse-count">{{ intercourse_count|default:"-" }}</p>
             </div>
-        </div>
-
-        <select id="frequency-range-dropdown" class="range-dropdown">
-                <option value="1" {% if frequency_month_range == 1 %}selected{% endif %}>{% trans "Last 1 Month" %}</option>
-                <option value="3" {% if frequency_month_range == 3 %}selected{% endif %}>{% trans "Last 3 Months" %}</option>
-                <option value="6" {% if frequency_month_range == 6 %}selected{% endif %}>{% trans "Last 6 Months" %}</option>
-                <option value="12" {% if frequency_month_range == 12 %}selected{% endif %}>{% trans "Last Year" %}</option>
-        </select>
-        <div class="stat-section frequency">
-            <div class="stat-section-title">{% trans "Frequency" %}</div>
-            <div class="stat-items-grid">
-                <div class="stat-item">
-                    <h3 class="stat-title">{% trans "Intercourse Frequency" %}</h3>
-                    <p class="stat-value days" id="frequency-intercourse">{{ frequency_intercourse|default:"—" }}</p>
-                </div>
-                <div class="stat-item">
-                    <h3 class="stat-title">{% trans "Orgasm Frequency" %}</h3>
-                    <p class="stat-value days" id="frequency-orgasm">{{ frequency_orgasm|default:"—" }}</p>
-                </div>
+            <div class="stat-item">
+                <h3 class="stat-title">{% trans "Orgasm Rate" %}</h3>
+                <p class="stat-value percentage" id="orgasm-percentage">{{ orgasm_percentage|floatformat:1|default:"-" }}</p>
             </div>
-        </div>
-
-        <div class="stat-section top-symptoms-section">
-            <div class="stat-section-title">{% trans "Common Symptoms" %}</div>
-            <div id="top-symptoms-container" class="stat-items-grid">
-                <!-- Populated by JS -->
+            <div class="stat-item">
+                <h3 class="stat-title">{% trans "Protected" %}</h3>
+                <p class="stat-value" id="protected-count">{{ protected_count|default:"-" }}</p>
             </div>
-            <p class="empty-state hidden" id="top-symptoms-empty">{% trans "No enough data yet." %}</p>
-        </div>
-
-        <div class="stat-section search-section">
-            <div class="stat-section-title">{% trans "Search Logs" %}</div>
-            <div class="search-controls">
-                <input type="text" id="log-search-input" placeholder="{% trans 'Search notes...' %}">
-                <button id="log-search-btn" class="action-btn">{% trans "Search" %}</button>
+            <div class="stat-item">
+                <h3 class="stat-title">{% trans "Unprotected" %}</h3>
+                <p class="stat-value" id="unprotected-count">{{ unprotected_count|default:"-" }}</p>
             </div>
-            <div id="search-results-container" class="search-results hidden">
-                <h4>{% trans "Results" %}</h4>
-                <ul id="search-results-list"></ul>
-            </div>
-        </div>
-
-        <div class="stat-section analysis-section">
-             <div class="stat-section-title">{% trans "Symptom & Mood Analysis" %}</div>
-             <div class="analysis-tabs">
-                 <button class="tab-btn active" data-type="symptom">{% trans "Symptoms" %}</button>
-                 <button class="tab-btn" data-type="mood">{% trans "Moods" %}</button>
-                 <button class="tab-btn" data-type="medication">{% trans "Medications" %}</button>
-             </div>
-             
-             <div id="analysis-chips-container" class="chips-container">
-                 <!-- Populated by JS -->
-             </div>
-
-             <div id="analysis-result-panel" class="analysis-result hidden">
-                 <h3 id="analysis-item-name"></h3>
-                 <p>{% trans "Total Occurrences:" %} <span id="analysis-total-count"></span></p>
-                 
-                 <div class="recent-occurrences">
-                     <h4>{% trans "Occurrences" %}</h4>
-                     <ul id="analysis-dates-list"></ul>
-                 </div>
-             </div>
         </div>
     </div>
 
-{% endblock content %}
+    <select id="frequency-range-dropdown" class="range-dropdown">
+        <option value="1" {% if frequency_month_range == 1 %}selected{% endif %}>{% trans "Last 1 Month" %}</option>
+        <option value="3" {% if frequency_month_range == 3 %}selected{% endif %}>{% trans "Last 3 Months" %}</option>
+        <option value="6" {% if frequency_month_range == 6 %}selected{% endif %}>{% trans "Last 6 Months" %}</option>
+        <option value="12" {% if frequency_month_range == 12 %}selected{% endif %}>{% trans "Last Year" %}</option>
+    </select>
+    
+    <div class="stat-section frequency">
+        <div class="stat-section-title">{% trans "Frequency" %}</div>
+        <div class="stat-items-grid">
+            <div class="stat-item">
+                <h3 class="stat-title">{% trans "Intercourse Frequency" %}</h3>
+                <p class="stat-value days" id="frequency-intercourse">{{ frequency_intercourse|default:"—" }}</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="stat-title">{% trans "Orgasm Frequency" %}</h3>
+                <p class="stat-value days" id="frequency-orgasm">{{ frequency_orgasm|default:"—" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-section top-symptoms-section">
+        <div class="stat-section-title">{% trans "Common Symptoms" %}</div>
+        <div id="top-symptoms-container" class="stat-items-grid"></div>
+        <p class="empty-state hidden" id="top-symptoms-empty">{% trans "No enough data yet." %}</p>
+    </div>
+
+    <div class="stat-section search-section">
+        <div class="stat-section-title">{% trans "Search Logs" %}</div>
+        <div class="search-controls">
+            <input type="text" id="log-search-input" placeholder="{% trans 'Search notes...' %}">
+            <button id="log-search-btn" class="action-btn">{% trans "Search" %}</button>
+        </div>
+        <div id="search-results-container" class="search-results hidden">
+            <h4>{% trans "Results" %}</h4>
+            <ul id="search-results-list"></ul>
+        </div>
+    </div>
+
+    <div class="stat-section analysis-section">
+        <div class="stat-section-title">{% trans "Symptom & Mood Analysis" %}</div>
+        <div class="analysis-tabs">
+            <button class="tab-btn active" data-type="symptom">{% trans "Symptoms" %}</button>
+            <button class="tab-btn" data-type="mood">{% trans "Moods" %}</button>
+            <button class="tab-btn" data-type="medication">{% trans "Medications" %}</button>
+        </div>
+
+        <div id="analysis-chips-container" class="chips-container"></div>
+
+        <div id="analysis-result-panel" class="analysis-result hidden">
+            <h3 id="analysis-item-name"></h3>
+            <p>{% trans "Total Occurrences:" %} <span id="analysis-total-count"></span></p>
+            <div class="recent-occurrences">
+                <h4>{% trans "Occurrences" %}</h4>
+                <ul id="analysis-dates-list"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

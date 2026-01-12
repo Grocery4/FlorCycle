@@ -1,37 +1,39 @@
 {% extends "base.html" %}
-{% load static %}
-{% load i18n %}
+{% load static i18n %}
 
-{% block extra_head %}<link rel="stylesheet" href={% static "dashboard/css/settings.css" %}>{% endblock extra_head %}
-{% block title %}{% trans "Settings" %}{% endblock title %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'dashboard/css/settings.css' %}" />
+{% endblock %}
+
+{% block title %}{% trans "Settings" %}{% endblock %}
 
 {% block content %}
-    <div class="settings-content-wrapper">
-        {% include "dashboard/subpage_topbar.html" %}
-        
-        <div class="settings-sections">
-            {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
+<div class="settings-content-wrapper">
+    {% include "dashboard/subpage_topbar.html" %}
+
+    <div class="settings-sections">
+        {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
             <div class="cycle-details">
                 <h3>{% trans "Cycle Settings" %}</h3>
-                <form method='post'>
+                <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="cycle_details" value="1">
                     {{ cycle_details_form.as_p }}
                     <button type="submit">{% trans "Save" %}</button>
                 </form>
             </div>
-            {% endif %}
-            
-            {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
+        {% endif %}
+
+        {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
             <div class="premium-subscription">
                 <h3>{% trans "Premium Membership" %}</h3>
                 {% if not user.userprofile.is_premium %}
                     <div class="premium-upgrade-card">
                         <p>{% trans "Unlock exclusive access to our community forum and connect with experts!" %}</p>
-                        <form method='post' class="premium-form-container">
+                        <form method="post" class="premium-form-container">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="upgrade_premium">
-                            
+
                             <div class="plan-selection">
                                 {{ premium_form.subscription_plan.label_tag }}
                                 {{ premium_form.subscription_plan }}
@@ -54,7 +56,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <button type="submit" class="btn-premium-upgrade">{% trans "Upgrade to Premium" %}</button>
                         </form>
                     </div>
@@ -63,7 +65,7 @@
                         <div class="status-badge">{% trans "PREMIUM" %}</div>
                         <p>{% blocktrans with plan=user.userprofile.get_subscription_plan_display %}You have an active <strong>{{ plan }}</strong> subscription.{% endblocktrans %}</p>
                         <p>{% trans "Valid until:" %} {{ user.userprofile.end_date }}</p>
-                        
+
                         <form method="post" class="cancel-premium-form">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="cancel_premium">
@@ -72,66 +74,57 @@
                     </div>
                 {% endif %}
             </div>
-            {% endif %}
+        {% endif %}
 
-            <div class="user-management">
-                <h3>{% trans "Profile Settings" %}</h3>
-                <div class="profile-pic-section">
-                    <h4>{% trans "Profile Picture" %}</h4>
-                    {% if user.userprofile.profile_picture %}
-                        <img src="{{ user.userprofile.profile_picture.url }}" alt="Current profile picture" style="max-width: 150px; border-radius: 50%;">
-                    {% else %}
-                        <p>{% trans "No profile picture set." %}</p>
-                    {% endif %}
-                    <form method='post' enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="update_profile_pic">
-                        {{ profile_form.as_p }}
-                        <button type="submit">{% trans "Update Picture" %}</button>
-                    </form>
-                </div>
-
-                <div class="email-section">
-                    <h4>{% trans "Account Information" %}</h4>
-                    <form method='post'>
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="update_user_info">
-                        {{ user_form.as_p }}
-                        <button type="submit">{% trans "Update Email" %}</button>
-                    </form>
-                </div>
-
-                <div class="password-section">
-                    <h4>{% trans "Change Password" %}</h4>
-                    <form method='post'>
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="change_password">
-                        {{ password_form.as_p }}
-                        <button type="submit">{% trans "Change Password" %}</button>
-                    </form>
-                </div>
+        <div class="user-management">
+            <h3>{% trans "Profile Settings" %}</h3>
+            <div class="profile-pic-section">
+                <h4>{% trans "Profile Picture" %}</h4>
+                {% if user.userprofile.profile_picture %}
+                    <img src="{{ user.userprofile.profile_picture.url }}" alt="Current profile picture" style="max-width: 150px; border-radius: 50%;">
+                {% else %}
+                    <p>{% trans "No profile picture set." %}</p>
+                {% endif %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_profile_pic">
+                    {{ profile_form.as_p }}
+                    <button type="submit">{% trans "Update Picture" %}</button>
+                </form>
             </div>
 
-            {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
+            <div class="email-section">
+                <h4>{% trans "Account Information" %}</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_user_info">
+                    {{ user_form.as_p }}
+                    <button type="submit">{% trans "Update Email" %}</button>
+                </form>
+            </div>
+
+            <div class="password-section">
+                <h4>{% trans "Change Password" %}</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="change_password">
+                    {{ password_form.as_p }}
+                    <button type="submit">{% trans "Change Password" %}</button>
+                </form>
+            </div>
+        </div>
+
+        {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
             <div class="partner-management">
                 <h3>{% trans "Partner Management" %}</h3>
-                
-                {% if partner_link_success %}
-                    <p class="success-message">{{ partner_link_success }}</p>
-                {% endif %}
-                {% if partner_link_error %}
-                    <p class="error-message">{{ partner_link_error }}</p>
-                {% endif %}
-                {% if partner_unlink_success %}
-                    <p class="success-message">{{ partner_unlink_success }}</p>
-                {% endif %}
-                {% if partner_unlink_error %}
-                    <p class="error-message">{{ partner_unlink_error }}</p>
-                {% endif %}
+                {% if partner_link_success %}<p class="success-message">{{ partner_link_success }}</p>{% endif %}
+                {% if partner_link_error %}<p class="error-message">{{ partner_link_error }}</p>{% endif %}
+                {% if partner_unlink_success %}<p class="success-message">{{ partner_unlink_success }}</p>{% endif %}
+                {% if partner_unlink_error %}<p class="error-message">{{ partner_unlink_error }}</p>{% endif %}
 
                 <div class="link-partner-form">
                     <h4>{% trans "Link a Partner" %}</h4>
-                    <form method='post'>
+                    <form method="post">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="link_partner">
                         <input type="text" name="partner_code" placeholder="{% trans 'Enter partner code' %}" maxlength="10" required>
@@ -143,19 +136,19 @@
                     <div class="linked-partners-list">
                         <h4>{% trans "Linked Partners" %}</h4>
                         <ul>
-                        {% for partner in linked_partners %}
-                            <li>
-                                {{ partner.user }}
-                                <form method='post' style="display:inline;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="action" value="unlink_single_partner">
-                                    <input type="hidden" name="partner_user_id" value="{{ partner.user.id }}">
-                                    <button type="submit" class="unlink-single-btn">{% trans "Unlink" %}</button>
-                                </form>
-                            </li>
-                        {% endfor %}
+                            {% for partner in linked_partners %}
+                                <li>
+                                    {{ partner.user }}
+                                    <form method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="unlink_single_partner">
+                                        <input type="hidden" name="partner_user_id" value="{{ partner.user.id }}">
+                                        <button type="submit" class="unlink-single-btn">{% trans "Unlink" %}</button>
+                                    </form>
+                                </li>
+                            {% endfor %}
                         </ul>
-                        <form method='post'>
+                        <form method="post">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="unlink_partner">
                             <button type="submit">{% trans "Unlink All Partners" %}</button>
@@ -163,9 +156,9 @@
                     </div>
                 {% endif %}
             </div>
-            {% endif %}
+        {% endif %}
 
-            {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
+        {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
             <div class="data-management">
                 <h3>{% trans "Backup & Restore" %}</h3>
                 <div class="backup-section">
@@ -197,8 +190,7 @@
                     </form>
                 </div>
             </div>
-            {% endif %}
-        </div>
+        {% endif %}
     </div>
-
-{% endblock content %}
+</div>
+{% endblock %}

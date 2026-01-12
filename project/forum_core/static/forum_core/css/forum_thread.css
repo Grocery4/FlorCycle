@@ -23,7 +23,8 @@
     padding: 2.5rem;
     margin-bottom: 2rem;
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
 .thread-main-content {
@@ -51,7 +52,8 @@
     padding: 2rem;
     border: var(--border-width) solid var(--border-color);
     margin-bottom: 20px;
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
 .comment-meta {
@@ -83,7 +85,8 @@
     padding: 2.5rem;
     background: var(--surface-color);
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
 .comment-form-section h3 {
@@ -106,14 +109,25 @@
     text-transform: uppercase;
 }
 
-.edit-link { color: var(--text-color); }
-.delete-link { color: var(--error-color); }
-.report-link { color: var(--warning-color); }
-.solve-link { color: var(--secondary-color); }
+.edit-link {
+    color: var(--text-color);
+}
+
+.delete-link {
+    color: var(--error-color);
+}
+
+.report-link {
+    color: var(--warning-color);
+}
+
+.solve-link {
+    color: var(--secondary-color);
+}
 
 .solution-badge {
     background: var(--success-color);
-    color: #000;
+    color: var(--text-color);
     padding: 4px 12px;
     font-size: 0.8rem;
     font-weight: 800;
@@ -122,11 +136,19 @@
 }
 
 .thread-solved-notice {
-    background: #e0f2f1;
+    background: var(--bg-color);
     border: var(--border-width) solid var(--success-color);
     padding: 2rem;
     text-align: center;
     font-weight: 800;
-    color: #004d40;
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--success-color);
+    color: var(--text-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--success-color);
+}
+
+.avatar-small {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
 }

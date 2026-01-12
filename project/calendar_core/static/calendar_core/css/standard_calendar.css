@@ -10,7 +10,8 @@
 .cal {
     background: var(--surface-color);
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
 table {
@@ -35,19 +36,19 @@ td {
 }
 
 .highlight-menstruation {
-    background-color: #ffc1e3;
-    color: #000;
+    background-color: var(--period-bg);
+    color: var(--text-color);
 }
 
 .highlight-ovulation {
-    background-color: #b2dfdb;
-    color: #000;
+    background-color: var(--ovulation-bg);
+    color: var(--text-color);
 }
 
 .highlight-menstruation.highlight-ovulation {
     background: linear-gradient(
         135deg,
-        #ffc1e3 50%,
-        #b2dfdb 50%
+        var(--period-bg) 50%,
+        var(--ovulation-bg) 50%
     );
 }

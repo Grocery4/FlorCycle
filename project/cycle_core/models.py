@@ -23,7 +23,7 @@ class CycleDetails(models.Model):
 
 
     base_menstruation_date = models.DateField(
-        default=now,
+        default=lambda: now().date(),
         verbose_name=_("Base menstruation date")
     )
 
@@ -69,7 +69,7 @@ class CycleWindow(models.Model):
 
     menstruation_start = models.DateField(
         blank=False,
-        default=now
+        default=lambda: now().date()
     )
 
     menstruation_end = models.DateField(

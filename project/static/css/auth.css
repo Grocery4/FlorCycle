@@ -10,7 +10,8 @@
     background: var(--surface-color);
     padding: 2.5rem;
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
     width: 100%;
     max-width: 450px;
 }
@@ -36,18 +37,33 @@
     font-size: 0.9rem;
 }
 
-.auth-card input {
+.auth-card input,
+.auth-card select,
+.auth-card textarea {
     width: 100%;
     padding: 12px;
     border: var(--border-width) solid var(--border-color);
+    color: var(--text-color);
     font-family: var(--font-mono);
     font-weight: 700;
     background: var(--surface-color);
     outline: none;
+    box-sizing: border-box;
 }
 
-.auth-card input:focus {
-    background: #fdf2f8;
+.auth-card input:focus,
+.auth-card select:focus,
+.auth-card textarea:focus {
+    background: var(--selected-bg);
+}
+
+.auth-card select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
 }
 
 .auth-card .block-btn {
@@ -72,7 +88,7 @@
 }
 
 .auth-card .actions a.block-btn {
-    color: #fff;
+    color: var(--surface-color);
     border-bottom: none;
 }
 

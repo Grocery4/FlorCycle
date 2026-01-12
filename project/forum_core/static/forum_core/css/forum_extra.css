@@ -1,0 +1,129 @@
+/* Shared styles for forum forms, reports, and confirmations */
+
+.forum-nav {
+    margin-bottom: 2rem;
+}
+
+.nav-link,
+.back-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+}
+
+.nav-link:hover,
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.form-container,
+.report-form-card {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
+}
+
+.delete-confirm-container .form-container {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 3rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.form-input,
+select,
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: var(--border-width) solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-color);
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 800;
+    border: var(--border-width) solid var(--border-color);
+}
+
+.btn-primary {
+    background: var(--border-color);
+    color: var(--surface-color);
+}
+
+.btn-secondary {
+    background: var(--surface-color);
+    color: var(--text-color);
+    margin-left: 1rem;
+}
+
+.btn:hover {
+    background: var(--nav-hover-bg);
+    color: var(--text-color);
+}
+
+.delete-preview,
+.target-thread-preview,
+.target-comment-preview {
+    margin-bottom: 2rem;
+}
+
+.delete-preview,
+.thread-preview-card,
+.comment-card {
+    padding: 1.5rem;
+    background: var(--nav-hover-bg);
+    border: 2px dashed var(--border-color);
+    font-style: italic;
+}
+
+.btn-delete {
+    background: var(--error-color);
+    color: var(--surface-color);
+}
+
+.btn-delete:hover {
+    background: var(--error-color);
+    opacity: 0.8;
+}
+
+.report-header {
+    margin-bottom: 2rem;
+    border-bottom: var(--border-width) solid var(--border-color);
+    padding-bottom: 1rem;
+}
+
+.thread-meta,
+.comment-meta {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: var(--greyed-text-color);
+}
+
+.thread-author,
+.comment-author {
+    font-weight: 700;
+    color: var(--text-color);
+    margin-right: 1rem;
+}

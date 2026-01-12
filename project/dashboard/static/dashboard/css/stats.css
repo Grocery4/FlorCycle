@@ -1,215 +1,218 @@
 .stats-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
 }
 
 .range-dropdown {
-  padding: 10px 12px;
-  border: 2px solid #000;
-  background: white;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 15px;
-  align-self: flex-start;
-  transition: all 0.2s;
+    padding: 10px 12px;
+    border: 2px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-color);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 15px;
+    align-self: flex-start;
 }
 
 .range-dropdown:hover {
-  background: #f5f5f5;
+    background: var(--nav-hover-bg);
 }
 
 .range-dropdown:focus {
-  outline: none;
-  background: #f0f0f0;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    outline: none;
+    background: var(--nav-hover-bg);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 .stat-section {
-  border: 2px solid #000;
-  padding: 20px;
-  background: white;
-  margin: 10px 0;
-  width: 100%;
-  box-sizing: border-box;
+    border: 2px solid var(--border-color);
+    padding: 20px;
+    background: var(--surface-color);
+    color: var(--text-color);
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .stat-section-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #000;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .stat-items-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
 }
 
 .stat-item {
-  border: 1px solid #000;
-  padding: 15px;
-  background: #f0f0f0;
-  text-align: center;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    background: var(--nav-hover-bg);
+    text-align: center;
 }
 
 .stat-title {
-  font-size: 14px;
-  color: #666;
-  margin: 0 0 10px 0;
-  font-weight: 600;
+    font-size: 14px;
+    color: var(--greyed-text-color);
+    margin: 0 0 10px 0;
+    font-weight: 600;
 }
 
 .stat-value {
-  font-size: 28px;
-  font-weight: bold;
-  margin: 0;
-  color: #000;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+    color: var(--text-color);
 }
 
 .stat-value.percentage::after {
-  content: "%";
-  font-size: 20px;
-  margin-left: 2px;
+    content: '%';
+    font-size: 20px;
+    margin-left: 2px;
 }
 
 .stat-value.days::after {
-  content: " days";
-  font-size: 14px;
-  margin-left: 5px;
-  font-weight: normal;
+    content: ' days';
+    font-size: 14px;
+    margin-left: 5px;
+    font-weight: normal;
 }
 
 .stat-section.activity {
-  background: #fff9f0;
+    background: var(--bg-color);
 }
 
 .stat-section.frequency {
-  background: #f0f8ff;
+    background: var(--bg-color);
 }
 
 .empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #666;
-  font-size: 16px;
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--greyed-text-color);
+    font-size: 16px;
 }
 
 /* Analysis Section */
 .analysis-tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
 }
 
 .tab-btn {
-  padding: 8px 16px;
-  border: 2px solid #ccc;
-  background: white;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s;
+    padding: 8px 16px;
+    border: 2px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-color);
+    cursor: pointer;
+    font-weight: 600;
 }
 
 .tab-btn.active,
 .tab-btn:hover {
-  border-color: #000;
-  background: #f0f0f0;
+    border-color: var(--primary-color);
+    background: var(--nav-hover-bg);
 }
 
 .chips-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .chip {
-  padding: 6px 12px;
-  border: 1px solid #000;
-  border-radius: 20px;
-  background: white;
-  cursor: pointer;
-  transition: background 0.2s;
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background: var(--surface-color);
+    color: var(--text-color);
+    cursor: pointer;
 }
 
 .chip:hover,
 .chip.active {
-  background: #000;
-  color: white;
+    background: var(--border-color);
+    color: var(--surface-color);
 }
 
 .analysis-result {
-  border: 2px solid #000;
-  padding: 15px;
-  background: #fff;
-  margin-top: 20px;
+    border: 2px solid var(--border-color);
+    padding: 15px;
+    background: var(--surface-color);
+    color: var(--text-color);
+    margin-top: 20px;
 }
 
 .result-chart-bar {
-  background: #000;
-  height: 20px;
-  margin-bottom: 5px;
+    background: var(--primary-color);
+    height: 20px;
+    margin-bottom: 5px;
 }
 
 /* Search Section */
 .search-controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 #log-search-input {
-  flex: 1;
-  padding: 10px;
-  border: 2px solid #000;
+    flex: 1;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-color);
 }
 
 .action-btn {
-  padding: 10px 20px;
-  background: #000;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
+    padding: 10px 20px;
+    background: var(--border-color);
+    color: var(--text-color);
+    cursor: pointer;
+    font-weight: bold;
 }
 
 .search-results {
-  margin-top: 15px;
-  border-top: 1px solid #eee;
-  padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
 }
 
 #search-results-list {
-  list-style: none;
-  padding: 0;
+    list-style: none;
+    padding: 0;
 }
 
 #search-results-list li,
 #analysis-dates-list li {
-  padding: 8px;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
 
 .stat-section.histogram-section {
-  background: #f8f9fa;
-  border: 2px solid #000;
+    background: var(--bg-color);
+    border: 2px solid var(--border-color);
 }
 
 .chart-container {
-  padding: 10px;
-  background: #fff;
-  border: 1px solid #eee;
+    padding: 10px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
 }

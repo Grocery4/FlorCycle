@@ -15,12 +15,12 @@
 
 .prediction-item.menstruation {
     background-color: var(--primary-color);
-    color: #000;
+    color: var(--text-color);
 }
 
 .prediction-item.ovulation {
     background-color: var(--secondary-color);
-    color: #000;
+    color: var(--text-color);
 }
 
 .prediction-item b {

@@ -4,7 +4,8 @@
     padding: 2.5rem;
     background: var(--surface-color);
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
 .form-group {

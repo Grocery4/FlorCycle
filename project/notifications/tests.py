@@ -12,12 +12,12 @@ class NotificationTest(TestCase):
         self.user_b = User.objects.create_user(username='user_b', email='b@test.com', password='password')
 
     def test_dangerous_symptom_notification(self):
-        symptoms = ["Severe Pain", "Headache"]
-        check_dangerous_symptoms(self.user_a, symptoms)
+        symptoms = ["Severe Pain", "Fainting", "Fever"]
+        check_dangerous_symptoms(self.user_a, symptoms, flow_level=3)
         
         notification = Notification.objects.filter(user=self.user_a, notification_type='MEDICAL').first()
         self.assertIsNotNone(notification)
-        self.assertIn("concerning symptoms", notification.message)
+        self.assertIn("critical symptoms", notification.message)
         self.assertIn("Severe Pain", notification.message)
 
     def test_forum_reply_notification(self):

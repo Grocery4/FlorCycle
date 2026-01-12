@@ -196,7 +196,7 @@ class PredictionBuilder():
         return(ovulation_start, ovulation_end)
 
     @staticmethod
-    def generateMultiplePredictions(source, times: int = 3, user = None) -> list:
+    def generateMultiplePredictions(source, times: int = 3, user = None, today = None) -> list:
         prediction_list = []
         
         # Normalize to an initial CycleWindow and avg values
@@ -227,8 +227,12 @@ class PredictionBuilder():
 
         # Calculate starting point for predictions based on current date
         # If the last period + average cycle length is in the past, jump to next expected period
-        today = now().date()
+        if today is None:
+            today = now().date()
+        
         current_start = initial_cw.menstruation_start
+        if isinstance(current_start, datetime):
+            current_start = current_start.date()
         
         # Keep advancing until we reach a prediction that starts on or after today
         while current_start + timedelta(days=avg_cycle) < today:

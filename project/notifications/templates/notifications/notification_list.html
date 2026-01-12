@@ -1,98 +1,54 @@
-{% extends "base.html" %} 
-{% load i18n %}
+{% extends "base.html" %}
+{% load static i18n %}
+
 {% block title %}{% trans "Notifications" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'notifications/css/notification_list.css' %}" />
+{% endblock %}
+
 {% block content %}
-<div
-  class="notifications-container"
-  style="max-width: 800px; margin: 2rem auto; padding: 1rem"
->
-  <div style="margin-bottom: 1rem">
-    <a
-      href="javascript:history.back()"
-      style="color: #007bff; text-decoration: none; font-size: 0.9rem"
-      >← {% trans "Back" %}</a
-    >
-  </div>
-  <h2>{% trans "Your Notifications" %}</h2>
+<div class="notifications-container">
+    <div class="back-nav"><a href="javascript:history.back()" class="back-link">← {% trans "Back" %}</a></div>
 
-  {% if notifications %}
-  <div style="margin-bottom: 1rem">
-    <a
-      href="{% url 'notifications:mark_all_as_read' %}"
-      class="btn"
-      style="
-        background: #eee;
-        padding: 0.5rem;
-        border-radius: 4px;
-        text-decoration: none;
-        color: #333;
-      "
-      >{% trans "Mark all as read" %}</a
-    >
-  </div>
+    <h2>{% trans "Your Notifications" %}</h2>
 
-  <ul style="list-style: none; padding: 0">
-    {% for notification in notifications %}
-    <li
-      style="padding: 1rem; border: 1px solid #eee; margin-bottom: 0.5rem; border-radius: 8px; {% if not notification.is_read %}background: #f0f7ff; border-left: 4px solid #007bff;{% endif %}"
-    >
-      <div
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-        "
-      >
-        <div>
-          <span style="font-size: 0.8rem; color: #666"
-            >{{ notification.get_notification_type_display }} •
-            {% blocktrans with time=notification.created_at|timesince %}{{ time }} ago{% endblocktrans %}
-          </span>
-          <h3 style="margin: 0.5rem 0">{{ notification.title }}</h3>
-          <p style="margin: 0">{{ notification.message }}</p>
+    {% if notifications %}
+        <div class="mark-all-read-container">
+            <a href="{% url 'notifications:mark_all_as_read' %}" class="btn-mark-all">{% trans "Mark all as read" %}</a>
         </div>
-        <div style="display: flex; gap: 0.5rem; align-items: center">
-          {% if not notification.is_read %}
-          <a
-            href="{% url 'notifications:mark_as_read' notification.id %}"
-            style="font-size: 0.8rem; color: #007bff; white-space: nowrap"
-            >{% trans "Mark as read" %}</a
-          >
-          {% elif notification.link %}
-          <a
-            href="{{ notification.link }}"
-            style="font-size: 0.8rem; color: #007bff; white-space: nowrap"
-            >{% trans "View" %}</a
-          >
-          {% endif %}
-          <form
-            method="post"
-            action="{% url 'notifications:delete_notification' notification.id %}"
-            style="margin: 0"
-          >
-            {% csrf_token %}
-            <button
-              type="submit"
-              style="
-                background: transparent;
-                border: none;
-                color: #dc3545;
-                cursor: pointer;
-                font-size: 0.8rem;
-                padding: 0;
-              "
-              onclick="return confirm('{% trans "Delete this notification?" %}')"
-            >
-              {% trans "Delete" %}
-            </button>
-          </form>
-        </div>
-      </div>
-    </li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <p>{% trans "No notifications yet." %}</p>
-  {% endif %}
+
+        <ul class="notifications-list">
+            {% for notification in notifications %}
+                <li class="notification-item{% if not notification.is_read %} unread{% endif %}">
+                    <div class="notification-content-wrapper">
+                        <div class="notification-main">
+                            <span class="notification-meta">
+                                {{ notification.get_notification_type_display }} •
+                                {% blocktrans with time=notification.created_at|timesince %}{{ time }} ago{% endblocktrans %}
+                            </span>
+                            <h3 class="notification-title">{{ notification.title }}</h3>
+                            <p class="notification-message">{{ notification.message }}</p>
+                        </div>
+
+                        <div class="notification-actions">
+                            {% if not notification.is_read %}
+                                <a href="{% url 'notifications:mark_as_read' notification.id %}" class="action-link">{% trans "Mark as read" %}</a>
+                            {% elif notification.link %}
+                                <a href="{{ notification.link }}" class="action-link">{% trans "View" %}</a>
+                            {% endif %}
+
+                            <form method="post" action="{% url 'notifications:mark_as_read' notification.id %}" class="delete-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-delete-notif" onclick="return confirm('{% trans "Delete this notification?" %}')">{% trans "Delete" %}</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{% trans "No notifications yet." %}</p>
+    {% endif %}
 </div>
 {% endblock %}
