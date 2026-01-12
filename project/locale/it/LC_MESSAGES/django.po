@@ -2073,6 +2073,10 @@ msgstr "ACCESSO NEGATO"
 msgid "Your account has been <strong>permanently suspended</strong> for violating our community guidelines."
 msgstr "Il tuo account è stato <strong>sospeso permanentemente</strong> per violazione delle nostre linee guida."
 
+#:/templates/registration/banned.html:30
+msgid "If you believe this was a mistake, contact our support team."
+msgstr "Se credi che si tratti di un errore, contatta il nostro team di supporto."
+
 #: templates/registration/banned.html:33
 #: templates/registration/verification_pending.html:22
 msgid "Return to Login"
