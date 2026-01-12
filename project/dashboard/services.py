@@ -13,7 +13,6 @@ from dateutil import relativedelta
 
 from django.contrib.auth.views import redirect_to_login
 
-#TODO - might move to utils module
 def user_type_required(allowed_types, redirect_url='login', denied_redirect_url='guest_mode:show_form'):
     def decorator(view_func):
         @wraps(view_func)
@@ -38,7 +37,6 @@ def user_type_required(allowed_types, redirect_url='login', denied_redirect_url=
         return _wrapped_view
     return decorator
 
-#TODO - might move to utils module
 def configured_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
@@ -130,7 +128,6 @@ def generate_date_intervals(consecutive_days):
     
     return period_ranges
 
-#TODO - accomodate for both cyclestats and cycledetails
 def create_cycle_window(user, start_date, end_date):
     ovulation_start, ovulation_end = PredictionBuilder.predictOvulation(start_date)
 

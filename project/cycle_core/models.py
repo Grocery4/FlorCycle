@@ -11,7 +11,6 @@ from datetime import timedelta
 MIN_LOG_FOR_STATS = 6
 
 class CycleDetails(models.Model):
-    #TODO - test this mf
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     CYCLE_DURATION_CHOICES = [(i, format_lazy(_('{count} DAYS'), count=i)) for i in range(22, 45)]

@@ -7,7 +7,6 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from .services import doctorCvUploadPath, activatePremiumSubscription, userProfilePicturePath, generate_partner_code
 
-#TODO - implement pfps, cycledata into standarduser,
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = [
         ('STANDARD', _('Standard')),
@@ -28,7 +27,6 @@ class CustomUser(AbstractUser):
     )
     is_banned = models.BooleanField(default=False)
 
-#TODO - test this mf class
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_configured = models.BooleanField(default=False)
@@ -86,15 +84,19 @@ class UserProfile(models.Model):
         default=None
     )
     
-    # The save method ensures consistent state for premium fields.
-    # Manual clean logic is redundant and blocks form validation during upgrades.
+    @property
+    def has_active_premium(self):
+        return self.is_premium and self.subscription_status == 'ACTIVE'
+    
     def clean(self):
         super().clean()
-    #TODO - test method for premium fields
     def save(self, *args, **kwargs):
         if not self.is_premium:
+            # Preserve EXPIRED and CANCELED statuses for historical tracking
+            # Only clear if status is ACTIVE or None
+            if self.subscription_status not in ['EXPIRED', 'CANCELED']:
+                self.subscription_status = None
             self.subscription_plan = None
-            self.subscription_status = None
             self.auto_renew = None
             self.payment_info = None
 
@@ -143,8 +145,6 @@ class DoctorProfile(models.Model):
     cv = models.FileField(validators=[FileExtensionValidator(allowed_extensions=["pdf", "docx"])], upload_to=doctorCvUploadPath)
     license_number = models.CharField(max_length=100, unique=True)
     is_verified = models.BooleanField(default=False)
-    #TODO - move rating to forum app
-    # rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
     def save(self, *args, **kwargs):
         if self.user.user_type != 'DOCTOR':

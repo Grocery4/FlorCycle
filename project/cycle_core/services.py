@@ -9,11 +9,10 @@ from log_core.models import DailyLog
 from datetime import datetime, timedelta, date
 import statistics
 
-#TODO - test this mf
 # authenticated users only
 def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
-    stats = user.cyclestats
-    cycledetails = user.cycledetails
+    stats = getattr(user, 'cyclestats', None)
+    cycledetails = getattr(user, 'cycledetails', None)
     
     if stats:
         if stats.log_count >= threshold:

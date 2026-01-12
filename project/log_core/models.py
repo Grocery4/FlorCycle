@@ -66,8 +66,6 @@ class DailyLog(models.Model):
             MinValueValidator(30.0),
             MaxValueValidator(50.0),
         ], verbose_name=_("Temperature"))
-    # TODO - calculate ovulation date average and ovulation window average through ovulation_test=POSITIVE query \
-    # MAYBE IN ANALYTICS APP, not MVP
     ovulation_test = models.CharField(choices=OVULATION_TEST_CHOICES, blank=True, null=True, verbose_name=_("Ovulation Test"))
 
     symptoms_field = models.ManyToManyField('Symptom', through='SymptomLog', verbose_name=_("Symptoms"))

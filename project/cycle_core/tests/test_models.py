@@ -61,10 +61,6 @@ class TestCycleDetailsModel(TestCase):
             avg_menstruation_duration=self.AVG_MENSTRUATION_DURATION
         )
 
-        # FIXME - created variable should be used when using CycleWindow.objects.get_or_create().
-        # in this case, cd.asCycleWindow() simply instantiates a CycleWindow object, but the save on db should be done
-        # by some dashboard view. refer to cycle_core.models.asCycleWindow() comments for more info.
-        # cw, created = cd.asCycleWindow()
         cw = cd.asCycleWindow()
 
         expected_menstruation_start = self.DATE
@@ -78,8 +74,6 @@ class TestCycleDetailsModel(TestCase):
         self.assertEqual(cw.min_ovulation_window, expected_ovulation_start)
         self.assertEqual(cw.max_ovulation_window, expected_ovulation_end)
 
-        # FIXME - insert into correct test
-        # cw2, created2 = cd.asCycleWindow()
         cw2 = cd.asCycleWindow()
 
         self.assertIsInstance(cw2, CycleWindow)
