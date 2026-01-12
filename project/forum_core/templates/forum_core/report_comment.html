@@ -1,44 +1,46 @@
 {% extends "base.html" %}
 {% load static i18n %}
+
 {% block title %}{% trans "Report Comment" %}{% endblock %}
+
 {% block extra_head %}
-<link rel="stylesheet" href="{% static 'forum_core/css/forum_extra.css' %}" />
+    <link rel="stylesheet" href="{% static 'forum_core/css/forum_extra.css' %}" />
 {% endblock %}
+
 {% block content %}
 <div class="forum-container">
-	<div class="report-header">
-		<a href="{% url 'forum_core:thread' comment.thread.id %}" class="back-link">← {% trans "Back to Thread" %}</a>
-		<h1>{% trans "Report Comment" %}</h1>
-	</div>
-	
-	<div class="target-comment-preview">
-		<h3>{% trans "Reporting this comment:" %}</h3>
-		<div class="comment-card">
-			<div class="comment-meta">
-				<span class="comment-author">{{ comment.created_by.username }}</span>
-				<span class="comment-date">{{ comment.created_at|date:"M d, Y H:i" }}</span>
-			</div>
-			<div class="comment-body">{{ comment.content|truncatewords:50 }}</div>
-		</div>
-	</div>
-	
-	<div class="report-form-card">
-		<form method="POST">
-			{% csrf_token %}
-			<div class="form-group">
-				<label for="id_reason">{% trans "Why are you reporting this?" %}</label>
-				{{ form.reason }}
-			</div>
-			<div class="form-group">
-				<label for="id_description">{% trans "Additional details (optional)" %}</label>
-				{{ form.description }}
-			</div>
-			<div class="form-actions">
-				<button type="submit" class="btn btn-primary">{% trans "Submit Report" %}</button>
-				<a href="{% url 'forum_core:thread' comment.thread.id %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
-			</div>
-		</form>
-	</div>
-</div>
+    <div class="report-header">
+        <a href="{% url 'forum_core:thread' comment.thread.id %}" class="back-link">← {% trans "Back to Thread" %}</a>
+        <h1>{% trans "Report Comment" %}</h1>
+    </div>
 
+    <div class="target-comment-preview">
+        <h3>{% trans "Reporting this comment:" %}</h3>
+        <div class="comment-card">
+            <div class="comment-meta">
+                <span class="comment-author">{{ comment.created_by.username }}</span>
+                <span class="comment-date">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+            </div>
+            <div class="comment-body">{{ comment.content|truncatewords:50 }}</div>
+        </div>
+    </div>
+
+    <div class="report-form-card">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_reason">{% trans "Why are you reporting this?" %}</label>
+                {{ form.reason }}
+            </div>
+            <div class="form-group">
+                <label for="id_description">{% trans "Additional details (optional)" %}</label>
+                {{ form.description }}
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{% trans "Submit Report" %}</button>
+                <a href="{% url 'forum_core:thread' comment.thread.id %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

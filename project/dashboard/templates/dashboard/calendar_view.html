@@ -1,112 +1,99 @@
 {% extends "base.html" %}
-{% load static %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'dashboard/css/calendar_view.css' %}" />
-{% endblock extra_head %}
-{% block title %}{% trans "Calendar" %}{% endblock title %}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'dashboard/js/calendar_view.js' %}"></script>
+    <script src="{% static 'dashboard/js/reset_buttons.js' %}"></script>
+{% endblock %}
+
+{% block title %}{% trans "Calendar" %}{% endblock %}
 
 {% block content %}
-    <div
-        class="calendar-page-container"
-        data-ajax-url="{% url 'dashboard:ajax_load_log' %}"
-        data-add-log-url="{% url 'dashboard:add_log' %}"
-        data-csrf-token="{{ csrf_token }}"
-        data-language-code="{{ LANGUAGE_CODE }}"
-    >
-        {% include "dashboard/subpage_topbar.html" %}
+<div class="calendar-page-container" 
+     data-ajax-url="{% url 'dashboard:ajax_load_log' %}" 
+     data-add-log-url="{% url 'dashboard:add_log' %}" 
+     data-csrf-token="{{ csrf_token }}" 
+     data-language-code="{{ LANGUAGE_CODE }}">
+    
+    {% include "dashboard/subpage_topbar.html" %}
 
-        <div class="calendar-wrapper">
-            <div class="calendar-list">
-                <div class="calendar-nav-header">
-                    <a href="?date={{ prev_date }}" class="nav-btn">&laquo; {% trans "Prev" %}</a>
-                    <a href="?date={{ next_date }}" class="nav-btn">{% trans "Next" %} &raquo;</a>
-                </div>
-                {% for calendar in calendars %}
-                    <div class="month-container">{{ calendar|safe }}</div>
-                {% endfor %}
+    <div class="calendar-wrapper">
+        <div class="calendar-list">
+            <div class="calendar-nav-header">
+                <a href="?date={{ prev_date }}" class="nav-btn">&laquo; {% trans "Prev" %}</a>
+                <a href="?date={{ next_date }}" class="nav-btn">{% trans "Next" %} &raquo;</a>
+            </div>
+            {% for calendar in calendars %}
+                <div class="month-container">{{ calendar|safe }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="daily-view-sidebar" id="daily-view-sidebar">
+            <div class="daily-view-header">
+                <h3 id="selected-date-display" style="text-transform: capitalize">{% trans "Select a date" %}</h3>
             </div>
 
-            <div class="daily-view-sidebar" id="daily-view-sidebar">
-                <div class="daily-view-header">
-                    <h3 id="selected-date-display" style="text-transform: capitalize">{% trans "Select a date" %}</h3>
+            <div id="daily-view-content" class="daily-view-content hidden">
+                <div class="cycle-status-indicators">
+                    <span id="period-indicator" class="indicator period hidden">{% trans "Period" %}</span>
+                    <span id="ovulation-indicator" class="indicator ovulation hidden">{% trans "Ovulation" %}</span>
                 </div>
 
-                <div id="daily-view-content" class="daily-view-content hidden">
-                    <div class="cycle-status-indicators">
-                        <span id="period-indicator" class="indicator period hidden">{% trans "Period" %}</span>
-                        <span id="ovulation-indicator" class="indicator ovulation hidden">{% trans "Ovulation" %}</span>
-                    </div>
+                <div class="log-details-form">
+                    <form id="sidebar-log-form" method="post" action="{% url 'dashboard:add_log' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="date" id="selected-date-input" />
 
-                    <div class="log-details-form">
-                        <form
-                            id="sidebar-log-form"
-                            method="post"
-                            action="{% url 'dashboard:add_log' %}"
-                        >
-                            {% csrf_token %}
-                            <input type="hidden" name="date" id="selected-date-input" />
-
-                            <div class="sub-form dl-form">
-                                <h3>{% trans "General data" %}</h3>
-                                {% for field in dl_form %}
-                                    {% if field.name != 'date' %}
-                                        <div class="field-wrapper">
-                                            {{ field.label_tag }}
-                                            {% if field.name == 'symptoms' or field.name == 'moods' or field.name == 'medications' %}
-                                                <div class="field-with-reset">
-                                                    {{ field }}
-                                                    <button
-                                                        type="button"
-                                                        class="reset-btn"
-                                                        data-field="id_{{ field.name }}"
-                                                    >
-                                                        {% blocktrans with label=field.label %}Reset {{ label }}{% endblocktrans %}
-                                                    </button>
-                                                </div>
-                                            {% else %}
-                                                {{ field }}
-                                            {% endif %}
-                                            {% if field.errors %}
-                                                {% for error in field.errors %}
-                                                    <div class="error-message">{{ error }}</div>
-                                                {% endfor %}
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-
-                            <div class="sub-form il-form">
-                                <h3>{% trans "Intercourse" %}</h3>
-                                {% for field in il_form %}
+                        <div class="sub-form dl-form">
+                            <h3>{% trans "General data" %}</h3>
+                            {% for field in dl_form %}
+                                {% if field.name != 'date' %}
                                     <div class="field-wrapper">
-                                        {{ field.label_tag }} {{ field }}
+                                        {{ field.label_tag }}
+                                        {% if field.name == 'symptoms' or field.name == 'moods' or field.name == 'medications' %}
+                                            <div class="field-with-reset">
+                                                {{ field }}
+                                                <button type="button" class="reset-btn" data-field="id_{{ field.name }}">
+                                                    {% blocktrans with label=field.label %}Reset {{ label }}{% endblocktrans %}
+                                                </button>
+                                            </div>
+                                        {% else %}
+                                            {{ field }}
+                                        {% endif %}
                                         {% if field.errors %}
-                                            {% for error in field.errors %}
-                                                <div class="error-message">{{ error }}</div>
-                                            {% endfor %}
+                                            {% for error in field.errors %}<div class="error-message">{{ error }}</div>{% endfor %}
                                         {% endif %}
                                     </div>
-                                {% endfor %}
-                            </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
 
-                            {% if not is_partner %}
-                                <div class="form-actions">
-                                    <button type="button" id="sidebar-save-btn" class="save-btn">
-                                        {% trans "Save Log" %}
-                                    </button>
+                        <div class="sub-form il-form">
+                            <h3>{% trans "Intercourse" %}</h3>
+                            {% for field in il_form %}
+                                <div class="field-wrapper">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        {% for error in field.errors %}<div class="error-message">{{ error }}</div>{% endfor %}
+                                    {% endif %}
                                 </div>
-                            {% endif %}
-                        </form>
-                    </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if not is_partner %}
+                            <div class="form-actions">
+                                <button type="button" id="sidebar-save-btn" class="save-btn">{% trans "Save Log" %}</button>
+                            </div>
+                        {% endif %}
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="{% static 'dashboard/js/calendar_view.js' %}"></script>
-    <script src="{% static 'dashboard/js/reset_buttons.js' %}"></script>
-
-{% endblock content %}
+</div>
+{% endblock %}

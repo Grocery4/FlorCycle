@@ -1,52 +1,47 @@
 {% extends "base.html" %}
-{% load static %}
-{% load i18n %}
+{% load static i18n %}
+
 {% block title %}{% trans "Cycle Setup" %}{% endblock %}
-{% block extra_head %}<link rel="stylesheet" href="{% static 'css/auth.css' %}">{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+{% endblock %}
 
 {% block content %}
-    <div class="auth-wrapper">
-        <div class="auth-card">
-            <h2>{% trans "Configure Cycle" %}</h2>
-            <p
-                style="
-                       margin-bottom: 2rem;
-                       font-size: 0.9rem;
-                       color: #666;
-                       text-align: center;
-                      "
-            >
-                {% trans "Please provide your average cycle details to get started." %}
-            </p>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2>{% trans "Configure Cycle" %}</h2>
+        
+        <p style="margin-bottom: 2rem; font-size: 0.9rem; color: #666; text-align: center;">
+            {% trans "Please provide your average cycle details to get started." %}
+        </p>
 
-            <form method="post">
-                {% csrf_token %} {% if form.non_field_errors %}
-                    <div class="error" style="margin-bottom: 1rem">
-                        {{ form.non_field_errors }}
-                    </div>
-                {% endif %}
-                {% for field in form %}
-                    <div class="form-group">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {{ field }} {% if field.help_text %}
-                            <small
-                                style="
-                	   	               display: block;
-                                       margin-top: 5px;
-                                       color: #666;
-                                       font-size: 0.8rem;
-                                      "
-                            >{{ field.help_text }}</small>
-                        {% endif %} {% if field.errors %}
-                            <div class="error">{{ field.errors }}</div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="error" style="margin-bottom: 1rem">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
 
-                <button type="submit" class="block-btn">
-                    {% trans "Save & Continue" %}
-                </button>
-            </form>
-        </div>
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    
+                    {% if field.help_text %}
+                        <small style="display: block; margin-top: 5px; color: #666; font-size: 0.8rem;">{{ field.help_text }}</small>
+                    {% endif %}
+                    
+                    {% if field.errors %}
+                        <div class="error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="block-btn">{% trans "Save & Continue" %}</button>
+        </form>
     </div>
+</div>
 {% endblock %}

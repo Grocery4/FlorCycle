@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 {% load static i18n %}
+
 {% block title %}{% trans "Edit Comment" %}{% endblock %}
+
 {% block extra_head %}
-<link rel="stylesheet" href="{% static 'forum_core/css/forum_extra.css' %}" />
+    <link rel="stylesheet" href="{% static 'forum_core/css/forum_extra.css' %}" />
 {% endblock %}
+
 {% block content %}
 <div class="forum-container">
     <div class="forum-nav">
         <a href="{% url 'forum_core:thread' comment.thread.id %}" class="nav-link">← {% trans "Back to Thread" %}</a>
     </div>
+
     <div class="forum-header">
         <h1>{% trans "Edit Comment" %}</h1>
     </div>
-    
+
     <div class="form-container">
         <form method="POST">
             {% csrf_token %}
@@ -27,5 +31,4 @@
         </form>
     </div>
 </div>
-
 {% endblock %}

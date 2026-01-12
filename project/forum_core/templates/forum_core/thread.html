@@ -1,158 +1,109 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'forum_core/css/forum_thread.css' %}" />
 {% endblock %}
+
 {% block title %}{{ thread.title }}{% endblock %}
+
 {% block content %}
-    <div class="forum-container">
-        <div class="thread-header">
-            <a href="{% url 'forum_core:home' %}" class="back-link">← {% trans "Back to Forums" %}</a>
-            <h1>{{ thread.title }}</h1>
-            <div class="thread-meta">
-                <span class="thread-author">
-                    {% trans "Posted by" %}
-                    <a
-                        href="{% url 'forum_core:user_profile' thread.created_by.username %}"
-                        class="profile-link"
-                    >{{ thread.created_by.username }}</a
-                        >
-                    </span>
-                    <span class="thread-date">{{ thread.created_at|date:"M d, Y H:i" }}</span>
+<div class="forum-container">
+    <div class="thread-header">
+        <a href="{% url 'forum_core:home' %}" class="back-link">← {% trans "Back to Forums" %}</a>
+        <h1>{{ thread.title }}</h1>
+        <div class="thread-meta">
+            <span class="thread-author">
+                <img src="{{ thread.created_by.userprofile.profile_picture.url }}" alt="{{ thread.created_by.username }}" class="avatar-small">
+                {% trans "Posted by" %}
+                <a href="{% url 'forum_core:user_profile' thread.created_by.username %}" class="profile-link">{{ thread.created_by.username }}</a>
+            </span>
+            <span class="thread-date">{{ thread.created_at|date:"M d, Y H:i" }}</span>
 
-                    <div class="thread-actions">
-                        {% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %}
-                            {% if not thread.is_solved %}
-                                <a
-                                    href="{% url 'forum_core:edit_thread' thread.id %}"
-                                    class="action-link edit-link"
-                                >{% trans "Edit" %}</a
-                                    >
-                            {% endif %}
-                            <form
-                                action="{% url 'forum_core:delete_thread' thread.id %}"
-                                method="POST"
-                                style="display: inline"
-                            >
-                                {% csrf_token %}
-                                <button
-                                    type="submit"
-                                    class="action-link delete-link"
-                                    onclick="return confirm('{% trans "Are you sure?" %}')"
-                                >
-                                    {% trans "Delete" %}
-                                </button>
-                            </form>
-                        {% endif %}
-                        <a
-                            href="{% url 'forum_core:report_thread' thread.id %}"
-                            class="action-link report-link"
-                        >{% trans "Report Thread" %}</a
-                            >
-                        </div>
-                    </div>
-                </div>
-
-                <div class="thread-content-card">
-                    <div class="thread-main-content">{{ thread.content|linebreaks }}</div>
-                </div>
-
-                <div class="comments-section">
-                    <h3>{{ comments.count }} {% trans "Comments" %}</h3>
-                    <div class="comments-list">
-                        {% for comment in comments %}
-                            <div class="comment-card">
-                                <div class="comment-meta">
-                                    <span class="comment-author">
-                                        <a
-                                            href="{% url 'forum_core:user_profile' comment.created_by.username %}"
-                                            class="profile-link"
-                                        >{{ comment.created_by.username }}</a
-                                            >
-                                        </span>
-                                        <span class="comment-date"
-                                        >{{ comment.created_at|date:"M d, Y H:i" }}</span
-                                            >
-
-                                            <div class="comment-actions">
-                                                {% if thread.solved_by_comment == comment %}
-                                                    <span class="solution-badge">✓ {% trans "SOLUTION" %}</span>
-                                                {% elif not thread.is_solved %}
-                                                    {% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %}
-                                                        <form
-                                                            action="{% url 'forum_core:solve_thread' thread.id comment.id %}"
-                                                            method="POST"
-                                                            style="display: inline"
-                                                        >
-                                                            {% csrf_token %}
-                                                            <button type="submit" class="action-link solve-link">
-                                                                {% trans "Mark as Solution" %}
-                                                            </button>
-                                                        </form>
-                                                    {% endif %}
-                                                {% endif %}
-                                                {% if request.user == comment.created_by or request.user.user_type == 'MODERATOR' %}
-                                                    {% if not thread.is_solved %}
-                                                        <a
-                                                            href="{% url 'forum_core:edit_comment' comment.id %}"
-                                                            class="action-link edit-link"
-                                                        >{% trans "Edit" %}</a
-                                                            >
-                                                            <form
-                                                                action="{% url 'forum_core:delete_comment' comment.id %}"
-                                                                method="POST"
-                                                                style="display: inline"
-                                                            >
-                                                                {% csrf_token %}
-                                                                <button
-                                                                    type="submit"
-                                                                    class="action-link delete-link"
-                                                                    onclick="return confirm('{% trans "Are you sure?" %}')"
-                                                                >
-                                                                    {% trans "Delete" %}
-                                                                </button>
-                                                            </form>
-                                                    {% endif %}
-                                                {% endif %}
-
-                                                <a
-                                                    href="{% url 'forum_core:report_comment' comment.id %}"
-                                                    class="action-link report-link"
-                                                >{% trans "Report" %}</a
-                                                    >
-                                                </div>
-                                            </div>
-                                            <div class="comment-body">{{ comment.content|linebreaks }}</div>
-                                        </div>
-                        {% empty %}
-                            <div class="empty-comments">
-                                <p>{% trans "No comments yet. Be the first to reply!" %}</p>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="comment-form-section">
+            <div class="thread-actions">
+                {% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %}
                     {% if not thread.is_solved %}
-                        <h3>{% trans "Add a Comment" %}</h3>
-                        <form method="POST">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                {% if form.content.errors %}
-                                    <div class="alert alert-error">{{ form.content.errors }}</div>
-                                {% endif %}
-                                <textarea name="content" class="block-input" rows="5" placeholder="{% trans 'Write your comment here...' %}" required></textarea>
-                            </div>
-                            <button type="submit" class="block-btn">{% trans "Post Comment" %}</button>
-                        </form>
-                    {% else %}
-                        <div class="thread-solved-notice">
-                            <p>
-                                {% trans "✓ This thread has been solved. It is no longer accepting new comments or modifications." %}
-                            </p>
-                        </div>
+                        <a href="{% url 'forum_core:edit_thread' thread.id %}" class="action-link edit-link">{% trans "Edit" %}</a>
                     {% endif %}
-                </div>
+                    <form action="{% url 'forum_core:delete_thread' thread.id %}" method="POST" style="display: inline">
+                        {% csrf_token %}
+                        <button type="submit" class="action-link delete-link" onclick="return confirm('{% trans "Are you sure?" %}')">{% trans "Delete" %}</button>
+                    </form>
+                {% endif %}
+                <a href="{% url 'forum_core:report_thread' thread.id %}" class="action-link report-link">{% trans "Report Thread" %}</a>
             </div>
+        </div>
+    </div>
+
+    <div class="thread-content-card">
+        <div class="thread-main-content">{{ thread.content|linebreaks }}</div>
+    </div>
+
+    <div class="comments-section">
+        <h3>{{ comments.count }} {% trans "Comments" %}</h3>
+        <div class="comments-list">
+            {% for comment in comments %}
+                <div class="comment-card">
+                    <div class="comment-meta">
+                        <span class="comment-author">
+                            <img src="{{ comment.created_by.userprofile.profile_picture.url }}" alt="{{ comment.created_by.username }}" class="avatar-small">
+                            <a href="{% url 'forum_core:user_profile' comment.created_by.username %}" class="profile-link">{{ comment.created_by.username }}</a>
+                        </span>
+                        <span class="comment-date">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+
+                        <div class="comment-actions">
+                            {% if thread.solved_by_comment == comment %}
+                                <span class="solution-badge">✓ {% trans "SOLUTION" %}</span>
+                            {% elif not thread.is_solved %}
+                                {% if request.user == thread.created_by or request.user.user_type == 'MODERATOR' %}
+                                    <form action="{% url 'forum_core:solve_thread' thread.id comment.id %}" method="POST" style="display: inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="action-link solve-link">{% trans "Mark as Solution" %}</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                            
+                            {% if request.user == comment.created_by or request.user.user_type == 'MODERATOR' %}
+                                {% if not thread.is_solved %}
+                                    <a href="{% url 'forum_core:edit_comment' comment.id %}" class="action-link edit-link">{% trans "Edit" %}</a>
+                                    <form action="{% url 'forum_core:delete_comment' comment.id %}" method="POST" style="display: inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="action-link delete-link" onclick="return confirm('{% trans "Are you sure?" %}')">{% trans "Delete" %}</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                            <a href="{% url 'forum_core:report_comment' comment.id %}" class="action-link report-link">{% trans "Report" %}</a>
+                        </div>
+                    </div>
+                    <div class="comment-body">{{ comment.content|linebreaks }}</div>
+                </div>
+            {% empty %}
+                <div class="empty-comments">
+                    <p>{% trans "No comments yet. Be the first to reply!" %}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="comment-form-section">
+        {% if not thread.is_solved %}
+            <h3>{% trans "Add a Comment" %}</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    {% if form.content.errors %}
+                        <div class="alert alert-error">{{ form.content.errors }}</div>
+                    {% endif %}
+                    <textarea name="content" class="block-input" rows="5" placeholder="{% trans 'Write your comment here...' %}" required></textarea>
+                </div>
+                <button type="submit" class="block-btn">{% trans "Post Comment" %}</button>
+            </form>
+        {% else %}
+            <div class="thread-solved-notice">
+                <p>{% trans "✓ This thread has been solved. It is no longer accepting new comments or modifications." %}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

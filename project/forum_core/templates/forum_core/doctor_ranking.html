@@ -1,55 +1,50 @@
 {% extends "base.html" %}
-{% load static i18n %} 
+{% load static i18n %}
+
 {% block title %}{% trans "Doctor Rankings" %}{% endblock %}
+
 {% block extra_head %}
-<link rel="stylesheet" href="{% static 'forum_core/css/doctor_ranking.css' %}">
+    <link rel="stylesheet" href="{% static 'forum_core/css/doctor_ranking.css' %}" />
 {% endblock %}
+
 {% block content %}
 <div class="forum-container">
-	<div class="forum-nav">
-		{% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
-		<a href="{% url 'dashboard:homepage' %}" class="back-dashboard">← {% trans "Back to Dashboard" %}</a>
-		{% endif %}
-	</div>
-	<div class="forum-header">
-		<a href="{% url 'forum_core:home' %}" class="back-link">← {% trans "Back to Forums" %}</a>
-		<h1>{% trans "Medical Experts Ranking" %}</h1>
-		<p class="forum-subtitle">{% trans "Our top-rated verified medical professionals" %}</p>
-	</div>
-	
-	<div class="ranking-list">
-		{% for doctor in doctors %}
-		<div class="ranking-card {% if forloop.first %}top-rank{% endif %}">
-			<div class="rank-number">#{{ forloop.counter }}</div>
-			<div class="doctor-details">
-				<h3>
-					<a href="{% url 'forum_core:user_profile' doctor.user.username %}">
-						Dr. {{ doctor.user.username }}
-					</a>
-				</h3>
-				<span class="verification-badge"
-				>✓ {% trans "Verified Specialist" %}</span
-				>
-			</div>
-			<div class="doctor-scores">
-				<div class="score-item">
-					<span class="score-value">
-						{% if doctor.avg_rating %} {{ doctor.avg_rating|stringformat:".1f" }} {% else %} {% trans "N/A" %} {% endif %}
-					</span>
-					<span class="score-label">{% trans "Avg Rating" %}</span>
-				</div>
-				<div class="score-item">
-					<span class="score-value">{{ doctor.rating_count }}</span>
-					<span class="score-label">{% trans "Reviews" %}</span>
-				</div>
-			</div>
-		</div>
-		{% empty %}
-		<div class="card empty-state">
-			<p>{% trans "No rated doctors yet. Be the first to provide feedback on a doctor's profile!" %}</p>
-		</div>
-		{% endfor %}
-	</div>
-</div>
+    <div class="forum-nav">
+        {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
+            <a href="{% url 'dashboard:homepage' %}" class="back-dashboard">← {% trans "Back to Dashboard" %}</a>
+        {% endif %}
+    </div>
 
+    <div class="forum-header">
+        <a href="{% url 'forum_core:home' %}" class="back-link">← {% trans "Back to Forums" %}</a>
+        <h1>{% trans "Medical Experts Ranking" %}</h1>
+        <p class="forum-subtitle">{% trans "Our top-rated verified medical professionals" %}</p>
+    </div>
+
+    <div class="ranking-list">
+        {% for doctor in doctors %}
+            <div class="ranking-card {% if forloop.first %}top-rank{% endif %}">
+                <div class="rank-number">#{{ forloop.counter }}</div>
+                <div class="doctor-details">
+                    <h3><a href="{% url 'forum_core:user_profile' doctor.user.username %}">Dr. {{ doctor.user.username }}</a></h3>
+                    <span class="verification-badge">✓ {% trans "Verified Specialist" %}</span>
+                </div>
+                <div class="doctor-scores">
+                    <div class="score-item">
+                        <span class="score-value">{% if doctor.avg_rating %} {{ doctor.avg_rating|stringformat:".1f" }} {% else %} {% trans "N/A" %} {% endif %}</span>
+                        <span class="score-label">{% trans "Avg Rating" %}</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-value">{{ doctor.rating_count }}</span>
+                        <span class="score-label">{% trans "Reviews" %}</span>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="card empty-state">
+                <p>{% trans "No rated doctors yet. Be the first to provide feedback on a doctor's profile!" %}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

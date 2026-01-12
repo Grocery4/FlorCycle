@@ -1,25 +1,32 @@
 {% extends "base.html" %}
 {% load static i18n %}
+
 {% block title %}{% blocktrans with username=profile_user.username %}{{ username }}'s Profile{% endblocktrans %}{% endblock %}
+
 {% block extra_head %}
-<link rel="stylesheet" href="{% static 'forum_core/css/profile.css' %}"/>
+    <link rel="stylesheet" href="{% static 'forum_core/css/profile.css' %}" />
 {% endblock %}
+
 {% block content %}
 <div class="forum-container profile-page">
     <div class="forum-nav">
         <a href="{% url 'forum_core:home' %}" class="nav-link">← {% trans "Back to Forums" %}</a>
         {% if request.user.user_type != 'DOCTOR' and request.user.user_type != 'MODERATOR' %}
-        <a href="{% url 'dashboard:homepage' %}" class="nav-link">← {% trans "Back to Dashboard" %}</a>
+            <a href="{% url 'dashboard:homepage' %}" class="nav-link">← {% trans "Back to Dashboard" %}</a>
         {% endif %}
     </div>
+
     <div class="profile-header card">
+        <div class="profile-avatar-container">
+            <img src="{{ profile_user.userprofile.profile_picture.url }}" alt="{{ profile_user.username }}" class="profile-avatar" />
+        </div>
+        
         <div class="profile-info">
             <h1>{{ profile_user.username }}</h1>
-            <span class="user-role-badge {{ profile_user.user_type|lower }}"
-            >{{ profile_user.get_user_type_display }}</span
-            >
+            <span class="user-role-badge {{ profile_user.user_type|lower }}">{{ profile_user.get_user_type_display }}</span>
             <p class="join-date">{% blocktrans with date=profile_user.date_joined|date:"M Y" %}Member since {{ date }}{% endblocktrans %}</p>
         </div>
+        
         <div class="profile-stats">
             <div class="stat-item">
                 <span class="stat-value">{{ comment_count }}</span>
@@ -30,75 +37,68 @@
                 <span class="stat-label">{% trans "Threads" %}</span>
             </div>
             {% if profile_user.user_type == 'DOCTOR' %}
-            <div class="stat-item">
-                <span class="stat-value">{% if avg_rating %} {{ avg_rating|stringformat:".1f" }} {% else %}{% trans "N/A" %} {% endif %}</span>
-                <span class="stat-label">{% trans "Rating" %}</span>
-            </div>
+                <div class="stat-item">
+                    <span class="stat-value">{% if avg_rating %} {{ avg_rating|stringformat:".1f" }} {% else %}{% trans "N/A" %} {% endif %}</span>
+                    <span class="stat-label">{% trans "Rating" %}</span>
+                </div>
             {% endif %}
         </div>
     </div>
-    
+
     <div class="profile-content">
         <div class="participated-section card">
             <h2>{% trans "Recent Activity" %}</h2>
             <div class="thread-list">
                 {% for thread in threads|slice:":10" %}
-                <div class="thread-item">
-                    <a href="{% url 'forum_core:thread' thread.id %}" class="thread-title"
-                    >{{ thread.title }}</a
-                    >
-                    <span class="thread-meta">{{ thread.created_at|date:"M d, Y" }}</span>
-                </div>
+                    <div class="thread-item">
+                        <a href="{% url 'forum_core:thread' thread.id %}" class="thread-title">{{ thread.title }}</a>
+                        <span class="thread-meta">{{ thread.created_at|date:"M d, Y" }}</span>
+                    </div>
                 {% empty %}
-                <p class="empty-msg">{% trans "No recent activity." %}</p>
+                    <p class="empty-msg">{% trans "No recent activity." %}</p>
                 {% endfor %}
             </div>
         </div>
-        
+
         {% if rating_form %}
-        <div class="rate-section card">
-            <h2>{% trans "Rate this Doctor" %}</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <div class="rating-form-grid">
-                    <div class="form-group">
-                        <label for="{{ rating_form.rating.id_for_label }}"
-                        >{% trans "Score" %}</label
-                        >
-                        {{ rating_form.rating }}
+            <div class="rate-section card">
+                <h2>{% trans "Rate this Doctor" %}</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="rating-form-grid">
+                        <div class="form-group">
+                            <label for="{{ rating_form.rating.id_for_label }}">{% trans "Score" %}</label>
+                            {{ rating_form.rating }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ rating_form.comment.id_for_label }}">{% trans "Feedback" %}</label>
+                            {{ rating_form.comment }}
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="{{ rating_form.comment.id_for_label }}"
-                        >{% trans "Feedback" %}</label
-                        >
-                        {{ rating_form.comment }}
-                    </div>
-                </div>
-                <button type="submit" name="submit_rating" class="btn btn-primary">
-                    {% trans "Submit Rating" %}
-                </button>
-            </form>
-        </div>
-        {% endif %} {% if profile_user.user_type == 'DOCTOR' %}
-        <div class="ratings-section card">
-            <h2>{% trans "Doctor Ratings" %}</h2>
-            <div class="rating-list">
-                {% for r in ratings %}
-                <div class="rating-card">
-                    <div class="rating-header">
-                        <span class="rating-stars">{{ r.rating }}/5</span>
-                        <span class="rating-date">{{ r.created_at|date:"M d, Y" }}</span>
-                    </div>
-                    <p class="rating-comment">{{ r.comment }}</p>
-                    <span class="rating-author">— {{ r.author.username }}</span>
-                </div>
-                {% empty %}
-                <p class="empty-msg">{% trans "No ratings yet." %}</p>
-                {% endfor %}
+                    <button type="submit" name="submit_rating" class="btn btn-primary">{% trans "Submit Rating" %}</button>
+                </form>
             </div>
-        </div>
+        {% endif %}
+
+        {% if profile_user.user_type == 'DOCTOR' %}
+            <div class="ratings-section card">
+                <h2>{% trans "Doctor Ratings" %}</h2>
+                <div class="rating-list">
+                    {% for r in ratings %}
+                        <div class="rating-card">
+                            <div class="rating-header">
+                                <span class="rating-stars">{{ r.rating }}/5</span>
+                                <span class="rating-date">{{ r.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            <p class="rating-comment">{{ r.comment }}</p>
+                            <span class="rating-author">— {{ r.author.username }}</span>
+                        </div>
+                    {% empty %}
+                        <p class="empty-msg">{% trans "No ratings yet." %}</p>
+                    {% endfor %}
+                </div>
+            </div>
         {% endif %}
     </div>
 </div>
-
 {% endblock %}
