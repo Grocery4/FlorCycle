@@ -12,7 +12,8 @@
     background: var(--surface-color);
     padding: 20px;
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
 .forum-header h1 {
@@ -50,13 +51,13 @@
 }
 
 .search-form input:focus {
-    background: #fdf2f8;
+    background: var(--selected-bg);
 }
 
 .search-btn {
     padding: 15px 30px;
     background-color: var(--secondary-color);
-    color: #000;
+    color: var(--text-color);
     border: var(--border-width) solid var(--border-color);
     cursor: pointer;
     font-weight: 800;
@@ -65,7 +66,7 @@
 }
 
 .search-btn:hover {
-    background-color: #3fb0a4;
+    background-color: var(--secondary-color);
 }
 
 /* Actions */
@@ -110,13 +111,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
-    transition: transform 0.1s;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
 .thread-card:hover {
     transform: translate(-3px, -3px);
-    box-shadow: calc(var(--shadow-offset) + 3px) calc(var(--shadow-offset) + 3px) 0 0 var(--border-color);
+    box-shadow: calc(var(--shadow-offset) + 3px)
+        calc(var(--shadow-offset) + 3px) 0 0 var(--border-color);
 }
 
 .thread-info {
@@ -141,7 +143,7 @@
 
 .solved-badge {
     background: var(--success-color);
-    color: #000;
+    color: var(--text-color);
     padding: 4px 10px;
     font-size: 0.75rem;
     font-weight: 800;
@@ -180,7 +182,7 @@
     padding: 10px 15px;
     font-size: 0.9rem;
     font-weight: 800;
-    color: #000;
+    color: var(--text-color);
     box-shadow: 3px 3px 0 0 var(--border-color);
     display: inline-block;
 }
@@ -190,7 +192,8 @@
     padding: 50px;
     border: var(--border-width) solid var(--border-color);
     background: var(--surface-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
 .empty-state p {
@@ -207,5 +210,5 @@
 
 .mod-btn {
     background: var(--warning-color) !important;
-    color: #000 !important;
+    color: var(--text-color) !important;
 }

@@ -4,8 +4,8 @@
     max-width: 600px;
     margin: 4rem auto;
     text-align: center;
-    background: white;
-    border: 2px solid #000;
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
     padding: 3rem;
 }
 
@@ -21,7 +21,7 @@
 }
 
 .pending-instruction {
-    color: #666;
+    color: var(--greyed-text-color);
     margin-bottom: 2rem;
 }
 
@@ -31,26 +31,25 @@
     text-decoration: none;
     font-weight: 800;
     text-transform: uppercase;
-    border: 2px solid #000;
-    transition: all 0.2s;
+    border: var(--border-width) solid var(--border-color);
 }
 
 .btn-primary {
-    background: #000;
-    color: #fff;
+    background: var(--border-color);
+    color: var(--surface-color);
 }
 
 .btn-primary:hover {
-    background: #333;
+    background: var(--nav-hover-bg);
 }
 
 .btn-secondary {
-    background: white;
-    color: #000;
+    background: var(--surface-color);
+    color: var(--text-color);
 }
 
 .btn-secondary:hover {
-    background: #f0f0f0;
+    background: var(--nav-hover-bg);
 }
 
 /* Banned Page Styles */
@@ -59,25 +58,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #fdfdfd;
+    background: var(--bg-color);
     padding: 2rem;
 }
 
 .banned-card {
     max-width: 500px;
     width: 100%;
-    background: #fff;
-    border: 4px solid #000;
+    background: var(--surface-color);
+    border: 4px solid var(--border-color);
     padding: 3rem;
     text-align: center;
-    box-shadow: 15px 15px 0px 0px rgba(0, 0, 0, 1);
+    box-shadow: 15px 15px 0px 0px var(--border-color);
 }
 
 .banned-icon {
     width: 80px;
     height: 80px;
     margin: 0 auto 2rem;
-    color: #ff0000;
+    color: var(--error-color);
 }
 
 .banned-card h1 {
@@ -85,12 +84,12 @@
     font-weight: 900;
     letter-spacing: -1px;
     margin-bottom: 1.5rem;
-    color: #000;
+    color: var(--text-color);
 }
 
 .banned-divider {
     height: 4px;
-    background: #000;
+    background: var(--border-color);
     width: 60px;
     margin: 0 auto 1.5rem;
 }
@@ -98,36 +97,35 @@
 .banned-message {
     font-size: 1.25rem;
     line-height: 1.6;
-    color: #333;
+    color: var(--text-color);
     margin-bottom: 2rem;
 }
 
 .banned-details {
     font-size: 0.9rem;
-    color: #666;
+    color: var(--greyed-text-color);
     margin-bottom: 2rem;
     padding: 1rem;
-    background: #f8f8f8;
-    border: 2px solid #000;
+    background: var(--nav-hover-bg);
+    border: var(--border-width) solid var(--border-color);
 }
 
 .banned-details a {
-    color: #000;
+    color: var(--text-color);
     font-weight: 700;
     text-decoration: underline;
 }
 
 .btn-return {
     display: inline-block;
-    background: #000;
-    color: #fff;
+    background: var(--border-color);
+    color: var(--surface-color);
     padding: 0.75rem 2rem;
     font-weight: 800;
     text-decoration: none;
-    transition: transform 0.1s;
 }
 
 .btn-return:hover {
     transform: translate(-3px, -3px);
-    box-shadow: 3px 3px 0px 0px rgba(255, 0, 0, 1);
+    box-shadow: 3px 3px 0px 0px var(--error-color);
 }

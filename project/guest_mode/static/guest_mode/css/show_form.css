@@ -10,7 +10,8 @@
     padding: 2rem;
     background: var(--surface-color);
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
 .guest-header h1 {
@@ -45,7 +46,8 @@
 form {
     background: var(--surface-color);
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
     padding: 2.5rem;
     margin-bottom: 2rem;
 }
@@ -76,6 +78,7 @@ form input,
 form select {
     width: 100%;
     padding: 12px;
+    color: var(--text-color);
     border: 2px solid var(--border-color);
     font-family: var(--font-mono);
     font-weight: 700;
@@ -85,18 +88,19 @@ form select {
 form select:focus,
 form input:focus {
     outline: none;
-    background: #fdf2f8;
+    background: var(--selected-bg);
 }
 
 form button {
     width: 100%;
     padding: 15px;
     background-color: var(--primary-color);
-    color: #fff;
+    color: var(--surface-color);
     border: var(--border-width) solid var(--border-color);
     font-weight: 800;
     text-transform: uppercase;
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
     cursor: pointer;
     margin-top: 10px;
 }
@@ -113,7 +117,8 @@ form button {
 .prediction_table {
     background: var(--surface-color);
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
     padding: 2rem;
     margin-bottom: 4rem;
     display: flex;

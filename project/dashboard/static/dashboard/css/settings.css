@@ -11,11 +11,12 @@
     margin-top: 2rem;
 }
 
-.settings-sections>div {
+.settings-sections > div {
     background: var(--surface-color);
     padding: 2rem;
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
 h3 {
@@ -54,15 +55,16 @@ label {
     font-size: 0.9rem;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"],
-input[type="date"],
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+input[type='date'],
 select,
 textarea {
     padding: 12px;
     border: var(--border-width) solid var(--border-color);
+    color: var(--text-color);
     font-family: var(--font-mono);
     font-weight: 700;
     background: var(--surface-color);
@@ -71,13 +73,13 @@ textarea {
 
 input:focus,
 select:focus {
-    background: #fdf2f8;
+    background: var(--selected-bg);
 }
 
 button {
     padding: 15px 25px;
     background-color: var(--secondary-color);
-    color: #000;
+    color: var(--text-color);
     border: var(--border-width) solid var(--border-color);
     font-weight: 800;
     text-transform: uppercase;
@@ -97,20 +99,20 @@ button:active {
 
 /* Premium Section */
 .premium-upgrade-card {
-    background-color: #fef3c7;
+    background-color: var(--selected-bg);
     padding: 20px;
     border: 2px solid var(--border-color);
 }
 
 .btn-premium-upgrade {
     background-color: var(--primary-color);
-    color: #000;
+    color: var(--text-color);
     font-size: 1.1rem;
 }
 
 .premium-status {
     text-align: center;
-    background: #ecfdf5;
+    background: var(--bg-color);
     padding: 20px;
     border: 2px solid var(--border-color);
 }
@@ -136,7 +138,7 @@ button:active {
     display: inline-block;
     padding: 12px 24px;
     background-color: var(--secondary-color);
-    color: #000;
+    color: var(--text-color);
     text-decoration: none;
     border: var(--border-width) solid var(--border-color);
     font-weight: 800;
@@ -154,7 +156,7 @@ button:active {
 
 .warning-notice.extreme {
     background-color: var(--error-color);
-    color: #000;
+    color: var(--text-color);
 }
 
 .btn-reset {

@@ -1,9 +1,10 @@
-document.addEventListener('DOMContentLoaded', function() {
-    
+document.addEventListener('DOMContentLoaded', function () {
     function initializePeriodSelector() {
         const selectedDates = new Set(window.selectedDates || []);
-        selectedDates.forEach(dateStr => {
-            const checkbox = document.querySelector(`input[value="${dateStr}"]`);
+        selectedDates.forEach((dateStr) => {
+            const checkbox = document.querySelector(
+                `input[value="${dateStr}"]`,
+            );
             if (checkbox) checkbox.checked = true;
         });
     }

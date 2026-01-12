@@ -8,34 +8,33 @@
     align-items: center;
     margin-bottom: 20px;
     padding: 15px 20px;
-    background: white;
+    background: var(--bg-color);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .nav_btn {
     text-decoration: none;
-    color: #333;
+    color: var(--text-color);
     font-weight: 500;
     padding: 8px 16px;
     border-radius: 20px;
-    background-color: #f0f0f0;
+    background-color: var(--bg-color);
     border: none;
-    transition: all 0.2s ease;
     cursor: pointer;
 }
 
 .nav_btn:hover {
-    background-color: #e0e0e0;
+    background-color: var(--nav-hover-bg);
 }
 
 .nav_btn:active {
     transform: scale(0.95);
 }
 
-button[type="submit"] {
-    background-color: #000;
-    color: white;
+button[type='submit'] {
+    background-color: var(--primary-color);
+    color: var(--text-color);
     padding: 12px 24px;
     border: none;
     border-radius: 20px;
@@ -43,9 +42,8 @@ button[type="submit"] {
     font-size: 16px;
     margin-top: 20px;
     width: 100%;
-    transition: opacity 0.2s;
 }
 
-button[type="submit"]:hover {
+button[type='submit']:hover {
     opacity: 0.8;
 }

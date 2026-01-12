@@ -14,14 +14,14 @@
 
 .partner-info {
     padding: 10px 0;
-    border: 1px solid black;
+    border: 1px solid var(--border-color);
     width: 80%;
     text-align: center;
 }
 
 .partner-code-section,
 .linked-user-section {
-    border: 1px solid black;
+    border: 1px solid var(--border-color);
     padding: 15px;
     margin: 10px 0;
 }
@@ -34,19 +34,19 @@
 
 .unlink-btn {
     padding: 8px 16px;
-    border: 1px solid black;
-    background-color: #fff;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
     cursor: pointer;
     margin-top: 10px;
 }
 
 .unlink-btn:hover {
-    background-color: #f0f0f0;
+    background-color: var(--nav-hover-bg);
 }
 
 .error {
-    border: 1px solid red;
-    color: red;
+    border: 1px solid var(--error-color);
+    color: var(--error-color);
     padding: 10px;
     margin: 10px 0;
 }

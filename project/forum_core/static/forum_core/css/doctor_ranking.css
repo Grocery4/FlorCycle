@@ -5,12 +5,12 @@
 }
 
 .ranking-card {
-    background: white;
-    border: 2px solid #000;
+    background: var(--surface-color);
+    border: 2px solid var(--border-color);
     padding: 1.5rem 2rem;
     display: flex;
     align-items: center;
-    transition: transform 0.2s;
+    color: var(--text-color);
 }
 
 .ranking-card:hover {
@@ -19,13 +19,13 @@
 
 .top-rank {
     border-width: 4px;
-    background: #f8f9fa;
+    background: var(--bg-color);
 }
 
 .rank-number {
     font-size: 2.5rem;
     font-weight: 900;
-    color: #000;
+    color: var(--text-color);
     margin-right: 2rem;
     min-width: 60px;
 }
@@ -40,7 +40,7 @@
 }
 
 .doctor-details h3 a {
-    color: #000;
+    color: var(--text-color);
     text-decoration: none;
 }
 
@@ -51,7 +51,7 @@
 .verification-badge {
     font-size: 0.8rem;
     font-weight: 700;
-    color: #28a745;
+    color: var(--success-color);
     text-transform: uppercase;
     display: inline-block;
     margin-top: 0.5rem;
@@ -73,11 +73,11 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     font-weight: 700;
-    color: #666;
+    color: var(--greyed-text-color);
 }
 
 .back-link {
-    color: #000;
+    color: var(--text-color);
     text-decoration: none;
     display: block;
     margin-bottom: 1rem;
@@ -87,7 +87,8 @@
 .empty-state {
     text-align: center;
     padding: 3rem;
-    border: 2px dashed #000;
+    border: 2px dashed var(--border-color);
+    color: var(--text-color);
 }
 
 .forum-nav {
@@ -95,7 +96,7 @@
 }
 
 .back-dashboard {
-    color: #000;
+    color: var(--text-color);
     text-decoration: none;
     font-weight: 700;
     font-size: 0.9rem;

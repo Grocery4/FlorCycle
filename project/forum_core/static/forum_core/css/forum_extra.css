@@ -4,8 +4,9 @@
     margin-bottom: 2rem;
 }
 
-.nav-link, .back-link {
-    color: #000;
+.nav-link,
+.back-link {
+    color: var(--text-color);
     text-decoration: none;
     font-weight: 700;
     font-size: 0.9rem;
@@ -14,16 +15,18 @@
     display: block;
 }
 
-.nav-link:hover, .back-link:hover {
+.nav-link:hover,
+.back-link:hover {
     text-decoration: underline;
 }
 
-.form-container, .report-form-card {
+.form-container,
+.report-form-card {
     max-width: 800px;
     margin: 2rem auto;
     padding: 2rem;
-    background: white;
-    border: 2px solid #000;
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
 }
 
 .delete-confirm-container .form-container {
@@ -43,12 +46,14 @@
     font-weight: 700;
 }
 
-.form-input, select, textarea {
+.form-input,
+select,
+textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid #000;
-    background: white;
-    color: black;
+    border: var(--border-width) solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-color);
     font-family: inherit;
     box-sizing: border-box;
 }
@@ -59,60 +64,66 @@
     text-decoration: none;
     display: inline-block;
     font-weight: 800;
-    transition: all 0.2s;
-    border: 2px solid #000;
+    border: var(--border-width) solid var(--border-color);
 }
 
 .btn-primary {
-    background: #000;
-    color: white;
+    background: var(--border-color);
+    color: var(--surface-color);
 }
 
 .btn-secondary {
-    background: white;
-    color: #000;
+    background: var(--surface-color);
+    color: var(--text-color);
     margin-left: 1rem;
 }
 
 .btn:hover {
-    background: #333;
-    color: white;
+    background: var(--nav-hover-bg);
+    color: var(--text-color);
 }
 
-.delete-preview, .target-thread-preview, .target-comment-preview {
+.delete-preview,
+.target-thread-preview,
+.target-comment-preview {
     margin-bottom: 2rem;
 }
 
-.delete-preview, .thread-preview-card, .comment-card {
+.delete-preview,
+.thread-preview-card,
+.comment-card {
     padding: 1.5rem;
-    background: #f9f9f9;
-    border: 2px dashed #000;
+    background: var(--nav-hover-bg);
+    border: 2px dashed var(--border-color);
     font-style: italic;
 }
 
 .btn-delete {
-    background: #ff0000;
-    color: white;
+    background: var(--error-color);
+    color: var(--surface-color);
 }
 
 .btn-delete:hover {
-    background: #cc0000;
+    background: var(--error-color);
+    opacity: 0.8;
 }
 
 .report-header {
     margin-bottom: 2rem;
-    border-bottom: 2px solid #000;
+    border-bottom: var(--border-width) solid var(--border-color);
     padding-bottom: 1rem;
 }
 
-.thread-meta, .comment-meta {
+.thread-meta,
+.comment-meta {
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
-    color: #666;
+    color: var(--greyed-text-color);
 }
 
-.thread-author, .comment-author {
+.thread-author,
+.comment-author {
     font-weight: 700;
-    color: #000;
+    color: var(--text-color);
     margin-right: 1rem;
 }

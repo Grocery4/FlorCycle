@@ -2,7 +2,7 @@
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: var(--surface-color);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     margin-bottom: 20px;
@@ -10,9 +10,8 @@ table {
 
 th {
     padding: 10px;
-    background: #f8f9fa;
-    color: #666;
-    font-weight: 600;
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
 }
 
 td {
@@ -21,14 +20,13 @@ td {
     vertical-align: top;
     padding: 0;
     /* Important: Label will provide padding */
-    border: 1px solid #f0f0f0;
+    border: 1px solid var(--nav-hover-bg);
     cursor: pointer;
     position: relative;
-    transition: background 0.2s;
 }
 
 td:hover {
-    background-color: #fcfcfc;
+    background-color: var(--nav-hover-bg);
 }
 
 .day-label {
@@ -39,7 +37,6 @@ td:hover {
     width: 100%;
     box-sizing: border-box;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .day-label input {
@@ -49,7 +46,7 @@ td:hover {
 .day-label .day-number {
     font-weight: 500;
     font-size: 0.9em;
-    color: #333;
+    color: var(--text-color);
     width: fit-content;
     padding: 2px 5px;
     border-radius: 4px;
@@ -57,13 +54,13 @@ td:hover {
 
 /* Checked state highlights the entire cell like menstruation highlight */
 .day-label:has(input:checked) {
-    background-color: rgba(229, 115, 115, 0.4);
+    background-color: var(--period-bg);
     /* Consistent with period highlight but stronger for selection */
 }
 
 .day-label:has(input:checked) .day-number {
-    background: #e57373;
-    color: white;
+    background: var(--primary-color);
+    color: var(--surface-color);
 }
 
 /* Future dates treatment */

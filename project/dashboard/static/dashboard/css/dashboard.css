@@ -31,26 +31,27 @@ body {
     gap: 15px;
 }
 
-.action-buttons-row>section {
+.action-buttons-row > section {
     flex: 1;
 }
 
-.dashboard-data>section,
-.action-buttons-row>section {
+.dashboard-data > section,
+.action-buttons-row > section {
     background: var(--surface-color);
     border: var(--border-width) solid var(--border-color);
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--border-color);
-    transition: transform 0.1s;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
 }
 
-.dashboard-data>section:hover,
-.action-buttons-row>section:hover {
+.dashboard-data > section:hover,
+.action-buttons-row > section:hover {
     transform: translate(-2px, -2px);
-    box-shadow: calc(var(--shadow-offset) + 2px) calc(var(--shadow-offset) + 2px) 0 0 var(--border-color);
+    box-shadow: calc(var(--shadow-offset) + 2px)
+        calc(var(--shadow-offset) + 2px) 0 0 var(--border-color);
 }
 
-.dashboard-data>section a,
-.action-buttons-row>section a {
+.dashboard-data > section a,
+.action-buttons-row > section a {
     text-decoration: none;
     color: var(--text-color);
     font-weight: 800;
