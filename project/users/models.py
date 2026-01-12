@@ -88,22 +88,10 @@ class UserProfile(models.Model):
     
     @property
     def has_active_premium(self):
-        """
-        Check if user has an active premium subscription.
-        Premium features require BOTH:
-        - is_premium == True
-        - subscription_status == 'ACTIVE'
-        
-        Use the expire_subscriptions management command to automatically
-        set subscription_status to 'EXPIRED' for subscriptions past their end_date.
-        """
         return self.is_premium and self.subscription_status == 'ACTIVE'
     
-    # The save method ensures consistent state for premium fields.
-    # Manual clean logic is redundant and blocks form validation during upgrades.
     def clean(self):
         super().clean()
-    #TODO - test method for premium fields
     def save(self, *args, **kwargs):
         if not self.is_premium:
             # Preserve EXPIRED and CANCELED statuses for historical tracking
