@@ -59,7 +59,7 @@ class TestPredictionBuilder(TestCase):
         self.assertEqual(cwp.max_ovulation_window, expected_ovulation_end)
 
     def test_generate_multiple_predictions(self):
-        predictions = PredictionBuilder.generateMultiplePredictions(self.cd, 3)
+        predictions = PredictionBuilder.generateMultiplePredictions(self.cd, 3, today=self.base_menstruation_date)
 
         self.assertEqual(len(predictions), 3)
         

@@ -854,8 +854,9 @@ msgid "Search threads by title..."
 msgstr "Cerca discussioni in base al titolo..."
 
 #: forum_core/templates/forum_core/forum_home.html:35
-msgid "My Profile"
-msgstr "Il mio profilo"
+#: forum_core/templates/forum_core/profile.html:3
+msgid "%(username)s's Profile"
+msgstr "Profilo di %(username)s"
 
 #: forum_core/templates/forum_core/forum_home.html:36
 msgid "Doctor Ranking"
@@ -876,8 +877,8 @@ msgid "SOLVED"
 msgstr "RISOLTO"
 
 #: forum_core/templates/forum_core/forum_home.html:52
-msgid "by"
-msgstr "di"
+msgid "by "
+msgstr "di "
 
 #: forum_core/templates/forum_core/forum_home.html:53
 msgid "Updated:"
@@ -1039,11 +1040,6 @@ msgstr "Verifica"
 #: forum_core/templates/forum_core/moderator_dashboard.html:250
 msgid "No users found."
 msgstr "Nessun utente trovato."
-
-#: forum_core/templates/forum_core/profile.html:3
-#, python-format
-msgid "%(username)s's Profile"
-msgstr "Profilo di %(username)s"
 
 #: forum_core/templates/forum_core/profile.html:23
 #, python-format
