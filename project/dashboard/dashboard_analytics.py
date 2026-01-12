@@ -8,9 +8,8 @@ from cycle_core.models import CycleWindow
 from collections import Counter
 
 def get_cycle_length_distribution(user):
-    """
-    Calculates the distribution of cycle lengths for historical data.
-    """
+    # Calculates the distribution of cycle lengths for historical data.
+    
     windows = CycleWindow.objects.filter(
         user=user, 
         is_prediction=False

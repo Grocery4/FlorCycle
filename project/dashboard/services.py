@@ -141,9 +141,7 @@ def create_cycle_window(user, start_date, end_date):
     )
 
 def _normalize_ranges(ranges):
-    """
-    Merge overlapping or adjacent date ranges and return a sorted list.
-    """
+    # Merge overlapping or adjacent date ranges and return a sorted list.
     if not ranges:
         return []
 
@@ -280,10 +278,7 @@ def get_cycle_length(user):
 
 
 def calculate_timeline_data(user):
-    """
-    Calculate timeline data for the current cycle.
-    Returns a dict with phase boundaries and marker positions as percentages.
-    """
+    # Calculate timeline data for the current cycle. Returns a dict with phase boundaries and marker positions as percentages.
     today = date.today()
     cycle = get_current_cycle(user)
     
