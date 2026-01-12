@@ -7,7 +7,6 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from .services import doctorCvUploadPath, activatePremiumSubscription, userProfilePicturePath, generate_partner_code
 
-#TODO - implement pfps, cycledata into standarduser,
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = [
         ('STANDARD', _('Standard')),
@@ -28,7 +27,6 @@ class CustomUser(AbstractUser):
     )
     is_banned = models.BooleanField(default=False)
 
-#TODO - test this mf class
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_configured = models.BooleanField(default=False)
@@ -147,8 +145,6 @@ class DoctorProfile(models.Model):
     cv = models.FileField(validators=[FileExtensionValidator(allowed_extensions=["pdf", "docx"])], upload_to=doctorCvUploadPath)
     license_number = models.CharField(max_length=100, unique=True)
     is_verified = models.BooleanField(default=False)
-    #TODO - move rating to forum app
-    # rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
     def save(self, *args, **kwargs):
         if self.user.user_type != 'DOCTOR':

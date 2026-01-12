@@ -1,10 +1,9 @@
 from datetime import date
+from dateutil.relativedelta import relativedelta
 
 from calendar_core.services import render_multiple_calendars
 
 
-#TODO - refactor to use relativedelta
-#TODO - might move into calendar_core
 # returns a list of date objects
 def get_months_range(predictions: list) -> list[date]:
     if not predictions:
@@ -18,10 +17,7 @@ def get_months_range(predictions: list) -> list[date]:
 
     while current <= date(last_date.year, last_date.month, 1):
         months.append(current)
-        if current.month == 12:
-            current = date(current.year + 1, 1, 1)
-        else:
-            current = date(current.year, current.month + 1, 1)
+        current += relativedelta(months=1)
 
     return months
 

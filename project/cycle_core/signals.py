@@ -4,7 +4,6 @@ from django.dispatch import receiver
 from .models import CycleDetails, CycleWindow, CycleStats
 from .services import generatePredictionBasedOnLogCount, updateCycleStats
 
-#TODO - test this mf
 @receiver(post_save, sender=CycleDetails)
 def initCycleStatsOnCycleDetailsCreation(sender, instance, created, **kwargs):
 	# Only act when a CycleDetails instance is created and is bound to a user
@@ -36,7 +35,6 @@ def teardownCycleStatsOnCycleDetailsDeletion(sender, instance, **kwargs):
 
 
 
-#TODO - test this mf
 @receiver(post_save, sender=CycleDetails)
 @receiver(post_save, sender=CycleStats)
 def generateOrUpdatePredictions(sender, instance, created, **kwargs):
@@ -50,7 +48,6 @@ def generateOrUpdatePredictions(sender, instance, created, **kwargs):
 		CycleWindow.objects.filter(user=user, is_prediction=True).delete()
 		CycleWindow.objects.bulk_create(predictions)
 
-#TODO - test this mf
 @receiver([post_save, post_delete], sender=CycleWindow)
 def updateLogCount(sender, instance, **kwargs):
     if instance.is_prediction:
@@ -61,7 +58,6 @@ def updateLogCount(sender, instance, **kwargs):
         stats.log_count = CycleWindow.objects.filter(user=instance.user, is_prediction=False).count()
         stats.save()
 
-#TODO - test this mf
 @receiver([post_save, post_delete], sender=CycleWindow)
 def updateStatsOnLogChange(sender, instance, **kwargs):
 	if instance.is_prediction:

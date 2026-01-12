@@ -640,8 +640,6 @@ def ajax_load_log(request):
 
     return JsonResponse(response_data)
 
-#TODO - might turn into a CBV
-#TODO - add form to choose month_range
 @user_type_required(['STANDARD', 'PREMIUM', 'PARTNER'])
 @configured_required
 def stats(request):
