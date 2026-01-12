@@ -27,7 +27,102 @@
         {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
             <div class="premium-subscription">
                 <h3>{% trans "Premium Membership" %}</h3>
-                {% if not user.userprofile.has_active_premium %}
+                
+                {% if user.userprofile.subscription_status == 'ACTIVE' %}
+                    {# Active Premium Subscription #}
+                    <div class="premium-status active">
+                        <div class="status-badge status-active">{% trans "ACTIVE" %}</div>
+                        <p>{% blocktrans with plan=user.userprofile.get_subscription_plan_display %}You have an active <strong>{{ plan }}</strong> subscription.{% endblocktrans %}</p>
+                        <p class="expiry-info">{% trans "Valid until:" %} <strong>{{ user.userprofile.end_date }}</strong></p>
+
+                        <form method="post" class="cancel-premium-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="cancel_premium">
+                            <button type="submit" class="btn-cancel-subscription" onclick="return confirm('{% trans "Are you sure you want to cancel your premium subscription? You will lose access to the forum." %}')">{% trans "Cancel Subscription" %}</button>
+                        </form>
+                    </div>
+                
+                {% elif user.userprofile.subscription_status == 'EXPIRED' %}
+                    {# Expired Subscription #}
+                    <div class="premium-status expired">
+                        <div class="status-badge status-expired">{% trans "EXPIRED" %}</div>
+                        <p class="status-message">{% trans "Your premium subscription has expired." %}</p>
+                        {% if user.userprofile.end_date %}
+                            <p class="expiry-info">{% trans "Expired on:" %} <strong>{{ user.userprofile.end_date }}</strong></p>
+                        {% endif %}
+                        <p class="renewal-prompt">{% trans "Renew your subscription to regain access to the premium forum and exclusive features." %}</p>
+                        
+                        <form method="post" class="premium-form-container">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="upgrade_premium">
+
+                            <div class="plan-selection">
+                                {{ premium_form.subscription_plan.label_tag }}
+                                {{ premium_form.subscription_plan }}
+                            </div>
+
+                            <div class="payment-details">
+                                <h4>{% trans "Payment Details" %}</h4>
+                                <div class="form-group">
+                                    {{ premium_form.card_number.label_tag }}
+                                    {{ premium_form.card_number }}
+                                </div>
+                                <div class="payment-row">
+                                    <div class="form-group">
+                                        {{ premium_form.expiry_date.label_tag }}
+                                        {{ premium_form.expiry_date }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ premium_form.cvv.label_tag }}
+                                        {{ premium_form.cvv }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-premium-upgrade">{% trans "Renew Premium" %}</button>
+                        </form>
+                    </div>
+                
+                {% elif user.userprofile.subscription_status == 'CANCELED' %}
+                    {# Canceled Subscription #}
+                    <div class="premium-status canceled">
+                        <div class="status-badge status-canceled">{% trans "CANCELED" %}</div>
+                        <p class="status-message">{% trans "Your premium subscription has been canceled." %}</p>
+                        <p class="renewal-prompt">{% trans "You can reactivate your premium membership at any time to access exclusive features." %}</p>
+                        
+                        <form method="post" class="premium-form-container">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="upgrade_premium">
+
+                            <div class="plan-selection">
+                                {{ premium_form.subscription_plan.label_tag }}
+                                {{ premium_form.subscription_plan }}
+                            </div>
+
+                            <div class="payment-details">
+                                <h4>{% trans "Payment Details" %}</h4>
+                                <div class="form-group">
+                                    {{ premium_form.card_number.label_tag }}
+                                    {{ premium_form.card_number }}
+                                </div>
+                                <div class="payment-row">
+                                    <div class="form-group">
+                                        {{ premium_form.expiry_date.label_tag }}
+                                        {{ premium_form.expiry_date }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ premium_form.cvv.label_tag }}
+                                        {{ premium_form.cvv }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-premium-upgrade">{% trans "Reactivate Premium" %}</button>
+                        </form>
+                    </div>
+                
+                {% else %}
+                    {# No Premium / Never Subscribed #}
                     <div class="premium-upgrade-card">
                         <p>{% trans "Unlock exclusive access to our community forum and connect with experts!" %}</p>
                         <form method="post" class="premium-form-container">
@@ -58,18 +153,6 @@
                             </div>
 
                             <button type="submit" class="btn-premium-upgrade">{% trans "Upgrade to Premium" %}</button>
-                        </form>
-                    </div>
-                {% else %}
-                    <div class="premium-status">
-                        <div class="status-badge">{% trans "PREMIUM" %}</div>
-                        <p>{% blocktrans with plan=user.userprofile.get_subscription_plan_display %}You have an active <strong>{{ plan }}</strong> subscription.{% endblocktrans %}</p>
-                        <p>{% trans "Valid until:" %} {{ user.userprofile.end_date }}</p>
-
-                        <form method="post" class="cancel-premium-form">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="cancel_premium">
-                            <button type="submit" class="btn-cancel-subscription" onclick="return confirm('{% trans "Are you sure you want to cancel your premium subscription? You will lose access to the forum." %}')">{% trans "Cancel Subscription" %}</button>
                         </form>
                     </div>
                 {% endif %}
