@@ -88,3 +88,7 @@ body {
 .logs {
     background-color: var(--secondary-color) !important;
 }
+
+.error-section {
+    padding: 15px;
+}
