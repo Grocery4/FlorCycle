@@ -9,15 +9,15 @@ def initialize_log_data():
     if they don't already exist.
     """
     symptoms = [
-        "Abdominal cramps", "Acne", "Anxiety", "Backaches", "Bloating", "Body ache",
+        "Abdominal cramps", "Acne", "Anxiety", "Backache", "Bloating", "Body ache",
         "Cervical firmness", "Cervical mucus", "Cervical opening", "Chills", "Confusion",
-        "Constipation", "Cottage-cheese", "Cramps", "Craving", "Creamy", "Diarrhea",
+        "Constipation", "Cottage-cheese", "Cramps", "Cravings", "Creamy", "Diarrhea",
         "Dizziness", "Dry", "Egg-white", "Fainting", "Fatigue", "Fever", "Foul-smelling",
         "Gas", "Green", "Headache", "Hot flashees", "Hunger", "Illness", "Influenza",
         "Insomnia", "Irritability", "Irritation", "Itchiness", "Low back pain",
         "Migraines", "Moodiness", "Muscle pain", "Nausea", "Neck ache", "Night sweats",
-        "Ovulation pain", "Pelvic pain", "Pms", "Rashes", "Sensitive breasts",
-        "Severe Pain", "Shoulder ache", "Sticky", "Stress", "Tender breasts",
+        "Ovulation Pain", "Pelvic pain", "Pms", "Rashes", "Sensitive breasts",
+        "Severe Pain", "Shoulder ache", "Sticky", "Stress", "Breast tenderness",
         "Tension", "Unable to concentrate", "Watery", "Weight gain", "With blood"
     ]
 
