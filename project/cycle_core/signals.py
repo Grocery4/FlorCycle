@@ -2,7 +2,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from .models import CycleDetails, CycleWindow, CycleStats
-from .services import generatePredictionBasedOnLogCount, updateCycleStats
+from .services import generate_prediction_based_on_log_count, update_cycle_stats
 
 @receiver(post_save, sender=CycleDetails)
 def initCycleStatsOnCycleDetailsCreation(sender, instance, created, **kwargs):
@@ -44,7 +44,7 @@ def generateOrUpdatePredictions(sender, instance, created, **kwargs):
 		return
 
 	if user:
-		predictions = generatePredictionBasedOnLogCount(user)
+		predictions = generate_prediction_based_on_log_count(user)
 		CycleWindow.objects.filter(user=user, is_prediction=True).delete()
 		CycleWindow.objects.bulk_create(predictions)
 
@@ -69,4 +69,4 @@ def updateStatsOnLogChange(sender, instance, **kwargs):
 		stats = CycleStats.objects.get(user=instance.user)
 	except CycleStats.DoesNotExist:
 		return
-	updateCycleStats(stats)
+	update_cycle_stats(stats)

@@ -2,7 +2,7 @@ from unittest.mock import patch
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from cycle_core.services import generatePredictionBasedOnLogCount
+from cycle_core.services import generate_prediction_based_on_log_count
 from cycle_core.models import CycleStats, CycleDetails, MIN_LOG_FOR_STATS
 
 User = get_user_model()
@@ -26,7 +26,7 @@ class TestGeneratePredictionBasedOnLogCount(TestCase):
         self.cycle_stats.save()
         self.user.refresh_from_db()
 
-        generatePredictionBasedOnLogCount(self.user)
+        generate_prediction_based_on_log_count(self.user)
 
         # Should use cycle_stats as source
         mock_predict.assert_called_with(self.cycle_stats, user=self.user)
@@ -38,7 +38,7 @@ class TestGeneratePredictionBasedOnLogCount(TestCase):
         self.cycle_stats.save()
         self.user.refresh_from_db()
         
-        generatePredictionBasedOnLogCount(self.user)
+        generate_prediction_based_on_log_count(self.user)
         
         # Should use cycle_details as source
         mock_predict.assert_called_with(self.cycle_details, user=self.user)
@@ -49,7 +49,7 @@ class TestGeneratePredictionBasedOnLogCount(TestCase):
         self.cycle_stats.delete()
         self.user.refresh_from_db()
         
-        generatePredictionBasedOnLogCount(self.user)
+        generate_prediction_based_on_log_count(self.user)
         
         # Should fallback to cycle_details
         mock_predict.assert_called_with(self.cycle_details, user=self.user)
@@ -61,4 +61,4 @@ class TestGeneratePredictionBasedOnLogCount(TestCase):
         self.user.refresh_from_db()
 
         with self.assertRaises(ValueError):
-            generatePredictionBasedOnLogCount(self.user)
+            generate_prediction_based_on_log_count(self.user)

@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, date
 import statistics
 
 # authenticated users only
-def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
+def generate_prediction_based_on_log_count(user, threshold = MIN_LOG_FOR_STATS):
     stats = getattr(user, 'cyclestats', None)
     cycledetails = getattr(user, 'cycledetails', None)
     
@@ -28,7 +28,7 @@ def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
     raise ValueError('CycleStats and CycleDetails not found.')
 
 
-def updateCycleStats(cs: CycleStats, min_logs:int=MIN_LOG_FOR_STATS):
+def update_cycle_stats(cs: CycleStats, min_logs:int=MIN_LOG_FOR_STATS):
         user = cs.user
         if user:
             logs = CycleWindow.objects.filter(user=user, is_prediction=False)

@@ -22,9 +22,7 @@ class CycleCalendar(calendar.HTMLCalendar):
                 self._date_to_classes[d].append(css_class)
 
     def formatmonthname(self, theyear, themonth, withyear=True):
-        """
-        Return a month name as a table row.
-        """
+        # Return a month name as a table row.
         if withyear:
             s = '%s %s' % (date_format(date(theyear, themonth, 1), "F"), theyear)
         else:
@@ -32,10 +30,8 @@ class CycleCalendar(calendar.HTMLCalendar):
         return '<tr><th colspan="7" class="%s">%s</th></tr>' % (self.cssclass_month_head, s)
 
     def formatweekday(self, day):
-        """
-        Return a weekday name as a table header.
-        """
-        # 2001-01-01 was a Monday
+        # Return a weekday name as a table header.
+        # (2001-01-01 was a Monday)
         d = date(2001, 1, 1 + day)
         s = date_format(d, "D")
         return '<th class="%s">%s</th>' % (self.cssclasses[day], s)

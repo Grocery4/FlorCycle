@@ -2,9 +2,7 @@ from django.utils.translation import gettext as _
 from .models import Notification
 
 def create_notification(user, title, message, notification_type, link=None):
-    """
-    Utility function to create a new notification.
-    """
+    # Utility function to create a new notification.
     return Notification.objects.create(
         user=user,
         title=title,
@@ -14,7 +12,8 @@ def create_notification(user, title, message, notification_type, link=None):
     )
 
 def check_dangerous_symptoms(user, symptom_names, flow_level=None):
-    # Checks for dangerous symptoms and triggers medical advice notification. Only sends notification if ALL dangerous symptoms are present together:
+    # Checks for dangerous symptoms and triggers medical advice notification. 
+    # Only sends notification if ALL dangerous symptoms are present together:
     # Severe Pain, Fainting, Fever, AND Heavy Bleeding.
     DANGEROUS_SYMPTOMS = ["Severe Pain", "Fainting", "Fever"]
     

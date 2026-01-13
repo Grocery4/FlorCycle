@@ -24,9 +24,6 @@ class UserSignupForm(UserCreationForm):
 
         return user
 
-class ModeratorSignupForm(UserCreationForm):
-    pass
-
 class DoctorSignupForm(UserCreationForm):
     cv = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=["pdf", "docx"])], required=True)
     license_number = forms.CharField(max_length=100)

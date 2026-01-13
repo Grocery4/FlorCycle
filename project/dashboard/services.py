@@ -5,7 +5,7 @@ from django.db import transaction
 
 from cycle_core.models import CycleWindow, CycleStats, CycleDetails, MIN_LOG_FOR_STATS
 
-from cycle_core.services import PredictionBuilder, updateCycleStats
+from cycle_core.services import PredictionBuilder, update_cycle_stats
 from calendar_core.services import render_multiple_calendars, CalendarType
 from datetime import timedelta, datetime, date
 from dateutil import relativedelta
@@ -237,7 +237,7 @@ def apply_period_windows(user, selected_ranges, visible_start, visible_end, mont
         stats.log_count = CycleWindow.objects.filter(user=user, is_prediction=False).count()
         stats.save()
         # Update avg durations if we have enough logs
-        updateCycleStats(stats)
+        update_cycle_stats(stats)
     except CycleStats.DoesNotExist:
         pass
 
