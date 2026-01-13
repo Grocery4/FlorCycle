@@ -1,0 +1,49 @@
+.log-period-container {
+    padding: 20px;
+}
+
+.button-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    background: var(--bg-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.nav_btn {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: var(--bg-color);
+    border: none;
+    cursor: pointer;
+}
+
+.nav_btn:hover {
+    background-color: var(--nav-hover-bg);
+}
+
+.nav_btn:active {
+    transform: scale(0.95);
+}
+
+button[type='submit'] {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    padding: 12px 24px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+button[type='submit']:hover {
+    opacity: 0.8;
+}

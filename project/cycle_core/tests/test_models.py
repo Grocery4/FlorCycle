@@ -12,15 +12,15 @@ class TestCycleDetailsModel(TestCase):
         self.AVG_MENSTRUATION_DURATION = 5
 
     def test_successful_insert(self):
-        obj = CycleDetails.objects.create(last_menstruation_date=self.DATE, avg_cycle_duration=self.AVG_CYCLE_DURATION, avg_menstruation_duration=self.AVG_MENSTRUATION_DURATION)
-        self.assertEqual(obj.last_menstruation_date, self.DATE)
+        obj = CycleDetails.objects.create(base_menstruation_date=self.DATE, avg_cycle_duration=self.AVG_CYCLE_DURATION, avg_menstruation_duration=self.AVG_MENSTRUATION_DURATION)
+        self.assertEqual(obj.base_menstruation_date, self.DATE)
         self.assertEqual(obj.avg_cycle_duration, self.AVG_CYCLE_DURATION)
         self.assertEqual(obj.avg_menstruation_duration, self.AVG_MENSTRUATION_DURATION)
 
     def test_invalid_avg_cycle_duration(self):
         invalid_value = -1
         obj = CycleDetails.objects.create(
-            last_menstruation_date=self.DATE,
+            base_menstruation_date=self.DATE,
             avg_cycle_duration=invalid_value,
             avg_menstruation_duration=self.AVG_MENSTRUATION_DURATION
         )
@@ -29,7 +29,7 @@ class TestCycleDetailsModel(TestCase):
 
         invalid_value = 999
         obj = CycleDetails.objects.create(
-            last_menstruation_date=self.DATE,
+            base_menstruation_date=self.DATE,
             avg_cycle_duration=invalid_value,
             avg_menstruation_duration=self.AVG_MENSTRUATION_DURATION
         )
@@ -39,7 +39,7 @@ class TestCycleDetailsModel(TestCase):
 
     def test_invalid_avg_menstruation_duration(self):
         invalid_value = -1
-        obj = CycleDetails.objects.create(last_menstruation_date=self.DATE,
+        obj = CycleDetails.objects.create(base_menstruation_date=self.DATE,
         avg_cycle_duration=self.AVG_CYCLE_DURATION,
         avg_menstruation_duration=invalid_value
         )
@@ -47,7 +47,7 @@ class TestCycleDetailsModel(TestCase):
             obj.full_clean()
 
         invalid_value = 999
-        obj = CycleDetails.objects.create(last_menstruation_date=self.DATE,
+        obj = CycleDetails.objects.create(base_menstruation_date=self.DATE,
         avg_cycle_duration=self.AVG_CYCLE_DURATION,
         avg_menstruation_duration=invalid_value
         )
@@ -56,15 +56,11 @@ class TestCycleDetailsModel(TestCase):
 
     def test_as_cycle_window(self):
         cd = CycleDetails(
-            last_menstruation_date=self.DATE,
+            base_menstruation_date=self.DATE,
             avg_cycle_duration=self.AVG_CYCLE_DURATION,
             avg_menstruation_duration=self.AVG_MENSTRUATION_DURATION
         )
 
-        # FIXME - created variable should be used when using CycleWindow.objects.get_or_create().
-        # in this case, cd.asCycleWindow() simply instantiates a CycleWindow object, but the save on db should be done
-        # by some dashboard view. refer to cycle_core.models.asCycleWindow() comments for more info.
-        # cw, created = cd.asCycleWindow()
         cw = cd.asCycleWindow()
 
         expected_menstruation_start = self.DATE
@@ -78,8 +74,6 @@ class TestCycleDetailsModel(TestCase):
         self.assertEqual(cw.min_ovulation_window, expected_ovulation_start)
         self.assertEqual(cw.max_ovulation_window, expected_ovulation_end)
 
-        # FIXME - insert into correct test
-        # cw2, created2 = cd.asCycleWindow()
         cw2 = cd.asCycleWindow()
 
         self.assertIsInstance(cw2, CycleWindow)

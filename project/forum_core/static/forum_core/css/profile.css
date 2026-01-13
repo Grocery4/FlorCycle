@@ -1,0 +1,194 @@
+.profile-page {
+    max-width: 1000px;
+    margin: 2rem auto;
+}
+
+.card {
+    background: var(--surface-color);
+    border: 2px solid var(--border-color);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+.profile-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
+}
+
+.profile-avatar-container {
+    flex-shrink: 0;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--border-color);
+}
+
+.user-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: 2px solid var(--border-color);
+    margin-top: 0.5rem;
+}
+
+.premium {
+    background: var(--border-color);
+    color: var(--surface-color);
+}
+
+.doctor {
+    background: var(--info-color);
+    color: var(--text-color);
+}
+
+.moderator {
+    background: var(--warning-color);
+    color: var(--text-color);
+}
+
+.profile-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--greyed-text-color);
+}
+
+.thread-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+}
+
+.thread-item:last-child {
+    border-bottom: none;
+}
+
+.thread-title {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.thread-title:hover {
+    text-decoration: underline;
+}
+
+.thread-meta {
+    color: var(--greyed-text-color);
+    font-size: 0.9rem;
+}
+
+.rating-card {
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.rating-stars {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.rating-date {
+    color: var(--greyed-text-color);
+    font-size: 0.8rem;
+    margin-left: 1rem;
+}
+
+.rating-comment {
+    margin: 0.5rem 0;
+    font-style: italic;
+}
+
+.rating-author {
+    font-size: 0.8rem;
+    color: var(--greyed-text-color);
+}
+
+.empty-msg {
+    color: var(--greyed-text-color);
+    font-style: italic;
+}
+
+/* Form Styles */
+.rating-form-grid {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.form-input,
+.rate-section textarea,
+.rate-section select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    font-family: inherit;
+    background: var(--surface-color);
+    color: var(--text-color);
+    box-sizing: border-box;
+}
+
+.btn-primary {
+    background: var(--border-color);
+    color: var(--surface-color);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    font-weight: 800;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.btn-primary:hover {
+    background: var(--greyed-text-color);
+}
+
+.forum-nav {
+    margin-bottom: 2rem;
+}
+
+.back-dashboard {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.back-dashboard:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,214 @@
+.forum-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.forum-header {
+    text-align: left;
+    margin-bottom: 40px;
+    border-bottom: var(--border-width) solid var(--border-color);
+    padding-bottom: 20px;
+    background: var(--surface-color);
+    padding: 20px;
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
+}
+
+.forum-header h1 {
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.forum-subtitle {
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+/* Search Section */
+.forum-search-section {
+    margin-bottom: 30px;
+}
+
+.search-form {
+    display: flex;
+    gap: 0;
+}
+
+.search-form input {
+    flex: 1;
+    padding: 15px;
+    border: var(--border-width) solid var(--border-color);
+    border-right: none;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    background: var(--surface-color);
+    outline: none;
+}
+
+.search-form input:focus {
+    background: var(--selected-bg);
+}
+
+.search-btn {
+    padding: 15px 30px;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: var(--border-width) solid var(--border-color);
+    cursor: pointer;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+}
+
+.search-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Actions */
+.forum-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.forum-actions .action-btn {
+    flex: 1;
+    min-width: 150px;
+}
+
+.action-btn {
+    text-align: center;
+}
+
+/* Threads List */
+.threads-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: inline-block;
+    background: var(--primary-color);
+    padding: 5px 15px;
+    border: var(--border-width) solid var(--border-color);
+}
+
+.threads-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.thread-card {
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
+}
+
+.thread-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: calc(var(--shadow-offset) + 3px)
+        calc(var(--shadow-offset) + 3px) 0 0 var(--border-color);
+}
+
+.thread-info {
+    flex: 1;
+}
+
+.thread-title {
+    margin: 0 0 12px 0;
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+.thread-title a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.thread-title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+}
+
+.solved-badge {
+    background: var(--success-color);
+    color: var(--text-color);
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    border: var(--border-width) solid var(--border-color);
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.thread-meta {
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.author-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+}
+
+.author-link:hover {
+    border-bottom-color: var(--primary-color);
+}
+
+.thread-stats {
+    margin-left: 20px;
+    min-width: 100px;
+    text-align: right;
+}
+
+.comment-count {
+    background: var(--primary-color);
+    border: var(--border-width) solid var(--border-color);
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-color);
+    box-shadow: 3px 3px 0 0 var(--border-color);
+    display: inline-block;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px;
+    border: var(--border-width) solid var(--border-color);
+    background: var(--surface-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
+}
+
+.empty-state p {
+    font-weight: 800;
+    font-size: 1.2rem;
+}
+
+/* From inline styles in forum_home.html */
+.forum-nav {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.mod-btn {
+    background: var(--warning-color) !important;
+    color: var(--text-color) !important;
+}

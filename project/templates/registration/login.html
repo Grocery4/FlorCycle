@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Log in" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2>{% trans "Log in" %}</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="error" style="margin-bottom: 1rem">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="block-btn">{% trans "Log in" %}</button>
+        </form>
+
+        <div class="actions">
+            <a href="{% url 'password_reset' %}">{% trans "Forgot your password?" %}</a>
+            <a href="{% url 'users:standard_signup' %}">{% trans "Register" %}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+.calendar-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.cal {
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    padding: 10px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    border-bottom: var(--border-width) solid var(--border-color);
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    font-weight: 700;
+}
+
+.highlight-menstruation {
+    background-color: var(--period-bg);
+    color: var(--text-color);
+}
+
+.highlight-ovulation {
+    background-color: var(--ovulation-bg);
+    color: var(--text-color);
+}
+
+.highlight-menstruation.highlight-ovulation {
+    background: linear-gradient(
+        135deg,
+        var(--period-bg) 50%,
+        var(--ovulation-bg) 50%
+    );
+}

@@ -1,15 +1,4 @@
-<style>
-    .highlight-menstruation {
-        background-color : pink;
-    }
-
-    .highlight-ovulation {
-        background-color : green;
-    }
-</style>
-
-{% for cal in calendars %}
-    <div class="cal">
-        {{ cal|safe }}
-    </div>
-{% endfor %}
+{% load static i18n %}
+<div class="calendar-container">
+    {% for cal in calendars %}<div class="cal">{{ cal|safe }}</div>{% endfor %}
+</div>

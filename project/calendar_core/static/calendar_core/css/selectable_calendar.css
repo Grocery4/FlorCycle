@@ -1,0 +1,74 @@
+/* Base Table Styles copied from calendar_view.css */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+th {
+    padding: 10px;
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
+}
+
+td {
+    height: 80px;
+    /* Taller cells for modern look */
+    vertical-align: top;
+    padding: 0;
+    /* Important: Label will provide padding */
+    border: 1px solid var(--nav-hover-bg);
+    cursor: pointer;
+    position: relative;
+}
+
+td:hover {
+    background-color: var(--nav-hover-bg);
+}
+
+.day-label {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.day-label input {
+    display: none;
+}
+
+.day-label .day-number {
+    font-weight: 500;
+    font-size: 0.9em;
+    color: var(--text-color);
+    width: fit-content;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+/* Checked state highlights the entire cell like menstruation highlight */
+.day-label:has(input:checked) {
+    background-color: var(--period-bg);
+    /* Consistent with period highlight but stronger for selection */
+}
+
+.day-label:has(input:checked) .day-number {
+    background: var(--primary-color);
+    color: var(--surface-color);
+}
+
+/* Future dates treatment */
+.day-label:has(input:disabled) {
+    cursor: not-allowed;
+    opacity: 0.3;
+}
+
+.day-label:has(input:disabled):hover {
+    background-color: transparent;
+}

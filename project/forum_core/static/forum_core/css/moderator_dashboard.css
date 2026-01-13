@@ -1,0 +1,256 @@
+.mod-dashboard-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.forum-nav {
+    margin-bottom: 2rem;
+}
+
+.back-forum {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    border: 2px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    box-shadow: 3px 3px 0px 0px var(--border-color);
+    background: var(--surface-color);
+}
+
+.back-forum:hover {
+    box-shadow: none;
+    transform: translate(2px, 2px);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    border-bottom: 3px solid var(--border-color);
+    padding-bottom: 1.5rem;
+    color: var(--text-color);
+}
+
+.stats-overview {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-card {
+    text-align: center;
+    background: var(--border-color);
+    color: var(--surface-color);
+    padding: 1rem 2rem;
+    border-radius: 4px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+.dashboard-section h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    border-left: 5px solid var(--border-color);
+    padding-left: 1rem;
+    color: var(--text-color);
+}
+
+.reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.report-card {
+    background: var(--surface-color);
+    border: 2px solid var(--border-color);
+    padding: 1.5rem;
+    box-shadow: 5px 5px 0px 0px var(--border-color);
+    color: var(--text-color);
+}
+
+.report-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.report-reason {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.badge-spam {
+    background: var(--bg-color);
+}
+
+.badge-harassment {
+    background: var(--error-color);
+}
+
+.badge-inappropriate {
+    background: var(--warning-color);
+}
+
+.report-comment-preview,
+.report-description {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.report-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.btn-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid var(--border-color);
+    background: var(--border-color);
+    color: var(--surface-color);
+}
+
+.btn-outline {
+    background: var(--surface-color);
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.btn-success {
+    background: var(--success-color);
+    color: var(--text-color);
+    border-color: var(--success-color);
+}
+
+.btn-danger {
+    color: var(--error-color);
+}
+
+.btn-secondary {
+    background: var(--greyed-text-color);
+    color: var(--surface-color);
+    border-color: var(--greyed-text-color);
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface-color);
+    border: 2px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.user-table th,
+.user-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-table th {
+    background: var(--bg-color);
+    font-weight: 800;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.status-active {
+    color: var(--success-color);
+    font-weight: 700;
+}
+
+.status-banned {
+    color: var(--error-color);
+    font-weight: 700;
+}
+
+.status-verified {
+    color: var(--success-color);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.status-unverified {
+    color: var(--warning-color);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.user-type-tag {
+    font-size: 0.8rem;
+    background: var(--nav-hover-bg);
+    padding: 0.2rem 0.4rem;
+}
+
+.verification-details {
+    font-size: 0.8rem;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: var(--bg-color);
+    border: 1px dashed var(--border-color);
+}
+
+.cv-link {
+    color: var(--primary-color, #ff69b4);
+    font-weight: 800;
+    text-decoration: underline;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.search-form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.search-form input {
+    padding: 0.4rem;
+    border: 2px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-color);
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+
+@media (max-width: 992px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}

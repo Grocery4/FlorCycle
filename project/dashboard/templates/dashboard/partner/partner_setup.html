@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'dashboard/css/partner_setup.css' %}" />
+{% endblock %}
+
+{% block title %}{% trans "Partner Setup" %}{% endblock %}
+
+{% block content %}
+<div class="settings-content-wrapper">
+    {% include "dashboard/subpage_topbar.html" %}
+
+    <div class="settings-sections">
+        <div class="partner-info">
+            <h2>{% trans "Partner Setup" %}</h2>
+            <p>{% blocktrans %}Welcome {{ user|upper }}!{% endblocktrans %}</p>
+
+            {% if unlink_success %}<p class="success-message">{{ unlink_success }}</p>{% endif %}
+            {% if unlink_error %}<p class="error-message">{{ unlink_error }}</p>{% endif %}
+
+            {% if partner_profile %}
+                <div class="partner-code-section">
+                    <p>{% trans "To get started, share the following code with your partner:" %}</p>
+                    <div class="partner-code-display"><h1>{{ partner_profile.partner_code }}</h1></div>
+                </div>
+
+                <div class="linked-user-section">
+                    <h3>{% trans "Linked Main User" %}</h3>
+                    {% if linked_user %}
+                        <p>{% trans "Connected to:" %} <strong>{{ linked_user }}</strong></p>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="unlink" />
+                            <button type="submit" class="unlink-btn">{% trans "Unlink" %}</button>
+                        </form>
+                    {% else %}
+                        <p>{% trans "No main user linked yet." %}</p>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

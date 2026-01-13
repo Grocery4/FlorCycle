@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Moderator Dashboard" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'forum_core/css/moderator_dashboard.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="mod-dashboard-container">
+    <div class="forum-nav">
+        <a href="{% url 'forum_core:home' %}" class="back-forum">← {% trans "Back to Forums" %}</a>
+    </div>
+
+    <header class="dashboard-header">
+        <h1>{% trans "Moderator Dashboard" %}</h1>
+        <div class="stats-overview">
+            <div class="stat-card">
+                <span class="stat-value">{{ reports.count|add:thread_reports.count }}</span>
+                <span class="stat-label">{% trans "Total Reports" %}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ banned_users.count }}</span>
+                <span class="stat-label">{% trans "Banned Users" %}</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-grid">
+        <!-- Pending Reports Column -->
+        <section class="dashboard-section reports-section">
+            <div class="report-group">
+                <h2>{% trans "Reported Comments" %}</h2>
+                {% if reports %}
+                    <div class="reports-list">
+                        {% for report in reports %}
+                            <div class="report-card">
+                                <div class="report-meta">
+                                    <span class="report-reason badge-{{ report.reason|lower }}">{{ report.get_reason_display }}</span>
+                                    <span class="report-date">{{ report.created_at|date:"M d, H:i" }}</span>
+                                </div>
+                                <div class="report-comment-preview">
+                                    <strong>{% blocktrans with username=report.comment.created_by.username %}Comment by {{ username }}:{% endblocktrans %}</strong>
+                                    <p>"{{ report.comment.content|truncatewords:20 }}"</p>
+                                </div>
+                                <div class="report-description">
+                                    <strong>{% trans "Details:" %}</strong>
+                                    <p>{{ report.description|default:_("No description provided.") }}</p>
+                                </div>
+                                <div class="report-actions">
+                                    <a href="{% url 'forum_core:thread' report.comment.thread.id %}" class="btn-small btn-outline">{% trans "View Context" %}</a>
+                                    <form action="{% url 'forum_core:resolve_report' report.id %}" method="POST" style="display: inline">
+                                        {% csrf_token %}
+                                        <button type="submit" name="action" value="resolve" class="btn-small btn-success">{% trans "Resolve" %}</button>
+                                        <button type="submit" name="action" value="dismiss" class="btn-small btn-secondary">{% trans "Dismiss" %}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="empty-msg">{% trans "No reported comments." %}</p>
+                {% endif %}
+            </div>
+
+            <div class="report-group" style="margin-top: 3rem">
+                <h2>{% trans "Reported Threads" %}</h2>
+                {% if thread_reports %}
+                    <div class="reports-list">
+                        {% for report in thread_reports %}
+                            <div class="report-card">
+                                <div class="report-meta">
+                                    <span class="report-reason badge-{{ report.reason|lower }}">{{ report.get_reason_display }}</span>
+                                    <span class="report-date">{{ report.created_at|date:"M d, H:i" }}</span>
+                                </div>
+                                <div class="report-comment-preview">
+                                    <strong>{% trans "Thread:" %} {{ report.thread.title }}</strong>
+                                    <p>{% blocktrans with username=report.thread.created_by.username %}by {{ username }}{% endblocktrans %}</p>
+                                </div>
+                                <div class="report-description">
+                                    <strong>{% trans "Details:" %}</strong>
+                                    <p>{{ report.description|default:_("No description provided.") }}</p>
+                                </div>
+                                <div class="report-actions">
+                                    <a href="{% url 'forum_core:thread' report.thread.id %}" class="btn-small btn-outline">{% trans "View Thread" %}</a>
+                                    <form action="{% url 'forum_core:resolve_thread_report' report.id %}" method="POST" style="display: inline">
+                                        {% csrf_token %}
+                                        <button type="submit" name="action" value="resolve" class="btn-small btn-success">{% trans "Resolve" %}</button>
+                                        <button type="submit" name="action" value="dismiss" class="btn-small btn-secondary">{% trans "Dismiss" %}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="empty-msg">{% trans "No reported threads." %}</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- User Management Column -->
+        <section class="dashboard-section users-section">
+            <div class="section-header">
+                <h2>{% trans "User Management" %}</h2>
+                <form method="GET" class="search-form">
+                    <input type="text" name="q" placeholder="{% trans 'Search users...' %}" value="{{ request.GET.q }}" />
+                    <button type="submit" class="btn-small">{% trans "Search" %}</button>
+                </form>
+            </div>
+
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Username" %}</th>
+                        <th>{% trans "Type" %}</th>
+                        <th>{% trans "Status/Verification" %}</th>
+                        <th>{% trans "Action" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in all_users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td><span class="user-type-tag">{{ user.get_user_type_display }}</span></td>
+                            <td>
+                                {% if user.is_banned %}<span class="status-banned">{% trans "Banned" %}</span>{% else %}<span class="status-active">{% trans "Active" %}</span>{% endif %}
+                                {% if user.user_type == 'DOCTOR' %}
+                                    <div class="verification-details">
+                                        <strong>{% trans "License:" %}</strong> {{ user.doctorprofile.license_number }}<br>
+                                        {% if user.doctorprofile.cv %}<a href="{{ user.doctorprofile.cv.url }}" target="_blank" class="cv-link">📄 {% trans "View CV" %}</a>{% else %}<span style="color: var(--error-color); font-size: 0.75rem;">{% trans "No CV uploaded" %}</span>{% endif %}
+                                    </div>
+                                    {% if user.doctorprofile.is_verified %}<span class="status-verified">{% trans "Verified" %}</span>{% else %}<span class="status-unverified">{% trans "Unverified" %}</span>{% endif %}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.is_banned %}
+                                    <form action="{% url 'forum_core:unban_user' user.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-link">{% trans "Unban" %}</button>
+                                    </form>
+                                {% else %}
+                                    <form action="{% url 'forum_core:ban_user' user.id %}" method="POST" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-link btn-danger" onclick="return confirm('{% trans "Ban this user?" %}')">{% trans "Ban" %}</button>
+                                    </form>
+                                {% endif %}
+                                {% if user.user_type == 'DOCTOR' %}
+                                    <form action="{% url 'forum_core:toggle_doctor_verification' user.id %}" method="POST" style="display: inline; margin-left: 0.5rem;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-link">{% if user.doctorprofile.is_verified %}{% trans "Unverify" %}{% else %}{% trans "Verify" %}{% endif %}</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="4" class="empty-table">{% trans "No users found." %}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+html,
+body {
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.dashboard-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    background-color: var(--bg-color);
+}
+
+.dashboard-data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.action-buttons-row {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    gap: 15px;
+}
+
+.action-buttons-row > section {
+    flex: 1;
+}
+
+.dashboard-data > section,
+.action-buttons-row > section {
+    background: var(--surface-color);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0
+        var(--border-color);
+}
+
+.dashboard-data > section:hover,
+.action-buttons-row > section:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: calc(var(--shadow-offset) + 2px)
+        calc(var(--shadow-offset) + 2px) 0 0 var(--border-color);
+}
+
+.dashboard-data > section a,
+.action-buttons-row > section a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 800;
+    text-transform: uppercase;
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+}
+
+.period-prediction,
+.cycle-phases {
+    width: 100%;
+    max-width: 600px;
+}
+
+.logs {
+    width: 100%;
+    max-width: 600px;
+}
+
+.dashboard-action-bar {
+    flex-shrink: 0;
+    padding: 20px;
+    border-top: var(--border-width) solid var(--border-color);
+    background: var(--surface-color);
+}
+
+/* Specific section overrides */
+.log-period-section {
+    background-color: var(--primary-color) !important;
+}
+
+.logs {
+    background-color: var(--secondary-color) !important;
+}
+
+.error-section {
+    padding: 15px;
+}

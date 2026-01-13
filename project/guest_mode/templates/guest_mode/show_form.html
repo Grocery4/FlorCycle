@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Guest mode" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'guest_mode/css/show_form.css' %}" />
+    <link rel="stylesheet" href="{% static 'calendar_core/css/standard_calendar.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="guest-header">
+        <h1>{% trans "Guest Calendar" %}</h1>
+        <p>{% trans "Simulate your cycle and see predictions without an account." %}</p>
+    </div>
+
+    <div class="guest-content">
+        <div class="guest-form-section">
+            <form method="post" class="block-card">
+                <h3>{% trans "Enter Your Cycle Details" %}</h3>
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="block-btn">{% trans "Calculate Cycle" %}</button>
+            </form>
+        </div>
+
+        {% if predictions %}
+            <div class="guest-results-section">
+                <div class="prediction-section">
+                    <h3>{% trans "Your Predictions" %}</h3>
+                    <div class="prediction_table">{% include "cycle_core/prediction_table.html" %}</div>
+                </div>
+
+                {% if calendars %}
+                    <div class="calendar-section">
+                        <h3>{% trans "Cycle Calendar" %}</h3>
+                        <div class="calendars">{% include "calendar_core/calendars.html" %}</div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

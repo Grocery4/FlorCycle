@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
+# Version 1.0 !
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,8 +28,9 @@ SECRET_KEY = 'django-insecure-h-p_sev3on@5kadl8*f0ne18$6ye#=2xiwd9rr=79l8)!1i#%e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# Testing over internet purposes
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'dietpi.tail4aea60.ts.net']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'https://dietpi.tail4aea60.ts.net:8000']
 
 # Application definition
 
@@ -39,15 +42,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'guest_mode',
+    'dashboard',
     'cycle_core',
+    'log_core',
+    'forum_core',
     'calendar_core',
-    'users',
-    'forum',
+    'users.apps.UsersConfig',
+    'notifications',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -67,6 +74,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
+                'notifications.context_processors.notification_context',
             ],
         },
     },
@@ -110,6 +119,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+LANGUAGES = [
+    ('en', 'English'),
+    ('it', 'Italian'),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -133,5 +151,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 # Media file location
-MEDIA_ROOT = 'media/'
+MEDIA_ROOT = 'project/media/'
 MEDIA_URL = '/media/'
+
+# Redirect to dashboard after login
+LOGIN_REDIRECT_URL = '/dashboard/redirect'
+LOGOUT_REDIRECT_URL = '/guest-mode'
+
+# Email backend for development
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

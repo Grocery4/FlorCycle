@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Account Suspended | Florcycle" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/auth_extra.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="banned-container">
+    <div class="banned-card">
+        <div class="banned-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+            </svg>
+        </div>
+        
+        <h1>{% trans "ACCESS DENIED" %}</h1>
+        <div class="banned-divider"></div>
+        
+        <p class="banned-message">
+            {% blocktrans %}Your account has been <strong>permanently suspended</strong> for violating our community guidelines.{% endblocktrans %}
+        </p>
+        
+        <div class="banned-details">
+            <p>{% trans "If you believe this was a mistake, contact our support team." %}</p>
+        </div>
+        
+        <div class="banned-actions">
+            <a href="{% url 'login' %}" class="btn-return">{% trans "Return to Login" %}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

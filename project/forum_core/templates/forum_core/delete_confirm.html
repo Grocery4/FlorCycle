@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Confirm Delete" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'forum_core/css/forum_extra.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="forum-container">
+    <div class="forum-nav">
+        {% if type == 'thread' %}
+            <a href="{% url 'forum_core:thread' obj.id %}" class="nav-link">← {% trans "Back to Thread" %}</a>
+        {% else %}
+            <a href="{% url 'forum_core:thread' obj.thread.id %}" class="nav-link">← {% trans "Back to Thread" %}</a>
+        {% endif %}
+    </div>
+
+    <div class="form-container">
+        <h1>{% trans "Confirm Deletion" %}</h1>
+        <p>{% blocktrans with type=type %}Are you sure you want to delete this {{type}}?{% endblocktrans %}</p>
+
+        <div class="delete-preview">
+            {% if type == 'thread' %}
+                <strong>{{ obj.title }}</strong>
+            {% else %}
+                <p>{{ obj.content|truncatewords:20 }}</p>
+            {% endif %}
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-delete">{% trans "Yes, Delete" %}</button>
+                {% if type == 'thread' %}
+                    <a href="{% url 'forum_core:thread' obj.id %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+                {% else %}
+                    <a href="{% url 'forum_core:thread' obj.thread.id %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

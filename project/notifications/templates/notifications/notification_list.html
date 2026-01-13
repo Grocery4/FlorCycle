@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Notifications" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'notifications/css/notification_list.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="notifications-container">
+    <div class="back-nav"><a href="javascript:history.back()" class="back-link">← {% trans "Back" %}</a></div>
+
+    <h2>{% trans "Your Notifications" %}</h2>
+
+    {% if notifications %}
+        <div class="mark-all-read-container">
+            <a href="{% url 'notifications:mark_all_as_read' %}" class="btn-mark-all">{% trans "Mark all as read" %}</a>
+        </div>
+
+        <ul class="notifications-list">
+            {% for notification in notifications %}
+                <li class="notification-item{% if not notification.is_read %} unread{% endif %}">
+                    <div class="notification-content-wrapper">
+                        <div class="notification-main">
+                            <span class="notification-meta">
+                                {{ notification.get_notification_type_display }} •
+                                {% blocktrans with time=notification.created_at|timesince %}{{ time }} ago{% endblocktrans %}
+                            </span>
+                            <h3 class="notification-title">{{ notification.title }}</h3>
+                            <p class="notification-message">{{ notification.message }}</p>
+                        </div>
+
+                        <div class="notification-actions">
+                            {% if not notification.is_read %}
+                                <a href="{% url 'notifications:mark_as_read' notification.id %}" class="action-link">{% trans "Mark as read" %}</a>
+                            {% elif notification.link %}
+                                <a href="{{ notification.link }}" class="action-link">{% trans "View" %}</a>
+                            {% endif %}
+
+                            <form method="post" action="{% url 'notifications:mark_as_read' notification.id %}" class="delete-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-delete-notif" onclick="return confirm('{% trans "Delete this notification?" %}')">{% trans "Delete" %}</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{% trans "No notifications yet." %}</p>
+    {% endif %}
+</div>
+{% endblock %}

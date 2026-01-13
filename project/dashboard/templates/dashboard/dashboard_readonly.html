@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}" />
+    <link rel="stylesheet" href="{% static 'dashboard/css/timeline_bar.css' %}" />
+{% endblock %}
+
+{% block title %}{% trans "Dashboard - Read Only" %}{% endblock %}
+
+{% block content %}
+<div class="dashboard-content-wrapper">
+    {% include "dashboard/dashboard_topbar.html" %}
+
+    <div class="dashboard-data">
+        {% if error %}
+            <section class="error-section">
+                <p>{{ error }}</p>
+                <a href="{% url 'dashboard:partner_setup_page' %}"><button class="block-btn">{% trans "Go to Partner Setup" %}</button></a>
+            </section>
+        {% else %}
+            <section class="period-prediction">{% include "dashboard/next_prediction.html" %}</section>
+            <section class="cycle-phases">{% include "dashboard/stats/timeline_bar.html" %}</section>
+            <section class="logs"><a href="{% url 'dashboard:logs_page' %}">{% trans "logs" %}</a></section>
+        {% endif %}
+    </div>
+
+    <div class="dashboard-action-bar">
+        {% if not error %}{% include "dashboard/dashboard_actionbar.html" %}{% endif %}
+    </div>
+</div>
+{% endblock %}

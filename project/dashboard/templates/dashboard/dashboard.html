@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}" />
+    <link rel="stylesheet" href="{% static 'dashboard/css/timeline_bar.css' %}" />
+{% endblock %}
+
+{% block title %}{% trans "Dashboard" %}{% endblock %}
+
+{% block content %}
+<div class="dashboard-content-wrapper">
+    {% include "dashboard/dashboard_topbar.html" %}
+
+    <div class="dashboard-data">
+        <div class="action-buttons-row">
+            <section class="log-period-section">
+                <a href="{% url 'dashboard:add_period' %}">{% trans "log period" %}</a>
+            </section>
+        </div>
+        
+        <section class="period-prediction">{% include "dashboard/next_prediction.html" %}</section>
+        <section class="cycle-phases">{% include "dashboard/stats/timeline_bar.html" %}</section>
+        <section class="logs">
+            <a href="{% url 'dashboard:logs_page' %}">{% trans "logs" %}</a>
+        </section>
+    </div>
+
+    <div class="dashboard-action-bar">
+        {% include "dashboard/dashboard_actionbar.html" %}
+    </div>
+</div>
+{% endblock %}

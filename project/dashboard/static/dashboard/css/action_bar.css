@@ -1,0 +1,21 @@
+.action-bar {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    margin: 0;
+}
+
+.action-bar > a {
+    padding: 8px 12px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text-color);
+    border: 1px solid transparent;
+}
+
+.action-bar > a:hover {
+    border-color: var(--border-color);
+}
