@@ -213,6 +213,7 @@ msgstr "Prossima ovulazione"
 
 #: project/dashboard/templates/dashboard/partner/partner_setup.html:8
 #: project/dashboard/templates/dashboard/partner/partner_setup.html:16
+#: project/dashboard/templates/dashboard/settings.html:250
 msgid "Partner Setup"
 msgstr "Configurazione Partner"
 
@@ -357,6 +358,7 @@ msgid "Change Password"
 msgstr "Cambia password"
 
 #: project/dashboard/templates/dashboard/settings.html:202
+#: project/dashboard/templates/dashboard/settings.html:246
 msgid "Partner Management"
 msgstr "Gestione partner"
 
