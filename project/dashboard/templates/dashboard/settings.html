@@ -240,6 +240,18 @@
                 {% endif %}
             </div>
         {% endif %}
+        
+        {% if user.user_type == 'PARTNER' %}
+            <div class="partner-management">
+                <h3>{% trans "Partner Management" %}</h3>
+                
+                <form action="{% url 'dashboard:partner_setup_page' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">{% trans "Partner setup" %}</button>
+                </form>
+
+            </div>
+        {% endif %}
 
         {% if user.user_type == 'STANDARD' or user.user_type == 'PREMIUM' %}
             <div class="data-management">

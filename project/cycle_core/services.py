@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.utils.timezone import now
 
 
@@ -10,7 +9,7 @@ from datetime import datetime, timedelta, date
 import statistics
 
 # authenticated users only
-def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
+def generate_prediction_based_on_log_count(user, threshold = MIN_LOG_FOR_STATS):
     stats = getattr(user, 'cyclestats', None)
     cycledetails = getattr(user, 'cycledetails', None)
     
@@ -29,7 +28,7 @@ def generatePredictionBasedOnLogCount(user, threshold = MIN_LOG_FOR_STATS):
     raise ValueError('CycleStats and CycleDetails not found.')
 
 
-def updateCycleStats(cs: CycleStats, min_logs:int=MIN_LOG_FOR_STATS):
+def update_cycle_stats(cs: CycleStats, min_logs:int=MIN_LOG_FOR_STATS):
         user = cs.user
         if user:
             logs = CycleWindow.objects.filter(user=user, is_prediction=False)
@@ -97,10 +96,7 @@ def updateCycleStats(cs: CycleStats, min_logs:int=MIN_LOG_FOR_STATS):
 def calculate_ovulation_timing_from_logs(user, min_logs=MIN_LOG_FOR_STATS):
     """
     Calculate average ovulation timing based on positive ovulation tests in DailyLog.
-    
     Returns a tuple: (avg_ovulation_start_day, avg_ovulation_end_day)
-    Where days are relative to menstruation_start (1-based cycle day).
-    
     Returns None if insufficient data.
     """
     logged_cycles = list(
@@ -146,10 +142,7 @@ def calculate_ovulation_timing_from_logs(user, min_logs=MIN_LOG_FOR_STATS):
 
 
 def update_ovulation_stats(cs: CycleStats):
-    """
-    Update CycleStats with calculated ovulation timing based on logged ovulation tests.
-    Falls back to defaults if insufficient data.
-    """
+    # Update CycleStats with calculated ovulation timing based on logged ovulation tests. Falls back to defaults if insufficient data.
     ovulation_timing = calculate_ovulation_timing_from_logs(cs.user)
     
     if ovulation_timing:

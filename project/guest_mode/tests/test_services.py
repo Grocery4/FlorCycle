@@ -1,10 +1,9 @@
 from django.test import TestCase
 
 from datetime import date
-from unittest.mock import patch
 
-from cycle_core.models import CycleWindow, CycleDetails
-from guest_mode.services import get_months_range, get_highlighted_dates, generate_calendars
+from cycle_core.models import CycleWindow
+from guest_mode.services import get_months_range, get_highlighted_dates
 
 
 class GetMonthsRangeTests(TestCase):

@@ -799,7 +799,6 @@ def ajax_search_logs(request):
     if not user:
         return JsonResponse({'error': 'No linked user'}, status=403)
 
-    from django.db.models import Q
     data = json.loads(request.body)
     query = data.get('query')
 

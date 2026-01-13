@@ -2,9 +2,7 @@ from django.utils.translation import gettext as _
 from .models import Notification
 
 def create_notification(user, title, message, notification_type, link=None):
-    """
-    Utility function to create a new notification.
-    """
+    # Utility function to create a new notification.
     return Notification.objects.create(
         user=user,
         title=title,
@@ -14,11 +12,9 @@ def create_notification(user, title, message, notification_type, link=None):
     )
 
 def check_dangerous_symptoms(user, symptom_names, flow_level=None):
-    """
-    Checks for dangerous symptoms and triggers medical advice notification.
-    Only sends notification if ALL dangerous symptoms are present together:
-    Severe Pain, Fainting, Fever, AND Heavy Bleeding.
-    """
+    # Checks for dangerous symptoms and triggers medical advice notification. 
+    # Only sends notification if ALL dangerous symptoms are present together:
+    # Severe Pain, Fainting, Fever, AND Heavy Bleeding.
     DANGEROUS_SYMPTOMS = ["Severe Pain", "Fainting", "Fever"]
     
     # Check if all dangerous symptoms are present
@@ -39,10 +35,7 @@ def check_dangerous_symptoms(user, symptom_names, flow_level=None):
     return False
 
 def check_upcoming_predictions(user):
-    """
-    Checks if a period or ovulation starts tomorrow and notifies the user.
-    Only creates notification if one doesn't already exist for that prediction.
-    """
+    # Checks if a period or ovulation starts tomorrow and notifies the user. Only creates notification if one doesn't already exist for that prediction.
     from datetime import date, timedelta
     from cycle_core.models import CycleWindow
     

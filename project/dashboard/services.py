@@ -5,7 +5,7 @@ from django.db import transaction
 
 from cycle_core.models import CycleWindow, CycleStats, CycleDetails, MIN_LOG_FOR_STATS
 
-from cycle_core.services import PredictionBuilder, updateCycleStats
+from cycle_core.services import PredictionBuilder, update_cycle_stats
 from calendar_core.services import render_multiple_calendars, CalendarType
 from datetime import timedelta, datetime, date
 from dateutil import relativedelta
@@ -141,9 +141,7 @@ def create_cycle_window(user, start_date, end_date):
     )
 
 def _normalize_ranges(ranges):
-    """
-    Merge overlapping or adjacent date ranges and return a sorted list.
-    """
+    # Merge overlapping or adjacent date ranges and return a sorted list.
     if not ranges:
         return []
 
@@ -239,7 +237,7 @@ def apply_period_windows(user, selected_ranges, visible_start, visible_end, mont
         stats.log_count = CycleWindow.objects.filter(user=user, is_prediction=False).count()
         stats.save()
         # Update avg durations if we have enough logs
-        updateCycleStats(stats)
+        update_cycle_stats(stats)
     except CycleStats.DoesNotExist:
         pass
 
@@ -280,10 +278,7 @@ def get_cycle_length(user):
 
 
 def calculate_timeline_data(user):
-    """
-    Calculate timeline data for the current cycle.
-    Returns a dict with phase boundaries and marker positions as percentages.
-    """
+    # Calculate timeline data for the current cycle. Returns a dict with phase boundaries and marker positions as percentages.
     today = date.today()
     cycle = get_current_cycle(user)
     

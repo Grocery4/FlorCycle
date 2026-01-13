@@ -213,6 +213,7 @@ msgstr "Prossima ovulazione"
 
 #: project/dashboard/templates/dashboard/partner/partner_setup.html:8
 #: project/dashboard/templates/dashboard/partner/partner_setup.html:16
+#: project/dashboard/templates/dashboard/settings.html:250
 msgid "Partner Setup"
 msgstr "Configurazione Partner"
 
@@ -357,6 +358,7 @@ msgid "Change Password"
 msgstr "Cambia password"
 
 #: project/dashboard/templates/dashboard/settings.html:202
+#: project/dashboard/templates/dashboard/settings.html:246
 msgid "Partner Management"
 msgstr "Gestione partner"
 
@@ -1339,7 +1341,7 @@ msgstr "Calendario ospite"
 
 #: project/guest_mode/templates/guest_mode/show_form.html:15
 msgid "Simulate your cycle and see predictions without an account."
-msgstr "Simula il tuo ciclo e vedile le previsioni senza un account."
+msgstr "Simula il tuo ciclo e prevedi senza un account."
 
 #: project/guest_mode/templates/guest_mode/show_form.html:21
 msgid "Enter Your Cycle Details"
@@ -1378,27 +1380,27 @@ msgstr "Stato d'animo"
 msgid "Medication"
 msgstr "Farmaco"
 
-#: project/log_core/models.py:45 project/log_core/translation_strings.py:138
+#: project/log_core/models.py:45 project/log_core/translation_strings.py:143
 msgid "Positive"
 msgstr "Positivo"
 
-#: project/log_core/models.py:45 project/log_core/translation_strings.py:139
+#: project/log_core/models.py:45 project/log_core/translation_strings.py:144
 msgid "Negative"
 msgstr "Negativo"
 
-#: project/log_core/models.py:46 project/log_core/translation_strings.py:134
+#: project/log_core/models.py:46 project/log_core/translation_strings.py:139
 msgid "Spotting"
 msgstr "Spotting"
 
-#: project/log_core/models.py:46 project/log_core/translation_strings.py:135
+#: project/log_core/models.py:46 project/log_core/translation_strings.py:140
 msgid "Light"
 msgstr "Leggero"
 
-#: project/log_core/models.py:46 project/log_core/translation_strings.py:136
+#: project/log_core/models.py:46 project/log_core/translation_strings.py:141
 msgid "Medium"
 msgstr "Medio"
 
-#: project/log_core/models.py:46 project/log_core/translation_strings.py:137
+#: project/log_core/models.py:46 project/log_core/translation_strings.py:142
 msgid "Heavy"
 msgstr "Pesante"
 
@@ -1500,7 +1502,7 @@ msgid "Anxiety"
 msgstr "Ansia"
 
 #: project/log_core/translation_strings.py:7
-msgid "Backaches"
+msgid "Backache"
 msgstr "Mal di schiena"
 
 #: project/log_core/translation_strings.py:8
@@ -1544,7 +1546,7 @@ msgid "Cramps"
 msgstr "Crampi"
 
 #: project/log_core/translation_strings.py:18
-msgid "Craving"
+msgid "Cravings"
 msgstr "Voglie"
 
 #: project/log_core/translation_strings.py:19
@@ -1656,7 +1658,7 @@ msgid "Night sweats"
 msgstr "Sudorazione notturna"
 
 #: project/log_core/translation_strings.py:46
-msgid "Ovulation pain"
+msgid "Ovulation Pain"
 msgstr "Dolore da ovulazione"
 
 #: project/log_core/translation_strings.py:47
@@ -1692,8 +1694,8 @@ msgid "Stress"
 msgstr "Stress"
 
 #: project/log_core/translation_strings.py:55
-msgid "Tender breasts"
-msgstr "Seno tenero"
+msgid "Breast tenderness"
+msgstr "Sensibilità al seno"
 
 #: project/log_core/translation_strings.py:56
 msgid "Tension"
@@ -1715,271 +1717,291 @@ msgstr "Aumento di peso"
 msgid "With blood"
 msgstr "Con tracce di sangue"
 
+#: project/log_core/translation_strings.py:61
+msgid "Mood swings"
+msgstr "Sbalzi d'umore"
+
+#: project/log_core/translation_strings.py:62
+msgid "Oily Skin"
+msgstr "Pelle oleosa"
+
 #: project/log_core/translation_strings.py:63
+msgid "Dry Skin"
+msgstr "Pelle secca"
+
+#: project/log_core/translation_strings.py:64
+msgid "High Sex Drive"
+msgstr "Alto libido"
+
+#: project/log_core/translation_strings.py:65
+msgid "Low Sex Drive"
+msgstr "Basso libido"
+
+#: project/log_core/translation_strings.py:68
 msgid "Angry"
 msgstr "Arrabbiato"
 
-#: project/log_core/translation_strings.py:64
+#: project/log_core/translation_strings.py:69
 msgid "Anxious"
 msgstr "Ansioso"
 
-#: project/log_core/translation_strings.py:65
+#: project/log_core/translation_strings.py:70
 msgid "Ashamed"
 msgstr "Vergognoso"
 
-#: project/log_core/translation_strings.py:66
+#: project/log_core/translation_strings.py:71
 msgid "Assertive"
 msgstr "Determinato"
 
-#: project/log_core/translation_strings.py:67
+#: project/log_core/translation_strings.py:72
 msgid "Bashful"
 msgstr "Timido"
 
-#: project/log_core/translation_strings.py:68
+#: project/log_core/translation_strings.py:73
 msgid "Blue"
 msgstr "Triste"
 
-#: project/log_core/translation_strings.py:69
+#: project/log_core/translation_strings.py:74
 msgid "Bored"
 msgstr "Noiato"
 
-#: project/log_core/translation_strings.py:70
+#: project/log_core/translation_strings.py:75
 msgid "Confident"
 msgstr "Fiducioso"
 
-#: project/log_core/translation_strings.py:71
+#: project/log_core/translation_strings.py:76
 msgid "Depresed"
 msgstr "Depresso"
 
-#: project/log_core/translation_strings.py:72
+#: project/log_core/translation_strings.py:77
 msgid "Disappointed"
 msgstr "Deluso"
 
-#: project/log_core/translation_strings.py:73
+#: project/log_core/translation_strings.py:78
 msgid "Distrustful"
 msgstr "Diffidente"
 
-#: project/log_core/translation_strings.py:74
+#: project/log_core/translation_strings.py:79
 msgid "Embarassed"
 msgstr "Imbarazzato"
 
-#: project/log_core/translation_strings.py:75
+#: project/log_core/translation_strings.py:80
 msgid "Emotional"
 msgstr "Emotivo"
 
-#: project/log_core/translation_strings.py:76
+#: project/log_core/translation_strings.py:81
 msgid "Evil"
 msgstr "Cattivo"
 
-#: project/log_core/translation_strings.py:77
+#: project/log_core/translation_strings.py:82
 msgid "Excited"
 msgstr "Eccitato"
 
-#: project/log_core/translation_strings.py:78
+#: project/log_core/translation_strings.py:83
 msgid "Exhausted"
 msgstr "Esausto"
 
-#: project/log_core/translation_strings.py:79
+#: project/log_core/translation_strings.py:84
 msgid "Fliratious"
 msgstr "Provocante"
 
-#: project/log_core/translation_strings.py:80
+#: project/log_core/translation_strings.py:85
 msgid "Forgetful"
 msgstr "Dimentico"
 
-#: project/log_core/translation_strings.py:81
+#: project/log_core/translation_strings.py:86
 msgid "Frisky"
 msgstr "Vivace"
 
-#: project/log_core/translation_strings.py:82
+#: project/log_core/translation_strings.py:87
 msgid "Frustrated"
 msgstr "Frustrato"
 
-#: project/log_core/translation_strings.py:83
+#: project/log_core/translation_strings.py:88
 msgid "Furious"
 msgstr "Furioso"
 
-#: project/log_core/translation_strings.py:84
+#: project/log_core/translation_strings.py:89
 msgid "Good"
 msgstr "Bene"
 
-#: project/log_core/translation_strings.py:85
+#: project/log_core/translation_strings.py:90
 msgid "Grumpy"
 msgstr "Scontroso"
 
-#: project/log_core/translation_strings.py:86
+#: project/log_core/translation_strings.py:91
 msgid "Happy"
 msgstr "Felice"
 
-#: project/log_core/translation_strings.py:87
+#: project/log_core/translation_strings.py:92
 msgid "Harsh"
 msgstr "Duro"
 
-#: project/log_core/translation_strings.py:88
+#: project/log_core/translation_strings.py:93
 msgid "Hopeful"
 msgstr "Speranzoso"
 
-#: project/log_core/translation_strings.py:89
+#: project/log_core/translation_strings.py:94
 msgid "Horny"
 msgstr "Attizzato"
 
-#: project/log_core/translation_strings.py:90
+#: project/log_core/translation_strings.py:95
 msgid "Ill"
 msgstr "Malato"
 
-#: project/log_core/translation_strings.py:91
+#: project/log_core/translation_strings.py:96
 msgid "Impatient"
 msgstr "Impaziente"
 
-#: project/log_core/translation_strings.py:92
+#: project/log_core/translation_strings.py:97
 msgid "In love"
 msgstr "Innamorato"
 
-#: project/log_core/translation_strings.py:93
+#: project/log_core/translation_strings.py:98
 msgid "Indifferent"
 msgstr "Indifferente"
 
-#: project/log_core/translation_strings.py:94
+#: project/log_core/translation_strings.py:99
 msgid "Inspired"
 msgstr "Ispirato"
 
-#: project/log_core/translation_strings.py:95
+#: project/log_core/translation_strings.py:100
 msgid "Jealous"
 msgstr "Geloso"
 
-#: project/log_core/translation_strings.py:96
+#: project/log_core/translation_strings.py:101
 msgid "Lonely"
 msgstr "Solo"
 
-#: project/log_core/translation_strings.py:97
+#: project/log_core/translation_strings.py:102
 msgid "Mischievous"
 msgstr "Malizioso"
 
-#: project/log_core/translation_strings.py:98
+#: project/log_core/translation_strings.py:103
 msgid "Miserable"
 msgstr "Miserabile"
 
-#: project/log_core/translation_strings.py:99
+#: project/log_core/translation_strings.py:104
 msgid "Neutral"
 msgstr "Neutrale"
 
-#: project/log_core/translation_strings.py:100
+#: project/log_core/translation_strings.py:105
 msgid "Normal"
 msgstr "Normale"
 
-#: project/log_core/translation_strings.py:101
+#: project/log_core/translation_strings.py:106
 msgid "Panicky"
 msgstr "Preso dal panico"
 
-#: project/log_core/translation_strings.py:102
+#: project/log_core/translation_strings.py:107
 msgid "Peaceful"
 msgstr "Tranquillo"
 
-#: project/log_core/translation_strings.py:103
+#: project/log_core/translation_strings.py:108
 msgid "Playful"
 msgstr "Giocoso"
 
-#: project/log_core/translation_strings.py:104
+#: project/log_core/translation_strings.py:109
 msgid "Proud"
 msgstr "Orgoglioso"
 
-#: project/log_core/translation_strings.py:105
+#: project/log_core/translation_strings.py:110
 msgid "Pure"
 msgstr "Puro"
 
-#: project/log_core/translation_strings.py:106
+#: project/log_core/translation_strings.py:111
 msgid "Relaxed"
 msgstr "Rilassato"
 
-#: project/log_core/translation_strings.py:107
+#: project/log_core/translation_strings.py:112
 msgid "Sad"
 msgstr "Triste"
 
-#: project/log_core/translation_strings.py:108
+#: project/log_core/translation_strings.py:113
 msgid "Satisfied"
 msgstr "Soddisfatto"
 
-#: project/log_core/translation_strings.py:109
+#: project/log_core/translation_strings.py:114
 msgid "Secretive"
 msgstr "Riservato"
 
-#: project/log_core/translation_strings.py:110
+#: project/log_core/translation_strings.py:115
 msgid "Sexy"
 msgstr "Sexy"
 
-#: project/log_core/translation_strings.py:111
+#: project/log_core/translation_strings.py:116
 msgid "Silly"
 msgstr "Sciocco"
 
-#: project/log_core/translation_strings.py:112
+#: project/log_core/translation_strings.py:117
 msgid "Sleepy"
 msgstr "Assonnato"
 
-#: project/log_core/translation_strings.py:113
+#: project/log_core/translation_strings.py:118
 msgid "Smug"
 msgstr "Compiaciuto"
 
-#: project/log_core/translation_strings.py:114
+#: project/log_core/translation_strings.py:119
 msgid "Stressed"
 msgstr "Stressato"
 
-#: project/log_core/translation_strings.py:115
+#: project/log_core/translation_strings.py:120
 msgid "Stunned"
 msgstr "Stordito"
 
-#: project/log_core/translation_strings.py:116
+#: project/log_core/translation_strings.py:121
 msgid "Surprise"
 msgstr "Sorpreso"
 
-#: project/log_core/translation_strings.py:117
+#: project/log_core/translation_strings.py:122
 msgid "Tense"
 msgstr "Teso"
 
-#: project/log_core/translation_strings.py:118
+#: project/log_core/translation_strings.py:123
 msgid "Tormented"
 msgstr "Tormentato"
 
-#: project/log_core/translation_strings.py:119
+#: project/log_core/translation_strings.py:124
 msgid "Unsafe"
 msgstr "Inscuro"
 
-#: project/log_core/translation_strings.py:120
+#: project/log_core/translation_strings.py:125
 msgid "Weird"
 msgstr "Strano"
 
-#: project/log_core/translation_strings.py:121
+#: project/log_core/translation_strings.py:126
 msgid "Worried"
 msgstr "Preoccupato"
 
-#: project/log_core/translation_strings.py:124
+#: project/log_core/translation_strings.py:129
 msgid "Contraceptive pill"
 msgstr "Pillola anticoncezionale"
 
-#: project/log_core/translation_strings.py:125
+#: project/log_core/translation_strings.py:130
 msgid "V-ring"
 msgstr "Anello vaginale"
 
-#: project/log_core/translation_strings.py:126
+#: project/log_core/translation_strings.py:131
 msgid "Patch"
 msgstr "Cerotto"
 
-#: project/log_core/translation_strings.py:127
+#: project/log_core/translation_strings.py:132
 msgid "Injection"
 msgstr "Iniezione"
 
-#: project/log_core/translation_strings.py:128
+#: project/log_core/translation_strings.py:133
 msgid "IUD"
 msgstr "Spirale"
 
-#: project/log_core/translation_strings.py:129
+#: project/log_core/translation_strings.py:134
 msgid "Implant"
 msgstr "Impianto sottocutaneo"
 
-#: project/log_core/translation_strings.py:132
+#: project/log_core/translation_strings.py:137
 msgid "Yes"
 msgstr "Sì"
 
-#: project/log_core/translation_strings.py:133
+#: project/log_core/translation_strings.py:138
 msgid "No"
 msgstr "No"
 

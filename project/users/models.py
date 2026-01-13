@@ -1,11 +1,10 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
-from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 
 from django.utils.translation import gettext_lazy as _
-from .services import doctorCvUploadPath, activatePremiumSubscription, userProfilePicturePath, generate_partner_code
+from .services import doctorCvUploadPath, userProfilePicturePath, generate_partner_code
 
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = [
