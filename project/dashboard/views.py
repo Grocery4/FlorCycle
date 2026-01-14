@@ -706,7 +706,7 @@ def ajax_get_top_symptoms(request):
 
     from django.db.models import Count
     from log_core.models import SymptomLog
-    # 1. Top 5 Symptoms
+    
     # Group by symptom name and count.
     top_symptoms_qs = SymptomLog.objects.filter(log__user=user)\
         .values('symptom__name')\
@@ -733,11 +733,6 @@ def ajax_get_top_symptoms(request):
 def ajax_get_available_items(request):
     from log_core.models import Symptom, Mood, Medication
 
-    # Get only used items (optimisation) or all? 
-    # Let's get all for now, or filter by what the user has actually used if preferred.
-    # To keep it simple and discoverable, let's return all available types.
-    # Or better: distinct existing logs to show what *can* be analyzed.
-    
     from django.utils.translation import gettext as _rt
     
     symptoms = Symptom.objects.all()
